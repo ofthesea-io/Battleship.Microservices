@@ -1,0 +1,28 @@
+<div class="mb-12">
+  <div class="row justify-content-center">
+    <div>
+      <div class="d-flex justify-content-center">
+        <div class="p-2"><img src="../assets/images/battleship.png" height="32px" width="32px" /></div>
+        <div class="p-2"><h2>Battleship - Docking the way</h2></div>
+        <div class="p-2"><img src="../assets/images/battleship.png" height="32px" width="32px" /></div>
+      </div>
+    </div>
+  </div>
+  <div class="justify-content-center">
+    <nav class="navbar navbar-expand-sm bg-dark text-white justify-content-center">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <span><a [routerLink]="['/login']" class="nav-link">Login </a></span>
+        </li>
+        <li class="nav-item">
+          <span><a [routerLink]="['/createPlayer']" class="nav-link">Create Account</a></span>
+        </li>
+        <li class="nav-item">
+          <span><a [routerLink]="['/statistics']" class="nav-link">Top Players</a></span>
+        </li>
+      </ul>
+    </nav>
+  </div>
+    <router-outlet></router-outlet>
+</div>
+

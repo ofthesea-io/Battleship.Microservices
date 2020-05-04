@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="row">
+    <mat-list *ngIf="players">
+      <h3 mat-subheader>Top Players</h3>
+      <mat-list-item *ngFor="let player of players">
+        <mat-card>
+            {{player.firstname}} {{player.lastname}} {{player.percentage}}%
+        </mat-card>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+    <div class="row" *ngIf="!players">
+      <h4>No top players at present!</h4>
+    </div>
+  </div>
+</div>

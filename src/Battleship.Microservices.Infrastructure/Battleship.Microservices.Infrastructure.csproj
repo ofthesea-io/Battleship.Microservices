@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Version>1.0.14</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Infrastructure elements to the microservice battleship game</Description>
+    <Copyright>MIT</Copyright>
+    <PackageProjectUrl>http://visualsanity.io</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/visualsanity/Battleship.Microservices</RepositoryUrl>
+    <AssemblyVersion>1.0.14</AssemblyVersion>
+    <FileVersion>1.0.14</FileVersion>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>Battleship Microservice</PackageTags>
+    <RootNamespace>Battleship.Microservices.Infrastructure</RootNamespace>
+    <PackageReleaseNotes>Core infrastructure elements for the microservice battleship game</PackageReleaseNotes>
+    <PackageId>Battleship.Microservices.Infrastructure</PackageId>
+    <Authors>Jakes Potgieter</Authors>
+    <Company>VisualSanity</Company>
+    <Product>Battleship.Infrastructure.Core</Product>
+    <AssemblyName>Battleship.Infrastructure.Core</AssemblyName>
+    <ReleaseVersion>0.0.1</ReleaseVersion>
+    <SynchReleaseVersion>false</SynchReleaseVersion>
+    <PackOnBuild>true</PackOnBuild>
+    <NeutralLanguage>en-GB</NeutralLanguage>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <ShouldCreateLogs>False</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>False</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <UpdatePackageVersion>True</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
+    <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
+    <PackageVersionSettings>AssemblyVersion.IncrementWithAutoReset.None</PackageVersionSettings>
+    <DebugType></DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>False</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <UpdatePackageVersion>False</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.35" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.2" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Polly" Version="7.2.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+  </ItemGroup>
+</Project>

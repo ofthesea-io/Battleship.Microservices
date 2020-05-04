@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Battleship.Audit": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

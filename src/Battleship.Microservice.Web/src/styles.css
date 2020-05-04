@@ -1,0 +1,24 @@
+@import '@angular/material/prebuilt-themes/purple-green.css';
+
+
+  /* unvisited link */
+a:link {
+    color: #f0ad4e;
+  }
+  
+  /* visited link */
+  a:visited {
+    color: #f0ad4e;
+  }
+  
+  /* mouse over link */
+  a:hover {
+    color: #f0ad4e;
+    text-decoration: underline;
+  }
+  
+  /* selected link */
+  a:active {
+    color: #f0ad4e;
+  }
+  

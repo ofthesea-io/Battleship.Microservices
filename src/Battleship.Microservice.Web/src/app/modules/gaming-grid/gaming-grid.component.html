@@ -1,0 +1,55 @@
+<div class="container" *ngIf="errorMessage === '' && xAxis.length != 0 && yAxis.length != 0">
+  <div class="row">
+    <div class="form-group col-sm-6">
+      <ul class="list-inline">
+        <li class="list-inline-item">
+          <label for="inputShips">
+            <h5>Select ships to start game</h5>
+          </label>
+          <select id="inputShips" class="form-control" ngModel required [ngModel]="selectedShipCounter"
+            (ngModelChange)="onChange($event)" name="selectedShipCounter">
+            <option value="0" disabled selected="true">Select ships</option>
+            <option *ngFor="let number of numberOfShipOptions" [value]="number.Id">
+              {{ number.option }}
+            </option>
+          </select>
+        </li>
+      </ul>
+    </div>
+    <div class="col-sm-6">
+      <div class="box h-100 d-flex justify-content-center flex-column">
+        <h4>Welcome</h4>
+        <h4>
+          <small>
+            <p>{{ player.firstName }} {{ player.lastName }}</p>
+          </small>
+        </h4>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngFor="let y of yAxis">
+    <div class="col-sm-1 bg-primary text-white border text-center" *ngFor="let x of xAxis" attr.data-x="{{ x }}"
+      attr.data-y="{{ y }}" (click)="checkCoordinate($event)">
+      {{ x }} {{ y }}
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-sm-9">
+      <app-score-card [scoreCard]="playerScoreCard"></app-score-card>
+    </div>
+    <div class="col-sm-3">
+      <div class="float-right">
+        <ul class="list-inline">
+          <li class="list-inline-item">
+            <button type="submit" id="inputSubmit" class="btn btn-success" [disabled]="!isGameStarted"
+              (click)="onSaveGame();">Save Game</button>
+          </li>
+          <li class="list-inline-item">
+            <button type="submit" id="inputCancel" class="btn btn-warning" (click)="onCancelGame();">Cancel
+              Game</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,95 @@
+<div class="container mt-5 mb-5">
+  <div class="row">
+    <div class="col-md-3">
+      <!-- Placeholder -->
+    </div>
+    <div class="col-md-6">
+      <form>
+        <div class="form-group row" *ngIf="demoPlayers.length > 0">
+          <label for="demoPlayerInput" class="col-2 ml-2 col-form-label">Demo</label>
+          <div class="col-9">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="fa fa-lock fa-fw"></i>
+                </div>
+              </div>
+              <select id="demoPlayerInput" class="form-control col-10" ngModel required
+                (ngModelChange)="onChange($event)" name="demoPlayers">
+                <option value="" disabled>Select Player</option>
+                <option *ngFor="let demoPlayer of demoPlayers" [value]="demoPlayer.playerId">
+                  {{ demoPlayer.firstName }} {{ demoPlayer.lastName }}
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="demoPlayers.length == 0">
+          <fa name="spinner" animation="spin"></fa>&nbsp;Waiting for demo players to load...
+        </div>
+        <div class="form-group row">
+          <div class="clearfix">
+            <div class="float-none ml-4">
+              <i class="fa fa-fire text-danger "></i> Demo account does not contain admin functionality
+            </div>
+          </div>
+        </div>
+      </form>
+
+
+      <!-- custom account -->
+      <h4>Personal Account</h4>
+      <div class="border">
+        <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm.value)" class="mt-3">
+          <div class="form-group row">
+            <label for="email" class="col-2 col-form-label ml-2">Email</label>
+            <div class="col-9">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fa fa-envelope-o fa-fw"></i>
+                  </div>
+                </div>
+                <input type="text" class="form-control col-10" name="email" placeholder="Email" [(ngModel)]="email"
+                  required="required" #emailInput="ngModel" />
+                <div *ngIf="emailInput.invalid && (passwordInput.dirty || passwordInput.touched)">
+                  <div *ngIf="emailInput.hasError('required')" class="form-group row text-danger">Please enter your
+                    email address</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="password" class="col-2 col-form-label ml-2">Password</label>
+            <div class="col-9">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fa fa-lock fa-fw"></i>
+                  </div>
+                </div>
+                <input type="password" class="form-control col-10" name="password" placeholder="Password"
+                  [(ngModel)]="password" required #passwordInput="ngModel" />
+                <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)">
+                  <div *ngIf="passwordInput.hasError('required')" class="text-danger">Please enter your password</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="offset-3 col-9">
+              <button type="submit" id="inputSubmit" class="btn btn-success" [disabled]="loginForm.invalid">
+                Login
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <!-- Placeholder -->
+    </div>
+  </div>
+</div>
+
+<app-error-handler [errorMessageHandler]="errorMessage"></app-error-handler>

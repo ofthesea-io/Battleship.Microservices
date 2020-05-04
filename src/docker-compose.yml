@@ -1,0 +1,113 @@
+version: '3'
+services:
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    volumes:
+      - rabbitmqdata:/var/lib/rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      
+  sqlserver:
+    image: microsoft/mssql-server-linux:latest
+    container_name: sqlserver
+    volumes:
+      - sqlserverdata:/var/opt/mssql 
+    ports:
+      - "1434:1433"
+    environment:
+      - ACCEPT_EULA=Y 
+      - MSSQL_PID=sa
+      - SA_PASSWORD=testing
+
+  game:
+    image: battleship/game:latest
+    build: game
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    ports:
+      - "8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  player:
+    image: battleship/player:latest
+    build: player
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    ports:
+      - "8082"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  scorecard:
+    image: battleship/scorecard:latest
+    build: scorecard
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    ports:
+      - "8083"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      
+  statistics:
+    image: battleship/statistics:latest
+    build: statistics
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    ports:
+      - "8084"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  audit:
+    image: battleship/audit:latest
+    build: audit
+    container_name: audit
+    depends_on:
+      - rabbitmq
+    ports:
+      - "8085"
+    environment:
+      - DOTNET_ENVIRONMENT=Production
+      
+  Warehouse:
+    image: battleship/Warehouse:latest
+    build: Warehouse
+    container_name: Warehouse
+    depends_on:
+      - rabbitmq
+      - audit
+    ports:
+      - "8086"
+    environment:
+      - DOTNET_ENVIRONMENT=Production     
+      
+  webapp:
+    image: battleship/webapp:latest
+    build: WebApp
+    container_name: webapp
+    depends_on:
+      - player
+      - game
+      - scorecard
+      - statistics
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+volumes:
+  sqlserverdata:
+    external: true    
+  rabbitmqdata:
+    external: true
