@@ -3,6 +3,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Configuration } from '../Utilities/configuration';
 import { catchError } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { AppConfig } from 'src/app/app.config';
 
 @Injectable({
   providedIn: 'root'
@@ -10,15 +11,13 @@ import { Observable } from 'rxjs';
 export class StatisticsService {
 
   private config: Configuration;
-  private host = 'http://localhost:8084';
-  private statisticsUrl: string = this.host + '/api/Statistics/';
 
   constructor(private httpClient: HttpClient) {
       this.config = new Configuration();
    }
 
   getTopPlayers(): Observable<HttpResponse<any>> {
-    const createStatisticsUri: string = this.statisticsUrl + 'GetTopPlayers';
+    const createStatisticsUri: string = this.apiServerUrl() + 'GetTopPlayers';
     return this.httpClient.get<any>(createStatisticsUri, {
         headers: this.config.getAuthHeaders(),
         observe: 'response'
@@ -26,4 +25,10 @@ export class StatisticsService {
       .pipe(
         catchError(this.config.handleError));
   }
+
+     /* Properties */
+     apiServerUrl(): string {
+      const server: string =  AppConfig.settings.apiServer.Player.host + AppConfig.settings.apiServer.Player.url;
+      return server;
+    }
 }

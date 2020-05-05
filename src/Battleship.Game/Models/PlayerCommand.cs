@@ -1,6 +1,6 @@
 ﻿namespace Battleship.Game.Models
 {
-    using Battleship.Microservices.Infrastructure.Models;
+    using Microservices.Infrastructure.Models;
 
     public class PlayerCommand
     {

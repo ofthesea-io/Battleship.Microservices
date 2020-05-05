@@ -11,6 +11,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
 
+
     public class Startup
     {
         private readonly IConfiguration configuration;
@@ -30,7 +31,7 @@
 
             services.AddMemoryCache();
             services.AddCors();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddMvc().AddNewtonsoftJson().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             var configSection = this.configuration.GetSection("RabbitMQ");
             var host = configSection["Host"];

@@ -1,0 +1,30 @@
+{
+  "env": {
+    "name": "DEV"
+  },
+  "logging": {
+    "console": true
+  },
+  "apiServer": {
+    "Player": {
+      "host": "http://localhost:8081",
+      "url": "/api/Player/"
+    },
+    "Board": {
+      "host": "http://localhost:8082",
+      "url": "/api/Board/"
+    },
+    "ScoreCard": {
+      "host": "http://localhost:8083",
+      "url": "/api/ScoreCard/"
+    },
+    "Statistics": {
+      "host": "http://localhost:8084",
+      "url": "/api/Statistics/"
+    },
+    "Leaderboard": {
+      "host": "http://localhost:8085",
+      "url": "/api/Leaderboard/"
+    }
+  }
+}

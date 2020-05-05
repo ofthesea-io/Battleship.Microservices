@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { BattleshipService } from '../../core/services/battleship.service';
+import { BoardService } from '../../core/services/board.service';
 import { ScoreCard } from '../../core/models/scoreCard';
 import { Configuration } from '../../core/Utilities/configuration';
 import { Coordinate } from '../../core/models/coordinate';
@@ -33,7 +33,7 @@ export class GamingGridComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private battleShipService: BattleshipService,
+    private battleShipService: BoardService,
     private config: Configuration,
     private dialog: MatDialog,
     private scoreCardService: ScoreCardService
