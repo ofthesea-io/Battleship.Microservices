@@ -10,6 +10,7 @@
     using Infrastructure;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Primitives;
     using Models;
     using Newtonsoft.Json;
 
@@ -69,9 +70,8 @@
         {
             try
             {
-                string sessionToken = this.HttpContext.Request.Headers["Authorization"];
-                if (!this.gameRepository.CheckPlayerStatus(sessionToken))
-                    return StatusCode(StatusCodes.Status401Unauthorized);
+                string sessionToken = IsAuthenticated(this.HttpContext);
+                if (string.IsNullOrEmpty(sessionToken)) return StatusCode(StatusCodes.Status401Unauthorized);
 
                 if (playerCommand.Coordinate.X == 0 || playerCommand.Coordinate.Y == 0 ||
                     string.IsNullOrEmpty(sessionToken))
@@ -86,26 +86,20 @@
                 var shipCoordinate = shipCoordinates.FirstOrDefault(q =>
                     q.Key.X == playerCommand.Coordinate.X && q.Key.Y == playerCommand.Coordinate.Y);
 
-                if (playerCommand.ScoreCard == null)
-                    playerCommand.ScoreCard = new ScoreCard
-                    {
-                        Hit = 0,
-                        Miss = 0,
-                        Sunk = 0,
-                        Total = 0,
-                        Message = "Game started"
-                    };
-
                 playerCommand.ScoreCard.IsHit = false;
                 if (shipCoordinate.Value != null)
                 {
                     shipCoordinate.Value.Ship.CoordinateStatus++;
-                    var updateShipCoordinates = JsonConvert.SerializeObject(shipCoordinates.ToArray(),
-                        Formatting.Indented, this.jsonSerializerSettings);
+                    var updateShipCoordinates = JsonConvert.SerializeObject(shipCoordinates.ToArray(), Formatting.Indented, this.jsonSerializerSettings);
                     await this.gameRepository.UpdateShipCoordinates(updateShipCoordinates, sessionToken);
                     playerCommand.ScoreCard.Hit++;
                     playerCommand.ScoreCard.Message = "Boom! You hit a ship!";
                     playerCommand.ScoreCard.IsHit = true;
+                    if (shipCoordinate.Value.Ship.IsShipSunk)
+                    {
+                        playerCommand.ScoreCard.Sunk++;
+                        playerCommand.ScoreCard.Message = "Ship sunk";
+                    }
                 }
                 else
                 {
@@ -143,7 +137,7 @@
             {
                 if (numberOfShips == 0) return BadRequest();
 
-                string sessionToken = this.HttpContext.Request.Headers["Authorization"];
+                string sessionToken = IsAuthenticated(this.HttpContext);
                 if (string.IsNullOrEmpty(sessionToken)) return StatusCode(StatusCodes.Status401Unauthorized);
 
                 await this.gameRepository.StartGame(sessionToken, numberOfShips);
@@ -163,7 +157,7 @@
                 var serializedScoreCard = JsonConvert.SerializeObject(scoreCard);
                 await this.messagePublisher.PublishMessageAsync(serializedScoreCard, "ScoreCard");
 
-                return Ok();
+                return  StatusCode(StatusCodes.Status200OK);
             }
             catch (Exception e)
             {
@@ -195,6 +189,17 @@
             {
                 return null;
             }
+        }
+
+        private string IsAuthenticated(HttpContext httpContext)
+        {
+            string result = string.Empty;
+            if (httpContext.Request.Headers.TryGetValue("Authorization", out StringValues values))
+            {
+                result = values.FirstOrDefault();
+            }
+
+            return result;
         }
     }
 }
