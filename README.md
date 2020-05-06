@@ -3,10 +3,10 @@
 
 The following application is a port from a console application kata that I develop on periodically. It uses the following technology:
 
-![Angular](https://github.com/VisualSanity/Battleship.Microservices/blob/master/Support/angular.png) 
-![DotNet Core](https://github.com/VisualSanity/Battleship.Microservices/blob/master/Support/dotnetcore.png) 
-![Sql Server](https://github.com/VisualSanity/Battleship.Microservices/blob/master/Support/sqlserver.png)  
-![Docker](https://github.com/VisualSanity/Battleship.Microservices/blob/master/Support/docker.png) 
+![Angular](https://github.com/VisualSanity/Battleship.Microservices/blob/master/support/angular.png) 
+![DotNet Core](https://github.com/VisualSanity/Battleship.Microservices/blob/master/support/dotnetcore.png) 
+![Sql Server](https://github.com/VisualSanity/Battleship.Microservices/blob/master/support/sqlserver.png) 
+![Docker](https://github.com/VisualSanity/Battleship.Microservices/blob/master/support/docker.png) 
 
 ## Battleship Game
 The following Battleship game uses the dimensions of a 10 X 10 grid.  The game is plotted on a X and Y axis. Instead of coding the X axis as chars, I decided to use the Ascii Table as it contains a numerical representation of characters, such as 'A' starting at point 65 and 'Z' ending in 90.  Both char and int consume one byte in memory (0 to 255) so the only overhead is the user input string manipulation. The reason for working in integers only, was to work in a geometrical graph quadrant manor. This would make working with Line equations, such as the linear Intersection equation easier:
@@ -14,11 +14,11 @@ The following Battleship game uses the dimensions of a 10 X 10 grid.  The game i
 [https://en.wikipedia.org/wiki/Line-line_intersection](https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection)
 
 However, this is a simple console application where the X axis runs from segment 65 to segment 74. It's still presented to the gamer as A to J, and the Y axis starts at segment 1 and ends at segment 10.  The game randomly generates the coordinates for the ships, either aligning them horizontally or vertically along its corresponding axis.
-![Grid Dimension](https://github.com/VisualSanity/Battleship.Microservices/blob/master/Support/Grid.jpg)
+![Grid Dimension](https://github.com/VisualSanity/Battleship.Microservices/blob/master/support/Grid.jpg)
 
 The user then enters the string input e.g. "A1" or "c7", and this will get mapped to coordinates X and Y accordingly. The flow of the game, is as follows: 
 
-![Flow chart](https://github.com/VisualSanity/Battleship.Microservice/blob/master/Support/Game_FlowChart.jpg)
+![Flow chart](https://github.com/VisualSanity/Battleship.Microservice/blob/master/support/Game_FlowChart.jpg)
 
 Console UI code is extracted into a ConsoleHelper class . This was so that I could unit test the UI layer. Most of the other classes are Singletons, as no IoC framework was available. The reason I implemented singletons rather than static classes was so that I could unit test the public methods and follow SOLID practices.
 
