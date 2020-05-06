@@ -3,21 +3,20 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Configuration } from '../Utilities/configuration';
 import { Observable } from 'rxjs';
 import { Player } from '../models/player';
+import { AppConfig } from 'src/app/app.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlayerService {
   private config: Configuration;
-  private host = 'http://localhost:8081';
-  private playerUrl: string = this.host + '/api/Player/';
 
   constructor(private httpClient: HttpClient) {
     this.config = new Configuration();
   }
 
   createAccount(player: Player): Observable<HttpResponse<any>> {
-    const playerUri: string = this.playerUrl + 'createPlayer';
+    const playerUri: string = this.apiServerUrl() + 'createPlayer';
     return this.httpClient.post<any>(playerUri, player, {
       headers: this.config.getHeaders(),
       observe: 'response'
@@ -25,7 +24,7 @@ export class PlayerService {
   }
 
   loginPlayer(player: Player): Observable<HttpResponse<any>> {
-    const playerUri: string = this.playerUrl + 'PlayerLogin';
+    const playerUri: string = this.apiServerUrl() + 'PlayerLogin';
     return this.httpClient.post<any>(playerUri, player, {
       headers: this.config.getHeaders(),
       observe: 'response'
@@ -33,7 +32,7 @@ export class PlayerService {
   }
 
   demoPlayerLogin(playerId: string): Observable<HttpResponse<any>> {
-    const playerUri: string = this.playerUrl +  'DemoLogin'.concat('?playerId=' + playerId);
+    const playerUri: string = this.apiServerUrl() +  'DemoLogin'.concat('?playerId=' + playerId);
     return this.httpClient.get<any>(playerUri, {
       headers: new HttpHeaders ({
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -43,10 +42,16 @@ export class PlayerService {
   }
 
   getDemoPlayers(): Observable<HttpResponse<any>> {
-    const playerUri: string = this.playerUrl + 'GetDemoPlayers';
+    const playerUri: string = this.apiServerUrl() + 'GetDemoPlayers';
     return this.httpClient.get<any>(playerUri, {
       headers: this.config.getHeaders(),
       observe: 'response'
     });
+  }
+
+   /* Properties */
+   apiServerUrl(): string {
+    const server: string =  AppConfig.settings.apiServer.Player.host + AppConfig.settings.apiServer.Player.url;
+    return server;
   }
 }

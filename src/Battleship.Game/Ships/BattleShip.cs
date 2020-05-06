@@ -8,6 +8,8 @@
 
         private readonly char shipType = BattleShipCode;
 
+        private int shipHit;
+
         public BattleShip(int shipIndex)
         {
             this.ShipLength = this.shipLength;
@@ -17,7 +19,25 @@
 
         #region IShip Members
 
+        public int ShipHit
+        {
+            get => shipHit;
+            set
+            {
+                if (shipHit == this.ShipLength - Index)
+                {
+                    this.IsShipSunk = true;
+                }
+                else
+                {
+                    shipHit++;
+                }
+            }
+        }
+
         public int ShipIndex { get; }
+
+        public bool IsShipSunk { get; set; }
 
         public int ShipLength { get; }
 

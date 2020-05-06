@@ -11,7 +11,13 @@
         // Ship hit counter
         int CoordinateStatus { get; set; }
 
+        // Ship hit counter
+        int ShipHit { get; set; }
+
         // Ship Index
         int ShipIndex { get; }
+
+        // Ship Sunk
+        bool IsShipSunk { get; set; }
     }
 }

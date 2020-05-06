@@ -38,6 +38,8 @@
 
         public int? NumberOfOccupiedSegments { get; set; }
 
+        public int TotalSegments => this.GetAlphaColumnChars().Length * this.GetNumericRows().Length;
+
         #endregion Properties
 
         #region Methods
@@ -59,6 +61,10 @@
             return instance;
         }
 
+        /// <summary>
+        /// Gets the x dimension column
+        /// </summary>
+        /// <returns>Array of int</returns>
         public int[] GetNumericRows()
         {
             var row = new int[this.GridDimension];
@@ -72,6 +78,10 @@
             return row;
         }
 
+        /// <summary>
+        ///  Gets the y dimension column
+        /// </summary>
+        /// <returns>Array of string</returns>
         public string[] GetAlphaColumnChars()
         {
             var xDimention = this.XInitialPoint + this.GridDimension;
@@ -88,10 +98,6 @@
 
         private void CreateSegmentationGrid()
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            this.boardLeft = 4;
-            Console.SetCursorPosition(this.boardLeft, this.boardTop);
-
             var yCounter = 1;
             while (yCounter <= this.GridDimension)
             {
