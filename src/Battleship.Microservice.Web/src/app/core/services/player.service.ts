@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Configuration } from '../Utilities/configuration';
 import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { Player } from '../models/player';
 import { AppConfig } from 'src/app/app.config';
 
@@ -46,10 +47,9 @@ export class PlayerService {
     return this.httpClient.get<any>(playerUri, {
       headers: this.config.getHeaders(),
       observe: 'response'
-    });
+    }).pipe(catchError(this.config.handleError));
   }
 
-   /* Properties */
    apiServerUrl(): string {
     const server: string =  AppConfig.settings.apiServer.Player.host + AppConfig.settings.apiServer.Player.url;
     return server;

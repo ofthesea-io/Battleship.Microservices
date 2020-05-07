@@ -3,9 +3,13 @@ import { Player } from '../../core/models/player';
 import { PlayerService } from '../../core/services/player.service';
 import { Configuration } from '../../core/Utilities/configuration';
 import { Router } from '@angular/router';
-import { config } from 'rxjs';
-import { MatDialogConfig, MatDialog } from '@angular/material';
-import { ConfirmationDialogComponent } from '../child-components/confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material';
+
+export enum PlayerDemoStatus {
+  isLoading = 0,
+  loaded = 1,
+  unavailable = -1
+}
 
 @Component({
   selector: 'app-player-login',
@@ -13,7 +17,8 @@ import { ConfirmationDialogComponent } from '../child-components/confirmation-di
   styleUrls: ['./player-login.component.css']
 })
 export class PlayerLoginComponent implements OnInit {
-  @Input('player') demoPlayers: Array<Player> = [];
+  demoPlayers: Array<Player> = [];
+  playerDemoStatus: PlayerDemoStatus;
   email: string;
   password: string;
   errorMessage: string;
@@ -26,13 +31,17 @@ export class PlayerLoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.playerDemoStatus = PlayerDemoStatus.isLoading;
     this.getDemoPlayers();
   }
 
   getDemoPlayers() {
     this.playerService.getDemoPlayers().subscribe(response => {
       if (response.status === 200) {
+        this.playerDemoStatus = PlayerDemoStatus.loaded;
         this.demoPlayers = response.body;
+      } else {
+        this.playerDemoStatus = PlayerDemoStatus.unavailable;
       }
     });
   }
