@@ -7,6 +7,9 @@ The following application is a port from a console application kata that I devel
 ![DotNet Core](https://github.com/VisualSanity/Battleship.Microservices/blob/master/support/dotnetcore.png) 
 ![Sql Server](https://github.com/VisualSanity/Battleship.Microservices/blob/master/support/sqlserver.png) 
 ![Docker](https://github.com/VisualSanity/Battleship.Microservices/blob/master/support/docker.png) 
+![RabbitMQ](https://github.com/VisualSanity/Battleship.Microservices/blob/master/support/rabbitmq.png) 
+
+Click here to play the game remotely
 
 ## Battleship Game
 The following Battleship game uses the dimensions of a 10 X 10 grid.  The game is plotted on a X and Y axis. Instead of coding the X axis as chars, I decided to use the Ascii Table as it contains a numerical representation of characters, such as 'A' starting at point 65 and 'Z' ending in 90.  Both char and int consume one byte in memory (0 to 255) so the only overhead is the user input string manipulation. The reason for working in integers only, was to work in a geometrical graph quadrant manor. This would make working with Line equations, such as the linear Intersection equation easier:
@@ -24,8 +27,8 @@ Console UI code is extracted into a ConsoleHelper class . This was so that I cou
 
 I try and write my code in C#, without to much "syntactic sugar" e.g. chained Linq queries, as it makes debugging unnecessarily more difficult during development. I try and write my code for the next developer in mind.   
 
-## Running the game
- The game was written in C# (.Net Core 2.2). Fork or clone this repository with your favourite git client or just use the command line. Whatever your  preferred flavour of platform is, make sure you are updated to .Net Core 2.2 SDK.
+## Running the game locally
+ The game was written in C# (.Net Core 3.1). Fork or clone this repository with your favourite git client or just use the command line. Whatever your  preferred flavour of platform is, make sure you are updated to .Net Core 3.1 SDK.
 
 **Visual Studio 2017**
 If you are using Visual Studio 2017 on a Microsoft environment , open the solution file in the source directory, (BattleshipGame.sln) and run the build. The nuget packages (NUnit, Newtonsoft) should auto restore.
@@ -35,8 +38,7 @@ If you are using Visual Studio Code on any environment (Linux, Mac or Microsoft)
  1. dotnet restore
  2. dotnet build -c release 
  3. dotnet publish -c release
- 4. cd Battleship.Game
- 5. dotnet run
+ 4. dotnet run Battleship.Microservices.sln
 
 **Testing**
 The game has been tested on the following three environments:
@@ -54,7 +56,7 @@ To run the game simulator, make sure your Visual Studio Code terminal is set to 
 
 Run the following commands from the BattleshipGame Source directory (Make sure that you published the game, as mentioned above):
 
- 1. cd ./Battleship.Game/bin/Release/netcoreapp2.2/publish
+ 1. cd ./Battleship.Game/bin/Release/netcoreapp3.1/publish
  2. dotnet ./Battleship.Game.dll "{'SimulationTimer': 50, 'X':['A','B','C','D','E','F','G','H','I','J'],'Y':[1,2,3,4,5,6,7,8,9,10]}"
 
 ## What have I learnt ?
