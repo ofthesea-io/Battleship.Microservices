@@ -2,6 +2,8 @@
 {
     public interface IShip
     {
+        #region Properties
+
         // The length of the ship
         int ShipLength { get; }
 
@@ -19,5 +21,7 @@
 
         // Ship Sunk
         bool IsShipSunk { get; set; }
+
+        #endregion
     }
 }

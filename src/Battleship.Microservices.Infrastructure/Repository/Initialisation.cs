@@ -8,6 +8,8 @@
 
     public class Initialisation
     {
+        #region Methods
+
         public static void Setup(string sqlConnectionString)
         {
             try
@@ -18,10 +20,12 @@
                 using (var connection = new SqlConnection(sqlConnectionString))
                 {
                     connection.Open();
-                    var strArray = new Regex("\\r{0,1}\\nGO\\r{0,1}\\n").Split(File.ReadAllText(path));
+                    string[] strArray = new Regex("\\r{0,1}\\nGO\\r{0,1}\\n").Split(File.ReadAllText(path));
                     for (var index = 0; index < strArray.Length; ++index)
+                    {
                         if (strArray[index] != string.Empty)
                             new SqlCommand(strArray[index], connection).ExecuteNonQuery();
+                    }
                 }
             }
             catch (Exception exp)
@@ -29,5 +33,7 @@
                 throw new Exception("Execution failed.", exp);
             }
         }
+
+        #endregion
     }
 }

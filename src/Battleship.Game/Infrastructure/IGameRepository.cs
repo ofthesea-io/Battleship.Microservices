@@ -2,10 +2,12 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Battleship.Microservices.Infrastructure.Models;
+    using Microservices.Infrastructure.Models;
 
     public interface IGameRepository
     {
+        #region Methods
+
         Task<bool> UserInput(Coordinate coordinate, string sessionToken);
 
         Task UpdateShipCoordinates(string updateShipCoordinates, string sessionToken);
@@ -17,5 +19,7 @@
         Task<bool> CreatePlayer(string sessionToken, Guid player);
 
         bool CheckPlayerStatus(string sessionToken);
+
+        #endregion
     }
 }

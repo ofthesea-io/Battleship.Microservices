@@ -5,6 +5,10 @@
 
     public interface IScoreCardController
     {
+        #region Methods
+
         Task<ActionResult> GetPlayerScoreCard();
+
+        #endregion
     }
 }

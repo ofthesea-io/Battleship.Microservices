@@ -6,28 +6,24 @@
 
     public class Player
     {
-        [JsonProperty("playerId")] 
-        public Guid PlayerId { get; set; }
+        #region Properties
 
-        [JsonProperty("firstName")] 
-        public string Firstname { get; set; }
+        [JsonProperty("playerId")] public Guid PlayerId { get; set; }
 
-        [JsonProperty("lastName")] 
-        public string Lastname { get; set; }
+        [JsonProperty("firstName")] public string Firstname { get; set; }
 
-        [JsonProperty("email")] 
-        public string Email { get; set; }
+        [JsonProperty("lastName")] public string Lastname { get; set; }
 
-        [JsonProperty("password")] 
-        public string Password { get; set; }
+        [JsonProperty("email")] public string Email { get; set; }
 
-        [JsonProperty("sessionToken")] 
-        public string SessionToken { get; set; }
+        [JsonProperty("password")] public string Password { get; set; }
 
-        [JsonProperty("scoreCard")]
-        public ScoreCard ScoreCard { get; set; }
+        [JsonProperty("sessionToken")] public string SessionToken { get; set; }
 
-        [JsonIgnore] 
-        public Guid SessionGuid { get; set; }
+        [JsonProperty("scoreCard")] public ScoreCard ScoreCard { get; set; }
+
+        [JsonIgnore] public Guid SessionGuid { get; set; }
+
+        #endregion
     }
 }

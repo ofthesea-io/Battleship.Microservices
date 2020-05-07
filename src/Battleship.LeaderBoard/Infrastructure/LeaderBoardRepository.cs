@@ -1,11 +1,15 @@
 ﻿namespace Battleship.LeaderBoard.Infrastructure
 {
-    using Battleship.Microservices.Infrastructure.Repository;
+    using Microservices.Infrastructure.Repository;
 
     public class LeaderBoardRepository : RepositoryCore, ILeaderBoardRepository
     {
+        #region Constructors
+
         public LeaderBoardRepository(string database) : base(database)
         {
         }
+
+        #endregion
     }
 }

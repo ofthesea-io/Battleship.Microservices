@@ -1,9 +1,9 @@
 ﻿namespace Battleship.Score
 {
-    using Battleship.Microservices.Infrastructure.Messages;
-    using Battleship.Microservices.Infrastructure.Repository;
     using Handlers;
     using Infrastructure;
+    using Microservices.Infrastructure.Messages;
+    using Microservices.Infrastructure.Repository;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -13,15 +13,24 @@
 
     public class Startup
     {
-        public IConfiguration configuration;
-        private string sqlConnectionString = string.Empty;
+        #region Fields
 
-        private readonly string database = "Database=Battleship.ScoreCard;";
+        private readonly string         database = "Database=Battleship.ScoreCard;";
+        public           IConfiguration configuration;
+        private          string         sqlConnectionString = string.Empty;
+
+        #endregion
+
+        #region Constructors
 
         public Startup(IConfiguration configuration)
         {
             this.configuration = configuration;
         }
+
+        #endregion
+
+        #region Methods
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -58,17 +67,16 @@
             else
                 app.UseHsts();
             app.UseCors(options => options
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowAnyOrigin()
+                                  .AllowAnyMethod()
+                                  .AllowAnyHeader()
+                                  .AllowAnyOrigin()
             );
 
             app.UseRouting();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
+
+        #endregion
     }
 }

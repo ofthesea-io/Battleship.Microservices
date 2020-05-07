@@ -14,12 +14,9 @@
             IShip battleShip = new BattleShip(1);
 
             // Act
-            for (int i = 0; i <= battleShip.ShipLength; i++)
-            {
-                battleShip.ShipHit++;
-            }
-            
-            bool isSunk = battleShip.IsShipSunk;
+            for (var i = 0; i <= battleShip.ShipLength; i++) battleShip.ShipHit++;
+
+            var isSunk = battleShip.IsShipSunk;
 
             // Assert
             Assert.IsTrue(isSunk);
@@ -32,12 +29,9 @@
             IShip destroyer = new Destroyer(1);
 
             // Act
-            for (int i = 0; i <= destroyer.ShipLength; i++)
-            {
-                destroyer.ShipHit++;
-            }
+            for (var i = 0; i <= destroyer.ShipLength; i++) destroyer.ShipHit++;
 
-            bool isSunk = destroyer.IsShipSunk;
+            var isSunk = destroyer.IsShipSunk;
 
             // Assert
             Assert.IsTrue(isSunk);

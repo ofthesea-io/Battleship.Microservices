@@ -4,11 +4,17 @@
 
     public sealed class Destroyer : ComponentBase, IShip
     {
+        #region Fields
+
         private readonly int shipLength = 4;
 
-        private readonly char shipType = DestroyerCode;
+        private readonly char shipType = ComponentBase.DestroyerCode;
 
         private int shipHit;
+
+        #endregion
+
+        #region Constructors
 
         public Destroyer(int shipIndex)
         {
@@ -16,6 +22,8 @@
             this.ShipChar = this.shipType;
             this.ShipIndex = shipIndex;
         }
+
+        #endregion
 
         #region IShip Members
 
@@ -25,17 +33,13 @@
 
         public int ShipHit
         {
-            get => shipHit;
+            get => this.shipHit;
             set
             {
-                if (shipHit == this.ShipLength - Index)
-                {
+                if (this.shipHit == this.ShipLength - this.Index)
                     this.IsShipSunk = true;
-                }
                 else
-                {
-                    shipHit++;
-                }
+                    this.shipHit++;
             }
         }
 

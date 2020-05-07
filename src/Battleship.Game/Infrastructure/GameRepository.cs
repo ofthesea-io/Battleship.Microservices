@@ -4,14 +4,17 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Battleship.Microservices.Infrastructure.Models;
-    using Battleship.Microservices.Infrastructure.Repository;
+    using Microservices.Infrastructure.Models;
+    using Microservices.Infrastructure.Repository;
+    using Models;
     using Newtonsoft.Json;
     using Ships;
     using Utilities;
 
     public class GameRepository : RepositoryCore, IGameRepository
     {
+        #region Fields
+
         private readonly JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
@@ -20,10 +23,18 @@
 
         private readonly IShipRandomiser shipRandomiser;
 
+        #endregion
+
+        #region Constructors
+
         public GameRepository(string database) : base(database)
         {
             this.shipRandomiser = ShipRandomiser.Instance();
         }
+
+        #endregion
+
+        #region Methods
 
         public Task<bool> UserInput(Coordinate coordinate, string sessionToken)
         {
@@ -32,63 +43,65 @@
 
         public async Task UpdateShipCoordinates(string updateShipCoordinates, string sessionToken)
         {
-            var parameters = new Dictionary<string, object>
+            Dictionary<string, object> parameters = new Dictionary<string, object>
             {
                 {"sessionToken", sessionToken},
                 {"updateShipCoordinates", updateShipCoordinates}
             };
 
-            await ExecuteAsync(parameters);
+            await this.ExecuteAsync(parameters);
         }
 
         public async Task<string> GetShipCoordinates(string sessionToken)
         {
-            var parameters = new Dictionary<string, object>
+            Dictionary<string, object> parameters = new Dictionary<string, object>
             {
                 {"sessionToken", sessionToken}
             };
 
-            return await ExecuteScalarAsync<string>(parameters);
+            return await this.ExecuteScalarAsync<string>(parameters);
         }
 
         public async Task<string> StartGame(string sessionToken, int numberOfShips)
         {
             if (string.IsNullOrEmpty(sessionToken) || numberOfShips == 0) throw new ArgumentException();
 
-            var getRandomShips = BattleshipExtensions.GetRandomShips(numberOfShips);
-            var ships = this.shipRandomiser.GetRandomisedShipCoordinates(getRandomShips);
+            List<IShip> getRandomShips = BattleshipExtensions.GetRandomShips(numberOfShips);
+            SortedDictionary<Coordinate, Segment> ships = this.shipRandomiser.GetRandomisedShipCoordinates(getRandomShips);
 
             var shipCoordinates =
                 JsonConvert.SerializeObject(ships.ToArray(), Formatting.Indented, this.jsonSerializerSettings);
 
-            var parameters = new Dictionary<string, object>
+            Dictionary<string, object> parameters = new Dictionary<string, object>
             {
                 {"sessionToken", sessionToken},
                 {"shipCoordinates", shipCoordinates}
             };
 
-            return await ExecuteScalarAsync<string>(parameters);
+            return await this.ExecuteScalarAsync<string>(parameters);
         }
 
         public async Task<bool> CreatePlayer(string sessionToken, Guid playerId)
         {
-            var parameters = new Dictionary<string, object>
+            Dictionary<string, object> parameters = new Dictionary<string, object>
             {
                 {"sessionToken", sessionToken},
                 {"playerId", playerId}
             };
 
-            return await ExecuteScalarAsync<bool>(parameters);
+            return await this.ExecuteScalarAsync<bool>(parameters);
         }
 
         public bool CheckPlayerStatus(string sessionToken)
         {
-            var parameters = new Dictionary<string, object>
+            Dictionary<string, object> parameters = new Dictionary<string, object>
             {
                 {"sessionToken", sessionToken}
             };
 
-            return ExecuteScalar<bool>(parameters);
+            return this.ExecuteScalar<bool>(parameters);
         }
+
+        #endregion
     }
 }

@@ -5,6 +5,10 @@
 
     public interface IWareHouseRepository
     {
+        #region Methods
+
         IEnumerable<Player> GetTopTenPlayers();
+
+        #endregion
     }
 }

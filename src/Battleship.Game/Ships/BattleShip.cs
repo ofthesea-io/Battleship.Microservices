@@ -1,14 +1,20 @@
 ﻿namespace Battleship.Game.Ships
 {
-    using Battleship.Microservices.Infrastructure.Components;
+    using Microservices.Infrastructure.Components;
 
     public sealed class BattleShip : ComponentBase, IShip
     {
+        #region Fields
+
         private readonly int shipLength = 5;
 
-        private readonly char shipType = BattleShipCode;
+        private readonly char shipType = ComponentBase.BattleShipCode;
 
         private int shipHit;
+
+        #endregion
+
+        #region Constructors
 
         public BattleShip(int shipIndex)
         {
@@ -17,21 +23,19 @@
             this.ShipIndex = shipIndex;
         }
 
+        #endregion
+
         #region IShip Members
 
         public int ShipHit
         {
-            get => shipHit;
+            get => this.shipHit;
             set
             {
-                if (shipHit == this.ShipLength - Index)
-                {
+                if (this.shipHit == this.ShipLength - this.Index)
                     this.IsShipSunk = true;
-                }
                 else
-                {
-                    shipHit++;
-                }
+                    this.shipHit++;
             }
         }
 

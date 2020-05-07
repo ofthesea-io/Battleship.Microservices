@@ -4,9 +4,9 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using Battleship.Microservices.Infrastructure.Messages;
-    using Battleship.Microservices.Infrastructure.Models;
     using Infrastructure;
+    using Microservices.Infrastructure.Messages;
+    using Microservices.Infrastructure.Models;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
     using Newtonsoft.Json;
@@ -15,11 +15,17 @@
 
     public class ScoreCardHandler : BackgroundService
     {
-        private readonly IConfiguration configuration;
-        private readonly IMessagePublisher messagePublisher;
+        #region Fields
+
+        private readonly IConfiguration       configuration;
+        private readonly IMessagePublisher    messagePublisher;
         private readonly IScoreCardRepository scoreCardRepository;
-        private IModel channel;
-        private IConnection connection;
+        private          IModel               channel;
+        private          IConnection          connection;
+
+        #endregion
+
+        #region Constructors
 
         public ScoreCardHandler(IConfiguration configuration, IScoreCardRepository scoreCardRepository,
             IMessagePublisher messagePublisher)
@@ -27,8 +33,12 @@
             this.configuration = configuration;
             this.scoreCardRepository = scoreCardRepository;
             this.messagePublisher = messagePublisher;
-            Initialise();
+            this.Initialise();
         }
+
+        #endregion
+
+        #region Methods
 
         private void Initialise()
         {
@@ -83,12 +93,13 @@
                 catch (Exception e)
                 {
                     var message = $"Battleship.Board: {e.Message}{Environment.NewLine}{e.StackTrace}";
-                    
                 }
             };
 
             this.channel.BasicConsume(this.messagePublisher.Queue, false, consumer);
             return Task.CompletedTask;
         }
+
+        #endregion
     }
 }

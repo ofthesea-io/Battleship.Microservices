@@ -3,13 +3,15 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Battleship.Microservices.Infrastructure.Components;
-    using Battleship.Microservices.Infrastructure.Models;
+    using Microservices.Infrastructure.Components;
+    using Microservices.Infrastructure.Models;
     using Models;
     using Ships;
 
     public class GridGenerator : ComponentBase, IGridGenerator
     {
+        #region Fields
+
         private static volatile GridGenerator instance;
 
         private readonly ISegmentation segmentation;
@@ -22,6 +24,10 @@
 
         private int boardTop;
 
+        #endregion
+
+        #region Constructors
+
         protected GridGenerator(
             ISegmentation segmentation,
             IShipRandomiser shipRandomiser,
@@ -32,6 +38,8 @@
             this.ships = ships;
         }
 
+        #endregion
+
         #region Properties
 
         public int? NumberOfSegments { get; set; }
@@ -40,34 +48,17 @@
 
         public int TotalSegments => this.GetAlphaColumnChars().Length * this.GetNumericRows().Length;
 
-        #endregion Properties
+        #endregion
 
         #region Methods
 
-        public static GridGenerator Instance()
-        {
-            if (instance == null)
-                lock (SyncObject)
-                {
-                    if (instance == null)
-                    {
-                        ISegmentation segmentation = Segmentation.Instance();
-                        IShipRandomiser shipRandomiser = ShipRandomiser.Instance();
-                        var ships = new List<IShip>();
-                        instance = new GridGenerator(segmentation, shipRandomiser, ships);
-                    }
-                }
-
-            return instance;
-        }
-
         /// <summary>
-        /// Gets the x dimension column
+        ///     Gets the x dimension column
         /// </summary>
         /// <returns>Array of int</returns>
         public int[] GetNumericRows()
         {
-            var row = new int[this.GridDimension];
+            int[] row = new int[this.GridDimension];
             var counter = 0;
             for (var i = 1; i <= this.GridDimension; i++)
             {
@@ -79,13 +70,13 @@
         }
 
         /// <summary>
-        ///  Gets the y dimension column
+        ///     Gets the y dimension column
         /// </summary>
         /// <returns>Array of string</returns>
         public string[] GetAlphaColumnChars()
         {
             var xDimention = this.XInitialPoint + this.GridDimension;
-            var column = new string[this.GridDimension];
+            string[] column = new string[this.GridDimension];
             var counter = 0;
             for (var i = this.XInitialPoint; i < xDimention; i++)
             {
@@ -96,6 +87,23 @@
             return column;
         }
 
+        public static GridGenerator Instance()
+        {
+            if (GridGenerator.instance == null)
+                lock (ComponentBase.SyncObject)
+                {
+                    if (GridGenerator.instance == null)
+                    {
+                        ISegmentation segmentation = Segmentation.Instance();
+                        IShipRandomiser shipRandomiser = ShipRandomiser.Instance();
+                        List<IShip> ships = new List<IShip>();
+                        GridGenerator.instance = new GridGenerator(segmentation, shipRandomiser, ships);
+                    }
+                }
+
+            return GridGenerator.instance;
+        }
+
         private void CreateSegmentationGrid()
         {
             var yCounter = 1;
@@ -103,7 +111,7 @@
             {
                 for (var xCounter = 0; xCounter <= this.GridDimension - this.Index; xCounter++)
                 {
-                    var segment = new Segment(Water);
+                    var segment = new Segment(ComponentBase.Water);
                     var coordinates = new Coordinate(this.XInitialPoint + xCounter, yCounter);
                     this.segmentation.AddSegment(coordinates, segment);
                 }
@@ -117,18 +125,18 @@
             this.NumberOfSegments = this.segmentation.GetSegments().Count();
 
             // update the board with randomly generated ship coordinates
-            UpdateSegmentationGridWithShips();
+            this.UpdateSegmentationGridWithShips();
         }
 
         private void UpdateSegmentationGridWithShips()
         {
-            var segments = this.shipRandomiser.GetRandomisedShipCoordinates(this.ships);
+            SortedDictionary<Coordinate, Segment> segments = this.shipRandomiser.GetRandomisedShipCoordinates(this.ships);
 
             this.segmentation.UpdateSegmentRange(segments);
 
             this.NumberOfOccupiedSegments = this.segmentation.GetSegments().Count(q => !q.Value.IsEmpty);
         }
 
-        #endregion Methods
+        #endregion
     }
 }

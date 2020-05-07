@@ -3,32 +3,43 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Battleship.Microservices.Infrastructure.Components;
-    using Battleship.Microservices.Infrastructure.Models;
+    using Microservices.Infrastructure.Components;
+    using Microservices.Infrastructure.Models;
     using Models;
     using Utilities;
 
     public class Segmentation : ComponentBase, ISegmentation
     {
+        #region Fields
+
         private static volatile Segmentation instance;
 
         private readonly SortedDictionary<Coordinate, Segment> segmentation;
+
+        #endregion
+
+        #region Constructors
 
         protected Segmentation()
         {
             this.segmentation = new SortedDictionary<Coordinate, Segment>(new CoordinateComparer());
         }
 
+        #endregion
+
+        #region Methods
+
         public static Segmentation Instance()
         {
-            if (instance == null)
-                lock (SyncObject)
-                {
-                    if (instance == null) instance = new Segmentation();
-                }
+            if (Segmentation.instance == null)
+                lock (ComponentBase.SyncObject)
+                    if (Segmentation.instance == null)
+                        Segmentation.instance = new Segmentation();
 
-            return instance;
+            return Segmentation.instance;
         }
+
+        #endregion
 
         #region ISegmentation Members
 
@@ -62,13 +73,13 @@
 
         public void UpdateSegmentRange(SortedDictionary<Coordinate, Segment> segments)
         {
-            foreach (var segment in segments)
+            foreach (KeyValuePair<Coordinate, Segment> segment in segments)
             {
                 if (!BattleshipExtensions.IsSegmentWithInGridRange(segment.Key.X, segment.Key.Y))
                     throw new IndexOutOfRangeException();
 
                 var item = this.segmentation.FirstOrDefault(q => q.Key.X == segment.Key.X && q.Key.Y == segment.Key.Y)
-                    .Value;
+                               .Value;
 
                 if (item != null)
                 {

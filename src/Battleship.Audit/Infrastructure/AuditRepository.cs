@@ -8,9 +8,13 @@
 
     public class AuditRepository : RepositoryCore, IAuditRepository
     {
+        #region Constructors
+
         public AuditRepository(string database) : base(database)
         {
         }
+
+        #endregion
 
         #region Methods
 

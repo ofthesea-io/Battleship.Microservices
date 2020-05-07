@@ -4,8 +4,8 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using Battleship.Microservices.Infrastructure.Messages;
     using Infrastructure;
+    using Microservices.Infrastructure.Messages;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
     using Models;
@@ -15,10 +15,16 @@
 
     public class GameMessageHandler : BackgroundService
     {
-        private readonly IGameRepository gameRepository;
+        #region Fields
+
+        private readonly IGameRepository   gameRepository;
         private readonly IMessagePublisher messagePublisher;
-        private IModel channel;
-        private IConnection connection;
+        private          IModel            channel;
+        private          IConnection       connection;
+
+        #endregion
+
+        #region Constructors
 
         public GameMessageHandler(IConfiguration configuration, IGameRepository gameRepository,
             IMessagePublisher messagePublisher)
@@ -26,8 +32,12 @@
             this.messagePublisher = messagePublisher;
             this.gameRepository = gameRepository;
 
-            Initialise();
+            this.Initialise();
         }
+
+        #endregion
+
+        #region Methods
 
         private void Initialise()
         {
@@ -70,7 +80,7 @@
                 catch (Exception exp)
                 {
                     var message = $"Battleship.Game:\r\n {exp.StackTrace}";
-                    
+
                     this.channel.BasicAck(ea.DeliveryTag, false);
                 }
             };
@@ -85,5 +95,7 @@
             this.connection.Close();
             base.Dispose();
         }
+
+        #endregion
     }
 }

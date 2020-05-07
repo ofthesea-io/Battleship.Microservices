@@ -7,6 +7,8 @@
 
     public interface IPlayerRepository
     {
+        #region Methods
+
         Task<Guid> CreatePlayer(Player player);
 
         Task<IEnumerable<Player>> GetPlayers();
@@ -20,5 +22,7 @@
         Task<bool> PlayerLogout(Guid playerId);
 
         Task<Player> DemoLogin(Guid playerId);
+
+        #endregion
     }
 }

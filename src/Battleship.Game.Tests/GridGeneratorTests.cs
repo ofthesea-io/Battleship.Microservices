@@ -18,7 +18,7 @@
         public void Board_WhenGridGenerated_ReturnOneHundredSegments()
         {
             // Arrange
-            int totalSegments = base.GridDimension * base.GridDimension;
+            var totalSegments = this.GridDimension * this.GridDimension;
             int? result = 0;
 
             // Act
@@ -44,12 +44,12 @@
         public void Board_WhenGridGenerated_ReturnThirteenOccupiedSegments()
         {
             // Arrange
-            List<IShip> ships = new List<IShip> { new BattleShip(1), new Destroyer(2), new Destroyer(3), };
-            this.shipRandomiser =  ShipRandomiser.Instance();
-            int occupiedSegments = this.shipRandomiser.GetRandomisedShipCoordinates(ships).Count;
+            List<IShip> ships = new List<IShip> {new BattleShip(1), new Destroyer(2), new Destroyer(3)};
+            this.shipRandomiser = ShipRandomiser.Instance();
+            var occupiedSegments = this.shipRandomiser.GetRandomisedShipCoordinates(ships).Count;
 
             // Act
-            var result = this.gridGenerator.NumberOfOccupiedSegments;
+            int? result = this.gridGenerator.NumberOfOccupiedSegments;
 
             // Assert
             Assert.AreNotEqual(occupiedSegments, result);

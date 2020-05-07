@@ -4,6 +4,8 @@
 
     public class ScoreCard
     {
+        #region Properties
+
         [JsonProperty("message", DefaultValueHandling = DefaultValueHandling.Include)]
         public string Message { get; set; }
 
@@ -22,10 +24,11 @@
         [JsonProperty("isCompleted", DefaultValueHandling = DefaultValueHandling.Include)]
         public bool IsCompleted { get; set; }
 
-        [JsonProperty("sessionToken")] 
-        public string SessionToken { get; set; }
+        [JsonProperty("sessionToken")] public string SessionToken { get; set; }
 
         [JsonProperty("isHit", DefaultValueHandling = DefaultValueHandling.Include)]
         public bool IsHit { get; set; }
+
+        #endregion
     }
 }

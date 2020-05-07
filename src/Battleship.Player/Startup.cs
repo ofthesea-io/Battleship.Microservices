@@ -12,16 +12,26 @@
 
     public class Startup
     {
+        #region Fields
+
         private const string Origins = "http://localhost:4200";
 
         private readonly IConfiguration configuration;
-        private readonly string database = "Database=Battleship.Player;";
-        private string sqlConnectionString = string.Empty;
+        private readonly string         database            = "Database=Battleship.Player;";
+        private          string         sqlConnectionString = string.Empty;
+
+        #endregion
+
+        #region Constructors
 
         public Startup(IConfiguration configuration)
         {
             this.configuration = configuration;
         }
+
+        #endregion
+
+        #region Methods
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -42,7 +52,7 @@
             var queue = configSection["Queue"];
 
             services.AddTransient<IMessagePublisher>(sp =>
-                new MessagePublisher(host, userName, password, exchange, queue));
+                                                         new MessagePublisher(host, userName, password, exchange, queue));
             services.AddSingleton<IPlayerRepository>(new PlayerRepository(databaseConnection));
         }
 
@@ -58,15 +68,14 @@
 
             app.UseCors(
                 options => options.AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowAnyOrigin()
+                                  .AllowAnyHeader()
+                                  .AllowAnyOrigin()
             );
             app.UseRouting();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
+
+        #endregion
     }
 }

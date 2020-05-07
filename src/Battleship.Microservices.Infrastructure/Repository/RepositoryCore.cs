@@ -11,13 +11,23 @@
 
     public class RepositoryCore : IRepositoryCore
     {
+        #region Fields
+
         private readonly string databaseName;
-        private readonly int timeout = 360;
+        private readonly int    timeout = 360;
+
+        #endregion
+
+        #region Constructors
 
         public RepositoryCore(string databaseName)
         {
             this.databaseName = databaseName;
         }
+
+        #endregion
+
+        #region Methods
 
         private SqlConnection GetOpenConnection()
         {
@@ -38,16 +48,16 @@
             [CallerMemberName] string procedure = "") where T : class
         {
             IEnumerable<T> result = null;
-            var connection = GetOpenConnection();
+            var connection = this.GetOpenConnection();
             try
             {
                 using (connection)
                 {
                     var dynamicParameters = new DynamicParameters();
                     if (parameters != null && parameters.Count > 0)
-                        dynamicParameters = SetupDynamicParameters(parameters);
-                    result = connection.Query<T>(SetName(procedure), dynamicParameters,
-                        commandType: CommandType.StoredProcedure, commandTimeout: this.timeout);
+                        dynamicParameters = this.SetupDynamicParameters(parameters);
+                    result = connection.Query<T>(this.SetName(procedure), dynamicParameters,
+                                                 commandType: CommandType.StoredProcedure, commandTimeout: this.timeout);
                 }
             }
             catch (SqlException exp)
@@ -68,13 +78,13 @@
 
         protected IEnumerable<T> Execute<T>([CallerMemberName] string procedure = "") where T : class
         {
-            var connection = GetOpenConnection();
+            var connection = this.GetOpenConnection();
             try
             {
                 using (connection)
                 {
-                    return connection.Query<T>(SetName(procedure), commandType: CommandType.StoredProcedure,
-                        commandTimeout: this.timeout);
+                    return connection.Query<T>(this.SetName(procedure), commandType: CommandType.StoredProcedure,
+                                               commandTimeout: this.timeout);
                 }
             }
             catch (SqlException exp)
@@ -100,16 +110,16 @@
         /// <exception cref="System.Exception">Execution failed.</exception>
         protected int Execute(Dictionary<string, object> parameters, [CallerMemberName] string procedure = "")
         {
-            var connection = GetOpenConnection();
+            var connection = this.GetOpenConnection();
             try
             {
                 using (connection)
                 {
                     var dynamicParameters = new DynamicParameters();
                     if (parameters != null && parameters.Count > 0)
-                        dynamicParameters = SetupDynamicParameters(parameters);
-                    return connection.Execute(SetName(procedure), dynamicParameters,
-                        commandType: CommandType.StoredProcedure, commandTimeout: this.timeout);
+                        dynamicParameters = this.SetupDynamicParameters(parameters);
+                    return connection.Execute(this.SetName(procedure), dynamicParameters,
+                                              commandType: CommandType.StoredProcedure, commandTimeout: this.timeout);
                 }
             }
             catch (SqlException exp)
@@ -128,13 +138,13 @@
 
         protected async Task<IEnumerable<T>> ExecuteAsync<T>([CallerMemberName] string procedure = "") where T : class
         {
-            var connection = GetOpenConnection();
+            var connection = this.GetOpenConnection();
             IEnumerable<T> result;
             try
             {
                 using (connection)
                 {
-                    var sql = SetName(procedure);
+                    var sql = this.SetName(procedure);
                     CommandType? commandType = CommandType.StoredProcedure;
                     var commandTimeout = this.timeout;
                     result = await connection.QueryAsync<T>(sql, null, null, commandTimeout, commandType);
@@ -160,7 +170,7 @@
         protected async Task<int> ExecuteAsync(Dictionary<string, object> parameters,
             [CallerMemberName] string procedure = "")
         {
-            var connection = GetOpenConnection();
+            var connection = this.GetOpenConnection();
             int result;
             try
             {
@@ -168,9 +178,9 @@
                 {
                     var dynamicParameters = new DynamicParameters();
                     if (parameters != null && parameters.Count > 0)
-                        dynamicParameters = SetupDynamicParameters(parameters);
+                        dynamicParameters = this.SetupDynamicParameters(parameters);
 
-                    var sql = SetName(procedure);
+                    var sql = this.SetName(procedure);
 
                     var commandType = CommandType.StoredProcedure;
                     int? commandTimeout = this.timeout;
@@ -204,16 +214,16 @@
         protected T ExecuteScalar<T>(Dictionary<string, object> parameters,
             [CallerMemberName] string procedure = "")
         {
-            var connection = GetOpenConnection();
+            var connection = this.GetOpenConnection();
             try
             {
                 using (connection)
                 {
                     var dynamicParameters = new DynamicParameters();
                     if (parameters != null && parameters.Count > 0)
-                        dynamicParameters = SetupDynamicParameters(parameters);
-                    return connection.Query<T>(SetName(procedure), dynamicParameters,
-                        commandType: CommandType.StoredProcedure).FirstOrDefault();
+                        dynamicParameters = this.SetupDynamicParameters(parameters);
+                    return connection.Query<T>(this.SetName(procedure), dynamicParameters,
+                                               commandType: CommandType.StoredProcedure).FirstOrDefault();
                 }
             }
             catch (SqlException exp)
@@ -233,7 +243,7 @@
         protected async Task<T> ExecuteScalarAsync<T>(Dictionary<string, object> parameters,
             [CallerMemberName] string procedure = "")
         {
-            var connection = GetOpenConnection();
+            var connection = this.GetOpenConnection();
             T result;
             try
             {
@@ -241,9 +251,9 @@
                 {
                     var dynamicParameters = new DynamicParameters();
                     if (parameters != null && parameters.Count > 0)
-                        dynamicParameters = SetupDynamicParameters(parameters);
-                    result = (await connection.QueryAsync<T>(SetName(procedure), dynamicParameters, null, new int?(),
-                        CommandType.StoredProcedure)).FirstOrDefault();
+                        dynamicParameters = this.SetupDynamicParameters(parameters);
+                    result = (await connection.QueryAsync<T>(this.SetName(procedure), dynamicParameters, null, new int?(),
+                                                             CommandType.StoredProcedure)).FirstOrDefault();
                 }
             }
             catch (SqlException ex)
@@ -275,7 +285,7 @@
             if (parameters != null && parameters.Count > 0)
             {
                 dynamicParameters = new DynamicParameters();
-                foreach (var entry in parameters)
+                foreach (KeyValuePair<string, object> entry in parameters)
                 {
                     var key = $"@{entry.Key}";
                     var value = entry.Value;
@@ -286,5 +296,7 @@
 
             return dynamicParameters;
         }
+
+        #endregion
     }
 }

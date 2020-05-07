@@ -4,8 +4,12 @@
 
     public class PlayerCommand
     {
+        #region Properties
+
         public Coordinate Coordinate { get; set; }
 
         public ScoreCard ScoreCard { get; set; }
+
+        #endregion
     }
 }

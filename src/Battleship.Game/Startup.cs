@@ -1,9 +1,9 @@
 ﻿namespace Battleship.Game
 {
-    using Battleship.Microservices.Infrastructure.Messages;
-    using Battleship.Microservices.Infrastructure.Repository;
     using Handlers;
     using Infrastructure;
+    using Microservices.Infrastructure.Messages;
+    using Microservices.Infrastructure.Repository;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -11,17 +11,26 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
 
-
     public class Startup
     {
+        #region Fields
+
         private readonly IConfiguration configuration;
-        private readonly string database = "Database=Battleship.Game;";
-        private string sqlConnectionString = string.Empty;
+        private readonly string         database            = "Database=Battleship.Game;";
+        private          string         sqlConnectionString = string.Empty;
+
+        #endregion
+
+        #region Constructors
 
         public Startup(IConfiguration configuration)
         {
             this.configuration = configuration;
         }
+
+        #endregion
+
+        #region Methods
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -46,7 +55,7 @@
 
             services.AddSingleton<IGameRepository>(new GameRepository(databaseConnection));
             services.AddTransient<IMessagePublisher>(sp =>
-                new MessagePublisher(host, username, password, exchange, queue));
+                                                         new MessagePublisher(host, username, password, exchange, queue));
             services.AddHostedService<GameMessageHandler>();
         }
 
@@ -62,17 +71,16 @@
 
             app.UseCors(
                 options => options.WithOrigins("http://localhost:4200")
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowAnyOrigin()
+                                  .AllowAnyMethod()
+                                  .AllowAnyHeader()
+                                  .AllowAnyOrigin()
             );
 
             app.UseRouting();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
+
+        #endregion
     }
 }

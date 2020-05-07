@@ -1,7 +1,7 @@
 ﻿namespace Battleship.Statistics
 {
     using Communication;
-    using Battleship.Microservices.Infrastructure.Messages;
+    using Microservices.Infrastructure.Messages;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -11,14 +11,24 @@
 
     public class Startup
     {
+        #region Fields
+
         private readonly IConfiguration configuration;
-        private readonly string database = "Database=Battleship.Player;";
-        private string sqlConnectionString = string.Empty;
+        private readonly string         database            = "Database=Battleship.Player;";
+        private          string         sqlConnectionString = string.Empty;
+
+        #endregion
+
+        #region Constructors
 
         public Startup(IConfiguration configuration)
         {
             this.configuration = configuration;
         }
+
+        #endregion
+
+        #region Methods
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -57,17 +67,16 @@
                 app.UseHsts();
             app.UseCors(
                 options => options.WithOrigins("http://localhost:4200")
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowAnyOrigin()
+                                  .AllowAnyMethod()
+                                  .AllowAnyHeader()
+                                  .AllowAnyOrigin()
             );
 
             app.UseRouting();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
+
+        #endregion
     }
 }

@@ -28,10 +28,10 @@
         public void Add_AddSegmentYAxisNotInGridDimension_ThrowIndexOutOfRangeException()
         {
             // Arrange 
-            int x = this.XInitialPoint;
-            int y = this.GridDimension + this.Index;
-            Coordinate coordinate = new Coordinate(x, y);
-            Segment segment = new Segment(Water);
+            var x = this.XInitialPoint;
+            var y = this.GridDimension + this.Index;
+            var coordinate = new Coordinate(x, y);
+            var segment = new Segment(ComponentBase.Water);
 
             // Act and Assert
             try
@@ -49,9 +49,9 @@
         public void UpdateSegment_SegmentOutOfRange_ThrowIndexOutOfRangeException()
         {
             // Arrange 
-            int x = this.XInitialPoint;
-            int y = this.GridDimension + this.Index;
-            Coordinate coordinate = new Coordinate(x, y);
+            var x = this.XInitialPoint;
+            var y = this.GridDimension + this.Index;
+            var coordinate = new Coordinate(x, y);
             var segment = new Segment(ShipDirection.Vertical, new Destroyer(1));
 
             // Act and Assert
@@ -70,18 +70,18 @@
         public void UpdateSegmentRange_CantUpdateAEmptySegmentWithAnotherEmptySegment_TrowArgumentException()
         {
             // Arrange 
-            int x = this.XInitialPoint;
-            int y = this.GridDimension;
-            Coordinate coordinate = new Coordinate(x, y);
+            var x = this.XInitialPoint;
+            var y = this.GridDimension;
+            var coordinate = new Coordinate(x, y);
 
             // Act and Assert
             try
             {
-                this.segmentation.AddSegment(coordinate, new Segment(Water));
+                this.segmentation.AddSegment(coordinate, new Segment(ComponentBase.Water));
                 SortedDictionary<Coordinate, Segment> range = new SortedDictionary<Coordinate, Segment>(new CoordinateComparer())
-                   {
-                       { coordinate, new Segment(Water) }
-                   };
+                {
+                    {coordinate, new Segment(ComponentBase.Water)}
+                };
                 this.segmentation.UpdateSegmentRange(range);
                 Assert.Fail();
             }
@@ -95,17 +95,18 @@
         public void UpdateSegmentRange_CantUpdateFilledSegmentWithEmptySegment_TrowArgumentException()
         {
             // Arrange 
-            int x = this.XInitialPoint;
-            int y = this.GridDimension;
-            Coordinate coordinate = new Coordinate(x, y);
-            // Act and Assert
+            var x = this.XInitialPoint;
+            var y = this.GridDimension;
+            var coordinate = new Coordinate(x, y);
+
+// Act and Assert
             try
             {
                 this.segmentation.AddSegment(coordinate, new Segment(ShipDirection.Horizontal, new BattleShip(1)));
-                SortedDictionary<Coordinate, Segment> range = new SortedDictionary<Coordinate, Segment>()
-                                       {
-                                           { coordinate, new Segment(Water) }
-                                       };
+                SortedDictionary<Coordinate, Segment> range = new SortedDictionary<Coordinate, Segment>
+                {
+                    {coordinate, new Segment(ComponentBase.Water)}
+                };
                 this.segmentation.UpdateSegmentRange(range);
                 Assert.Fail();
             }
@@ -117,29 +118,29 @@
 
 
         // This test does NOT fail in debug mode. The test runner has an issue which has been logged to the NUnit Team
-        //[Test]
-        //public void UpdateSegmentRange_CanUpdateSegmentWithFilledSegment_ReturnsVoidOrThrowsException()
-        //{
-        //    // Arrange 
-        //    int x = this.XInitialPoint;
-        //    int y = this.GridDimension;
-        //    Coordinate coordinate = new Coordinate(x, y);
+        // [Test]
+        // public void UpdateSegmentRange_CanUpdateSegmentWithFilledSegment_ReturnsVoidOrThrowsException()
+        // {
+        // // Arrange 
+        // int x = this.XInitialPoint;
+        // int y = this.GridDimension;
+        // Coordinate coordinate = new Coordinate(x, y);
 
-        //    // Act and Assert
-        //    try
-        //    {
-        //        this.segmentation.AddSegment(coordinate, new Segment(Water));
-        //        SortedDictionary<Coordinate, Segment> range = new SortedDictionary<Coordinate, Segment>(new CoordinateComparer())
-        //           {
-        //               { coordinate, new Segment(ShipDirection.Horizontal, new BattleShip(1)) }
-        //           };
-        //        this.segmentation.UpdateSegmentRange(range);
-        //        Assert.IsTrue(true);
-        //    }
-        //    catch (ArgumentException)
-        //    {
-        //       Assert.Fail();
-        //    }
-        //}
+        // // Act and Assert
+        // try
+        // {
+        // this.segmentation.AddSegment(coordinate, new Segment(Water));
+        // SortedDictionary<Coordinate, Segment> range = new SortedDictionary<Coordinate, Segment>(new CoordinateComparer())
+        // {
+        // { coordinate, new Segment(ShipDirection.Horizontal, new BattleShip(1)) }
+        // };
+        // this.segmentation.UpdateSegmentRange(range);
+        // Assert.IsTrue(true);
+        // }
+        // catch (ArgumentException)
+        // {
+        // Assert.Fail();
+        // }
+        // }
     }
 }

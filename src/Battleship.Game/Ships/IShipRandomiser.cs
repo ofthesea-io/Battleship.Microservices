@@ -1,7 +1,7 @@
 ﻿namespace Battleship.Game.Ships
 {
     using System.Collections.Generic;
-    using Battleship.Microservices.Infrastructure.Models;
+    using Microservices.Infrastructure.Models;
     using Models;
 
     /// <summary>
@@ -9,11 +9,15 @@
     /// </summary>
     public interface IShipRandomiser
     {
+        #region Methods
+
         /// <summary>
         ///     Generates random coordinates for the ships to be updated in the segmentation grid
         /// </summary>
         /// <param name="ships">IEnumerable list of ships of be add</param>
         /// <returns>List of ship coordinates</returns>
         SortedDictionary<Coordinate, Segment> GetRandomisedShipCoordinates(IList<IShip> ships);
+
+        #endregion
     }
 }

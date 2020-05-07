@@ -6,8 +6,12 @@
 
     public interface IBoardController
     {
+        #region Methods
+
         Task<ActionResult<GamingGrid>> GetGamingGrid();
 
         Task<ActionResult> UserInput([FromBody] PlayerCommand playerCommand);
+
+        #endregion
     }
 }

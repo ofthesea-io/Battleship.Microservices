@@ -1,24 +1,32 @@
 ﻿namespace Battleship.Warehouse.Communication
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using Infrastructure;
     using Microsoft.Extensions.Hosting;
+    using Model;
     using Newtonsoft.Json;
     using RabbitMQ.Client;
     using RabbitMQ.Client.Events;
 
     public class RpcServer : BackgroundService, IRpcServer
     {
-        private readonly string exchange;
-        private readonly string host;
+        #region Fields
+
+        private readonly string               exchange;
+        private readonly string               host;
         private readonly IWareHouseRepository iWareHouseRepository;
-        private readonly string password;
-        private readonly string rpcQueue;
-        private readonly string username;
+        private readonly string               password;
+        private readonly string               rpcQueue;
+        private readonly string               username;
+
+        #endregion
+
+        #region Constructors
 
         public RpcServer(string host, string username, string password, string exchange, string rpcQueue,
             IWareHouseRepository iWareHouseRepository)
@@ -32,6 +40,10 @@
             this.iWareHouseRepository = iWareHouseRepository;
         }
 
+        #endregion
+
+        #region Methods
+
         public void Execute()
         {
             throw new NotImplementedException();
@@ -40,7 +52,9 @@
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var factory = new ConnectionFactory
-                {HostName = this.host, UserName = this.username, Password = this.password};
+                {
+                   HostName = this.host, UserName = this.username, Password = this.password
+                };
             using (var connection = factory.CreateConnection())
             {
                 using (var channel = connection.CreateModel())
@@ -52,17 +66,17 @@
 
                     consumer.Received += (model, ea) =>
                     {
-                        var body = ea.Body.ToArray();
+                        byte[] body = ea.Body.ToArray();
                         var props = ea.BasicProperties;
                         var replyProps = channel.CreateBasicProperties();
                         replyProps.CorrelationId = props.CorrelationId;
                         try
                         {
-                            var players = this.iWareHouseRepository.GetTopTenPlayers();
+                            IEnumerable<Player> players = this.iWareHouseRepository.GetTopTenPlayers();
                             var result = JsonConvert.SerializeObject(players);
 
-                            var responseBytes = Encoding.UTF8.GetBytes(result);
-                            channel.BasicPublish("", props.ReplyTo, replyProps, responseBytes);
+                            byte[] responseBytes = Encoding.UTF8.GetBytes(result);
+                            channel.BasicPublish(string.Empty, props.ReplyTo, replyProps, responseBytes);
                             channel.BasicAck(ea.DeliveryTag, false);
                         }
                         catch (Exception e)
@@ -75,5 +89,7 @@
 
             return Task.CompletedTask;
         }
+
+        #endregion
     }
 }

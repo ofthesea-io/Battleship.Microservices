@@ -3,27 +3,38 @@
     using System;
     using System.Collections.Generic;
     using System.Threading;
-    using Battleship.Microservices.Infrastructure.Components;
+    using Microservices.Infrastructure.Components;
 
     public class TaskScheduler : ComponentBase
     {
-        private static TaskScheduler _instance;
+        #region Fields
+
+        private static   TaskScheduler _instance;
         private readonly List<Timer> timers = new List<Timer>();
+
+        #endregion
+
+        #region Constructors
 
         private TaskScheduler()
         {
         }
 
+        #endregion
+
+        #region Properties
+
         public static TaskScheduler Instance
         {
             get
             {
-                lock (SyncObject)
-                {
-                    return _instance ??= new TaskScheduler();
-                }
+                lock (ComponentBase.SyncObject) return TaskScheduler._instance ??= new TaskScheduler();
             }
         }
+
+        #endregion
+
+        #region Methods
 
         public void ScheduleTask(int hour, int min, double intervalInHour, Action task)
         {
@@ -38,5 +49,7 @@
 
             this.timers.Add(timer);
         }
+
+        #endregion
     }
 }

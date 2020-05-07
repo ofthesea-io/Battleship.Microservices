@@ -1,7 +1,7 @@
 ﻿namespace Battleship.Game.Board
 {
     using System.Collections.Generic;
-    using Battleship.Microservices.Infrastructure.Models;
+    using Microservices.Infrastructure.Models;
     using Models;
 
     /// <summary>
@@ -9,6 +9,8 @@
     /// </summary>
     public interface ISegmentation
     {
+        #region Methods
+
         /// <summary>
         ///     Add a segment to the segmentation grid
         /// </summary>
@@ -42,5 +44,7 @@
         /// <param name="y">The y coordinate.</param>
         /// <returns>Returns a single segment</returns>
         Segment GetSegment(int x, int y);
+
+        #endregion
     }
 }
