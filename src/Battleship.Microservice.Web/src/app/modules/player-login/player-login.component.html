@@ -5,7 +5,7 @@
     </div>
     <div class="col-md-6">
       <form>
-        <div class="form-group row" *ngIf="demoPlayers.length > 0">
+        <div class="form-group row" *ngIf="playerDemoStatus == 1">
           <label for="demoPlayerInput" class="col-2 ml-2 col-form-label">Demo</label>
           <div class="col-9">
             <div class="input-group">
@@ -24,16 +24,21 @@
             </div>
           </div>
         </div>
-        <div *ngIf="demoPlayers.length == 0">
-          <fa name="spinner" animation="spin"></fa>&nbsp;Waiting for demo players to load...
+        <div *ngIf="playerDemoStatus == 0">
+          <i class="fa fa-spinner"></i>&nbsp;Waiting for the Battleship demo players to load...
         </div>
-        <div class="form-group row">
-          <div class="clearfix">
-            <div class="float-none ml-4">
-              <i class="fa fa-fire text-danger "></i> Demo account does not contain admin functionality
-            </div>
-          </div>
+        <div *ngIf="playerDemoStatus == -1">
+          <i class="fas fa-exclamation-triangle warning text-warning"></i>&nbsp;Unable to connect to player service
         </div>
+        <dl class="row mt-3">
+          <dt class="col-sm-1">
+            <i class="fa fa-fire text-danger fa-2x"></i>
+          </dt>
+          <dd class="col-sm-11">
+              Demo accounts does not contain admin functionality such as top players and audits. 
+              Note. You can make up a email address as Battleships does not ask for email confirmation.
+          </dd>
+        </dl>
       </form>
 
 
