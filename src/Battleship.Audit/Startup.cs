@@ -12,39 +12,46 @@ namespace Battleship.Audit
 
     public class Startup
     {
+        #region
+
         private readonly IConfiguration configuration;
         private readonly string database = "Database=Battleship.Auditing;";
         private string sqlConnectionString = string.Empty;
+
+        #endregion
 
         public Startup(IConfiguration configuration)
         {
             this.configuration = configuration;
         }
 
+        #region Methods
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             this.sqlConnectionString = this.configuration.GetConnectionString("BattleshipAuditCN");
-            var databaseConnection = $"{this.sqlConnectionString}{this.database}";
+            string databaseConnection = $"{this.sqlConnectionString}{this.database}";
 
             services.AddMemoryCache();
             services.AddCors();
             services.AddMvc().AddNewtonsoftJson().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-            var configSection = this.configuration.GetSection("RabbitMQ");
-            var host = configSection["Host"];
-            var username = configSection["UserName"];
-            var password = configSection["Password"];
-            var exchange = configSection["Exchange"];
-            var queue = configSection["Queue"];
+            IConfigurationSection configSection = this.configuration.GetSection("RabbitMQ");
+            string host = configSection["Host"];
+            string username = configSection["UserName"];
+            string password = configSection["Password"];
+            string exchange = configSection["Exchange"];
+            string queue = configSection["Queue"];
 
-            var auditSection = this.configuration.GetSection("RabbitMQ");
-            var auditQueue = configSection["AuditQueue"];
-            var auditPath = configSection["auditPath"];
+            IConfigurationSection auditSection = this.configuration.GetSection("RabbitMQ");
+            string auditQueue = configSection["AuditQueue"];
+            string auditPath = configSection["auditPath"];
 
             services.AddSingleton<IAuditRepository>(new AuditRepository(databaseConnection));
             services.AddTransient<IMessagePublisher>(sp =>
-                new MessagePublisher(host, username, password, exchange, queue));
+                                                         new MessagePublisher(
+                                                             host, username, password, exchange, queue));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,17 +66,16 @@ namespace Battleship.Audit
 
             app.UseCors(
                 options => options.WithOrigins("http://localhost:4200")
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowAnyOrigin()
+                                  .AllowAnyMethod()
+                                  .AllowAnyHeader()
+                                  .AllowAnyOrigin()
             );
 
             app.UseRouting();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
+
+        #endregion
     }
 }

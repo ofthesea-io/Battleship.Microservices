@@ -10,7 +10,7 @@ namespace Battleship.Warehouse.Tests
         }
 
         [Test]
-        public void Test1()
+        public void Audit_WhenInitialized_IsRepositoryCreated()
         {
             Assert.Pass();
         }
