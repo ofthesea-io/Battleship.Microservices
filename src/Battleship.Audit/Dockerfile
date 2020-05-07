@@ -1,22 +1,22 @@
-FROM microsoft/dotnet:3.1-sdk AS build-env
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
+EXPOSE 80
+EXPOSE 443
 
-# Copy necessary files and restore as distinct layer
-COPY *.csproj ./
-RUN dotnet restore 
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
+WORKDIR /src
+COPY ["Battleship.Audit/Battleship.Audit.csproj", "Battleship.Audit/"]
+RUN dotnet restore "Battleship.Audit/Battleship.Audit.csproj"
+COPY . .
+WORKDIR "/src/Battleship.Audit"
+RUN dotnet build "Battleship.Audit.csproj" -c Release -o /app/build
 
-# Copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o out
+FROM build AS publish
+RUN dotnet publish "Battleship.Audit.csproj" -c Release -o /app/publish
 
-# Build runtime image
-FROM microsoft/dotnet:3.1-aspnetcore-runtime
-COPY --from=build-env /app/out .
-
-# Expose ports
-EXPOSE 8085/tcp
-ENV ASPNETCORE_URLS http://*:8085
-HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://localhost:8085 || exit 1
-
-# Start
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Battleship.Audit.dll"]
