@@ -46,28 +46,28 @@
         public Task PublishMessageAsync(string message, string queue)
         {
             return Task.Run(() => Policy.Handle<Exception>()
-                                        .WaitAndRetry(9, r => TimeSpan.FromSeconds(5.0),
-                                                      (e, s) => { }).Execute(() =>
-                                         {
-                                             using (var connection = new ConnectionFactory
-                                             {
-                                                 HostName = this.Host,
-                                                 UserName = this.Username,
-                                                 Password = this.Password
-                                             }.CreateConnection())
-                                             {
-                                                 using (var model = connection.CreateModel())
-                                                 {
-                                                     model.ExchangeDeclare(this.Exchange, "direct", true);
-                                                     model.QueueDeclare(queue, true, false, false, null);
+               .WaitAndRetry(9, r => TimeSpan.FromSeconds(5.0),
+                    (e, s) => { }).Execute(() =>
+                {
+                    using (var connection = new ConnectionFactory
+                    {
+                        HostName = this.Host,
+                        UserName = this.Username,
+                        Password = this.Password
+                    }.CreateConnection())
+                    {
+                        using (var model = connection.CreateModel())
+                        {
+                            model.ExchangeDeclare(this.Exchange, "direct", true);
+                            model.QueueDeclare(queue, true, false, false, null);
 
-                                                     model.QueueBind(queue, this.Exchange, queue);
-                                                     byte[] bytes = Encoding.UTF8.GetBytes(message);
+                            model.QueueBind(queue, this.Exchange, queue);
+                            byte[] bytes = Encoding.UTF8.GetBytes(message);
 
-                                                     model.BasicPublish(this.Exchange, queue, null, bytes);
-                                                 }
-                                             }
-                                         }));
+                            model.BasicPublish(this.Exchange, queue, null, bytes);
+                        }
+                    }
+                }));
         }
 
         #endregion

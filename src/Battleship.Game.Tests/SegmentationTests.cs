@@ -99,6 +99,7 @@
             var y = this.GridDimension;
             var coordinate = new Coordinate(x, y);
 
+
 // Act and Assert
             try
             {

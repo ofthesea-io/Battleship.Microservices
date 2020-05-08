@@ -23,7 +23,7 @@
         #region Fields
 
         private readonly IGameRepository gameRepository;
-        private readonly IGridGenerator  gridGenerator;
+        private readonly IGridGenerator gridGenerator;
 
         private readonly JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings
         {
@@ -88,12 +88,10 @@
 
                 var coordinates = await this.gameRepository.GetShipCoordinates(sessionToken);
 
-                Dictionary<Coordinate, Segment> shipCoordinates = JsonConvert
-                                                                 .DeserializeObject<KeyValuePair<Coordinate, Segment>[]>(coordinates, this.jsonSerializerSettings)
-                                                                 .ToDictionary(kv => kv.Key, kv => kv.Value);
+                Dictionary<Coordinate, Segment> shipCoordinates = JsonConvert.DeserializeObject<KeyValuePair<Coordinate, Segment>[]>(coordinates, this.jsonSerializerSettings)
+                   .ToDictionary(kv => kv.Key, kv => kv.Value);
 
-                KeyValuePair<Coordinate, Segment> shipCoordinate = shipCoordinates.FirstOrDefault(q =>
-                                                                                                      q.Key.X == playerCommand.Coordinate.X && q.Key.Y == playerCommand.Coordinate.Y);
+                KeyValuePair<Coordinate, Segment> shipCoordinate = shipCoordinates.FirstOrDefault(q => q.Key.X == playerCommand.Coordinate.X && q.Key.Y == playerCommand.Coordinate.Y);
 
                 playerCommand.ScoreCard.IsHit = false;
                 if (shipCoordinate.Value != null)

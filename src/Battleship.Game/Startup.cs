@@ -16,8 +16,8 @@
         #region Fields
 
         private readonly IConfiguration configuration;
-        private readonly string         database            = "Database=Battleship.Game;";
-        private          string         sqlConnectionString = string.Empty;
+        private readonly string database = "Database=Battleship.Game;";
+        private string sqlConnectionString = string.Empty;
 
         #endregion
 
@@ -55,7 +55,7 @@
 
             services.AddSingleton<IGameRepository>(new GameRepository(databaseConnection));
             services.AddTransient<IMessagePublisher>(sp =>
-                                                         new MessagePublisher(host, username, password, exchange, queue));
+                new MessagePublisher(host, username, password, exchange, queue));
             services.AddHostedService<GameMessageHandler>();
         }
 
@@ -71,10 +71,9 @@
 
             app.UseCors(
                 options => options.WithOrigins("http://localhost:4200")
-                                  .AllowAnyMethod()
-                                  .AllowAnyHeader()
-                                  .AllowAnyOrigin()
-            );
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .AllowAnyOrigin());
 
             app.UseRouting();
 

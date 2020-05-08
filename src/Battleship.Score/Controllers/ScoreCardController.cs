@@ -18,7 +18,7 @@
     {
         #region Fields
 
-        private readonly IMessagePublisher    messagePublisher;
+        private readonly IMessagePublisher messagePublisher;
         private readonly IScoreCardRepository scoreCardRepository;
 
         #endregion

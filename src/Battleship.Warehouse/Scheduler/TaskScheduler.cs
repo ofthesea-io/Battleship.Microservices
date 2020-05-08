@@ -9,7 +9,7 @@
     {
         #region Fields
 
-        private static   TaskScheduler _instance;
+        private static TaskScheduler _instance;
         private readonly List<Timer> timers = new List<Timer>();
 
         #endregion

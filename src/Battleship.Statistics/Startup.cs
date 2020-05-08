@@ -14,8 +14,8 @@
         #region Fields
 
         private readonly IConfiguration configuration;
-        private readonly string         database            = "Database=Battleship.Player;";
-        private          string         sqlConnectionString = string.Empty;
+        private readonly string database = "Database=Battleship.Player;";
+        private string sqlConnectionString = string.Empty;
 
         #endregion
 
@@ -67,9 +67,9 @@
                 app.UseHsts();
             app.UseCors(
                 options => options.WithOrigins("http://localhost:4200")
-                                  .AllowAnyMethod()
-                                  .AllowAnyHeader()
-                                  .AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .AllowAnyOrigin()
             );
 
             app.UseRouting();

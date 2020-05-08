@@ -51,6 +51,7 @@
 
             var counter = battleship.GroupBy(q => q.GetHashCode()).Count();
 
+
 // Assert
             Assert.AreEqual(counter, numberOfDestroyers);
         }

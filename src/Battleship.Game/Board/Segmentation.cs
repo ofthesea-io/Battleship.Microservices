@@ -33,8 +33,10 @@
         {
             if (Segmentation.instance == null)
                 lock (ComponentBase.SyncObject)
+                {
                     if (Segmentation.instance == null)
                         Segmentation.instance = new Segmentation();
+                }
 
             return Segmentation.instance;
         }
@@ -79,7 +81,7 @@
                     throw new IndexOutOfRangeException();
 
                 var item = this.segmentation.FirstOrDefault(q => q.Key.X == segment.Key.X && q.Key.Y == segment.Key.Y)
-                               .Value;
+                   .Value;
 
                 if (item != null)
                 {

@@ -17,11 +17,11 @@
     {
         #region Fields
 
-        private readonly IConfiguration       configuration;
-        private readonly IMessagePublisher    messagePublisher;
+        private readonly IConfiguration configuration;
+        private readonly IMessagePublisher messagePublisher;
         private readonly IScoreCardRepository scoreCardRepository;
-        private          IModel               channel;
-        private          IConnection          connection;
+        private IModel channel;
+        private IConnection connection;
 
         #endregion
 

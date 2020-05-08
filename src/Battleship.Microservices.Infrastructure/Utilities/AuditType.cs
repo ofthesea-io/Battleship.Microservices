@@ -2,8 +2,8 @@
 {
     public enum AuditType
     {
-        Error   = 1,
-        Log     = 2,
+        Error = 1,
+        Log = 2,
         Message = 3
     }
 }

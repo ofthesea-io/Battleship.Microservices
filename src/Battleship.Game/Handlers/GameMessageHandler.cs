@@ -17,10 +17,10 @@
     {
         #region Fields
 
-        private readonly IGameRepository   gameRepository;
+        private readonly IGameRepository gameRepository;
         private readonly IMessagePublisher messagePublisher;
-        private          IModel            channel;
-        private          IConnection       connection;
+        private IModel channel;
+        private IConnection connection;
 
         #endregion
 

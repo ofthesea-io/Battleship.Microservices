@@ -15,9 +15,9 @@
     {
         #region Fields
 
-        private readonly string         database = "Database=Battleship.ScoreCard;";
-        public           IConfiguration configuration;
-        private          string         sqlConnectionString = string.Empty;
+        private readonly string database = "Database=Battleship.ScoreCard;";
+        public IConfiguration configuration;
+        private string sqlConnectionString = string.Empty;
 
         #endregion
 
@@ -67,9 +67,9 @@
             else
                 app.UseHsts();
             app.UseCors(options => options
-                                  .AllowAnyMethod()
-                                  .AllowAnyHeader()
-                                  .AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowAnyOrigin()
             );
 
             app.UseRouting();

@@ -46,8 +46,8 @@ namespace Battleship.Audit
 
             services.AddSingleton<IAuditRepository>(new AuditRepository(databaseConnection));
             services.AddTransient<IMessagePublisher>(sp =>
-                                                         new MessagePublisher(
-                                                             host, username, password, exchange, queue));
+                new MessagePublisher(
+                    host, username, password, exchange, queue));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,9 +62,9 @@ namespace Battleship.Audit
 
             app.UseCors(
                 options => options.WithOrigins("http://localhost:4200")
-                                  .AllowAnyMethod()
-                                  .AllowAnyHeader()
-                                  .AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .AllowAnyOrigin()
             );
 
             app.UseRouting();
@@ -77,8 +77,8 @@ namespace Battleship.Audit
         #region
 
         private readonly IConfiguration configuration;
-        private readonly string         database            = "Database=Battleship.Auditing;";
-        private          string         sqlConnectionString = string.Empty;
+        private readonly string database = "Database=Battleship.Auditing;";
+        private string sqlConnectionString = string.Empty;
 
         #endregion
     }

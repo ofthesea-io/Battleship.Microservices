@@ -26,27 +26,27 @@
         private static IHostBuilder CreateHostBuilder(string[] args)
         {
             var hostBuilder = new HostBuilder()
-                             .ConfigureAppConfiguration((hostContext, config) => { config.AddJsonFile("appsettings.json", false); })
-                             .ConfigureServices((hostContext, services) =>
-                              {
-                                  var sqlConnectionString = hostContext.Configuration.GetSection("ConnectionStrings");
-                                  Initialisation.Setup(sqlConnectionString["BattleshipWarehouseCN"]);
-                                  var database = "Database=Battleship.WareHouse;";
-                                  var databaseConnection = $"{sqlConnectionString}{database}";
-                                  IWareHouseRepository warehouseRepository = new WareHouseRepository(databaseConnection);
-                                  services.AddTransient(svc =>
-                                  {
-                                      var configSection = hostContext.Configuration.GetSection("RabbitMQ");
-                                      var host = configSection["Host"];
-                                      var username = configSection["UserName"];
-                                      var password = configSection["Password"];
-                                      var exchange = configSection["Exchange"];
-                                      var rpcQueue = configSection["RpcQueue"];
+               .ConfigureAppConfiguration((hostContext, config) => { config.AddJsonFile("appsettings.json", false); })
+               .ConfigureServices((hostContext, services) =>
+                {
+                    var sqlConnectionString = hostContext.Configuration.GetSection("ConnectionStrings");
+                    Initialisation.Setup(sqlConnectionString["BattleshipWarehouseCN"]);
+                    var database = "Database=Battleship.WareHouse;";
+                    var databaseConnection = $"{sqlConnectionString}{database}";
+                    IWareHouseRepository warehouseRepository = new WareHouseRepository(databaseConnection);
+                    services.AddTransient(svc =>
+                    {
+                        var configSection = hostContext.Configuration.GetSection("RabbitMQ");
+                        var host = configSection["Host"];
+                        var username = configSection["UserName"];
+                        var password = configSection["Password"];
+                        var exchange = configSection["Exchange"];
+                        var rpcQueue = configSection["RpcQueue"];
 
-                                      return new RpcServer(host, username, password, exchange, rpcQueue, warehouseRepository);
-                                  });
-                              })
-                             .UseConsoleLifetime();
+                        return new RpcServer(host, username, password, exchange, rpcQueue, warehouseRepository);
+                    });
+                })
+               .UseConsoleLifetime();
 
             return hostBuilder;
         }
@@ -61,10 +61,10 @@
             try
             {
                 WareHousing.IntervalInDays(23, 59, 1,
-                                           () =>
-                                           {
-                                               // TODO - execute SQL Proc at midnight
-                                           });
+                    () =>
+                    {
+                        // TODO - execute SQL Proc at midnight
+                    });
             }
             catch (Exception e)
             {

@@ -14,7 +14,7 @@
         #region Fields
 
         private readonly string databaseName;
-        private readonly int    timeout = 360;
+        private readonly int timeout = 360;
 
         #endregion
 
@@ -57,7 +57,7 @@
                     if (parameters != null && parameters.Count > 0)
                         dynamicParameters = this.SetupDynamicParameters(parameters);
                     result = connection.Query<T>(this.SetName(procedure), dynamicParameters,
-                                                 commandType: CommandType.StoredProcedure, commandTimeout: this.timeout);
+                        commandType: CommandType.StoredProcedure, commandTimeout: this.timeout);
                 }
             }
             catch (SqlException exp)
@@ -84,7 +84,7 @@
                 using (connection)
                 {
                     return connection.Query<T>(this.SetName(procedure), commandType: CommandType.StoredProcedure,
-                                               commandTimeout: this.timeout);
+                        commandTimeout: this.timeout);
                 }
             }
             catch (SqlException exp)
@@ -119,7 +119,7 @@
                     if (parameters != null && parameters.Count > 0)
                         dynamicParameters = this.SetupDynamicParameters(parameters);
                     return connection.Execute(this.SetName(procedure), dynamicParameters,
-                                              commandType: CommandType.StoredProcedure, commandTimeout: this.timeout);
+                        commandType: CommandType.StoredProcedure, commandTimeout: this.timeout);
                 }
             }
             catch (SqlException exp)
@@ -223,7 +223,7 @@
                     if (parameters != null && parameters.Count > 0)
                         dynamicParameters = this.SetupDynamicParameters(parameters);
                     return connection.Query<T>(this.SetName(procedure), dynamicParameters,
-                                               commandType: CommandType.StoredProcedure).FirstOrDefault();
+                        commandType: CommandType.StoredProcedure).FirstOrDefault();
                 }
             }
             catch (SqlException exp)
@@ -253,7 +253,7 @@
                     if (parameters != null && parameters.Count > 0)
                         dynamicParameters = this.SetupDynamicParameters(parameters);
                     result = (await connection.QueryAsync<T>(this.SetName(procedure), dynamicParameters, null, new int?(),
-                                                             CommandType.StoredProcedure)).FirstOrDefault();
+                        CommandType.StoredProcedure)).FirstOrDefault();
                 }
             }
             catch (SqlException ex)

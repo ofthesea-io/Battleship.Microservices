@@ -17,12 +17,12 @@
     {
         #region Fields
 
-        private readonly string               exchange;
-        private readonly string               host;
+        private readonly string exchange;
+        private readonly string host;
         private readonly IWareHouseRepository iWareHouseRepository;
-        private readonly string               password;
-        private readonly string               rpcQueue;
-        private readonly string               username;
+        private readonly string password;
+        private readonly string rpcQueue;
+        private readonly string username;
 
         #endregion
 
@@ -52,9 +52,9 @@
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var factory = new ConnectionFactory
-                {
-                   HostName = this.host, UserName = this.username, Password = this.password
-                };
+            {
+                HostName = this.host, UserName = this.username, Password = this.password
+            };
             using (var connection = factory.CreateConnection())
             {
                 using (var channel = connection.CreateModel())

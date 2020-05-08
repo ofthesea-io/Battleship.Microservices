@@ -17,14 +17,14 @@
 
         private readonly IModel channel;
 
-        private readonly IConnection           connection;
+        private readonly IConnection connection;
         private readonly EventingBasicConsumer consumer;
-        private readonly string                exchange;
-        private readonly string                host;
-        private readonly string                password;
-        private readonly string                replyQueueName;
-        private readonly string                rpcQueue;
-        private readonly string                username;
+        private readonly string exchange;
+        private readonly string host;
+        private readonly string password;
+        private readonly string replyQueueName;
+        private readonly string rpcQueue;
+        private readonly string username;
 
         #endregion
 
@@ -40,9 +40,9 @@
             this.rpcQueue = rpcQueue;
 
             var factory = new ConnectionFactory
-                {
-                   HostName = this.host, UserName = this.username, Password = this.password
-                };
+            {
+                HostName = this.host, UserName = this.username, Password = this.password
+            };
 
             this.connection = factory.CreateConnection();
             this.channel = this.connection.CreateModel();

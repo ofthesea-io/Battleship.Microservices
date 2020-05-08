@@ -99,8 +99,10 @@
         {
             if (ShipRandomiser.instance == null)
                 lock (ComponentBase.SyncObject)
+                {
                     if (ShipRandomiser.instance == null)
                         ShipRandomiser.instance = new ShipRandomiser();
+                }
 
             return ShipRandomiser.instance;
         }
@@ -159,7 +161,7 @@
                 && BattleshipExtensions.IsSegmentWithInGridRange(currentXPosition, currentYPosition))
             {
                 temporarySegments.Add(new Coordinate(currentXPosition, currentYPosition),
-                                      new Segment(ShipDirection.Vertical, ship));
+                    new Segment(ShipDirection.Vertical, ship));
                 result = true;
             }
             else
@@ -180,7 +182,7 @@
                 && BattleshipExtensions.IsSegmentWithInGridRange(currentXPosition, currentYPosition))
             {
                 temporarySegments.Add(new Coordinate(currentXPosition, currentYPosition),
-                                      new Segment(ShipDirection.Horizontal, ship));
+                    new Segment(ShipDirection.Horizontal, ship));
                 result = true;
             }
             else

@@ -29,7 +29,7 @@
             }; // list of current segments that is not available
 
             KeyValuePair<Coordinate, Segment> segment = new KeyValuePair<Coordinate, Segment>(new Coordinate(69, 5),
-                                                                                              new Segment(ShipDirection.Vertical, secondDestroyer));
+                new Segment(ShipDirection.Vertical, secondDestroyer));
 
             // Act
             var result = segments.IsSegmentAvailable(segment.Key.X, segment.Key.Y);
@@ -54,7 +54,7 @@
             }; // list of current segments that is not available
 
             KeyValuePair<Coordinate, Segment> segment = new KeyValuePair<Coordinate, Segment>(new Coordinate(73, 3),
-                                                                                              new Segment(ShipDirection.Vertical, secondDestroyer));
+                new Segment(ShipDirection.Vertical, secondDestroyer));
 
             // Act
             var result = segments.IsSegmentAvailable(segment.Key.X, segment.Key.Y);
@@ -103,7 +103,7 @@
             }; // list of current segments that is not available
 
             KeyValuePair<Coordinate, Segment> segment = new KeyValuePair<Coordinate, Segment>(new Coordinate(69, 3),
-                                                                                              new Segment(ShipDirection.Vertical, secondDestroyer)); // fail point
+                new Segment(ShipDirection.Vertical, secondDestroyer)); // fail point
 
             // Act
             var result = segments.IsSegmentAvailable(segment.Key.X, segment.Key.Y);
@@ -128,7 +128,7 @@
             }; // list of current segments that is not available 
 
             KeyValuePair<Coordinate, Segment> segment = new KeyValuePair<Coordinate, Segment>(new Coordinate(67, 2),
-                                                                                              new Segment(ShipDirection.Vertical, secondDestroyer)); // pass point
+                new Segment(ShipDirection.Vertical, secondDestroyer)); // pass point
 
             // Act
             var result = segments.IsSegmentAvailable(segment.Key.X, segment.Key.Y);
@@ -154,7 +154,7 @@
 
             // Horizontal Intercepting ship
             KeyValuePair<Coordinate, Segment> segment = new KeyValuePair<Coordinate, Segment>(new Coordinate(71, 2),
-                                                                                              new Segment(ShipDirection.Vertical, secondDestroyer));
+                new Segment(ShipDirection.Vertical, secondDestroyer));
 
             // Act
             var result = segments.IsSegmentAvailable(segment.Key.X, segment.Key.Y);
@@ -244,6 +244,7 @@
 
             // Act
             var result = BattleshipExtensions.IsSegmentWithInGridRange(x, y);
+
 
 // Assert
             Assert.IsTrue(result);

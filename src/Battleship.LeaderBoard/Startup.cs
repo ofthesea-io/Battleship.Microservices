@@ -17,8 +17,8 @@ namespace Battleship.LeaderBoard
         private const string Origins = "http://localhost:4200";
 
         private readonly IConfiguration configuration;
-        private readonly string         database            = "Database=Battleship.Player;";
-        private          string         sqlConnectionString = string.Empty;
+        private readonly string database = "Database=Battleship.Player;";
+        private string sqlConnectionString = string.Empty;
 
         #endregion
 
@@ -52,7 +52,7 @@ namespace Battleship.LeaderBoard
             var queue = configSection["Queue"];
 
             services.AddTransient<IMessagePublisher>(sp =>
-                                                         new MessagePublisher(host, userName, password, exchange, queue));
+                new MessagePublisher(host, userName, password, exchange, queue));
             services.AddSingleton<ILeaderBoardRepository>(new LeaderBoardRepository(databaseConnection));
         }
 
@@ -68,9 +68,9 @@ namespace Battleship.LeaderBoard
 
             app.UseCors(
                 options => options.WithOrigins(Startup.Origins)
-                                  .AllowAnyMethod()
-                                  .AllowAnyHeader()
-                                  .AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .AllowAnyOrigin()
             );
             app.UseRouting();
 

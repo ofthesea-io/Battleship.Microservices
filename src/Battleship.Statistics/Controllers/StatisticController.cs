@@ -15,7 +15,7 @@
         #region Fields
 
         private readonly IMessagePublisher messagePublisher;
-        private readonly IRpcClient        rpcClient;
+        private readonly IRpcClient rpcClient;
 
         #endregion
 
