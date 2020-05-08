@@ -1,6 +1,7 @@
 ﻿namespace Battleship.Microservices.Infrastructure.Messages
 {
     using System.Threading.Tasks;
+    using Utilities;
 
     public interface IMessagePublisher
     {
@@ -21,6 +22,8 @@
         #region Methods
 
         Task PublishMessageAsync(string message, string queue);
+
+        Task PublishAuditLogMessageAsync(AuditType auditType, string message);
 
         #endregion
     }

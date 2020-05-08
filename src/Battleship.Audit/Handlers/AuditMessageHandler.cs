@@ -1,4 +1,4 @@
-﻿namespace Battleship.Game.Handlers
+﻿namespace Battleship.Audit.Handlers
 {
     using System;
     using System.Text;
@@ -6,37 +6,28 @@
     using System.Threading.Tasks;
     using Infrastructure;
     using Microservices.Infrastructure.Messages;
+    using Microservices.Infrastructure.Models;
     using Microsoft.Extensions.Hosting;
-    using Models;
     using Newtonsoft.Json;
     using RabbitMQ.Client;
     using RabbitMQ.Client.Events;
-    using Serilog;
 
-    public class GameMessageHandler : BackgroundService
+    public class AuditMessageHandler : BackgroundService
     {
-        #region Fields
 
-        private readonly IGameRepository gameRepository;
+        private readonly IAuditRepository auditRepository;
         private readonly IMessagePublisher messagePublisher;
+
         private IModel channel;
         private IConnection connection;
 
-        #endregion
-
-        #region Constructors
-
-        public GameMessageHandler(IGameRepository gameRepository, IMessagePublisher messagePublisher)
+        public AuditMessageHandler(IAuditRepository auditRepository, IMessagePublisher messagePublisher)
         {
+            this.auditRepository = auditRepository;
             this.messagePublisher = messagePublisher;
-            this.gameRepository = gameRepository;
 
             this.Initialise();
         }
-
-        #endregion
-
-        #region Methods
 
         public override void Dispose()
         {
@@ -52,20 +43,21 @@
             var consumer = new EventingBasicConsumer(this.channel);
             consumer.Received += (ch, ea) =>
             {
+                // received message
                 var content = Encoding.UTF8.GetString(ea.Body.ToArray());
 
+                // handle the received message
                 try
                 {
                     if (!string.IsNullOrEmpty(content))
                     {
-                        var player = JsonConvert.DeserializeObject<Player>(content);
-                        this.gameRepository.CreatePlayer(player.SessionToken, player.PlayerId);
+                        var auditMessage = JsonConvert.DeserializeObject<Audit>(content);
+                        this.auditRepository.SaveAuditMessage(auditMessage.AuditType, auditMessage.Message, auditMessage.Username);
                         this.channel.BasicAck(ea.DeliveryTag, true);
                     }
                 }
-                catch (Exception exp)
+                catch (Exception)
                 {
-                    Log.Error(exp, exp.Message);
                     this.channel.BasicAck(ea.DeliveryTag, false);
                 }
             };
@@ -78,7 +70,8 @@
         {
             var factory = new ConnectionFactory
             {
-                HostName = this.messagePublisher.Host, UserName = this.messagePublisher.Username,
+                HostName = this.messagePublisher.Host,
+                UserName = this.messagePublisher.Username,
                 Password = this.messagePublisher.Password
             };
 
@@ -91,7 +84,5 @@
             this.channel.ExchangeDeclare(this.messagePublisher.Exchange, ExchangeType.Direct, true);
             this.channel.QueueBind(this.messagePublisher.Queue, this.messagePublisher.Exchange, this.messagePublisher.Queue);
         }
-
-        #endregion
     }
 }

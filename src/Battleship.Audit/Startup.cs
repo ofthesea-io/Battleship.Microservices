@@ -1,8 +1,9 @@
 namespace Battleship.Audit
 {
-    using Infrastructure;
-    using Microservices.Infrastructure.Messages;
-    using Microservices.Infrastructure.Repository;
+    using Battleship.Audit.Infrastructure;
+    using Battleship.Microservices.Infrastructure.Messages;
+    using Battleship.Microservices.Infrastructure.Repository;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,16 @@ namespace Battleship.Audit
 
     public class Startup
     {
+        #region Fields
+
+        private readonly IConfiguration configuration;
+
+        private readonly string database = "Database=Battleship.Auditing;";
+
+        private string sqlConnectionString = string.Empty;
+
+        #endregion
+
         #region Constructors
 
         public Startup(IConfiguration configuration)
@@ -40,14 +51,8 @@ namespace Battleship.Audit
             var exchange = configSection["Exchange"];
             var queue = configSection["Queue"];
 
-            var auditSection = this.configuration.GetSection("RabbitMQ");
-            var auditQueue = configSection["AuditQueue"];
-            var auditPath = configSection["auditPath"];
-
             services.AddSingleton<IAuditRepository>(new AuditRepository(databaseConnection));
-            services.AddTransient<IMessagePublisher>(sp =>
-                new MessagePublisher(
-                    host, username, password, exchange, queue));
+            services.AddTransient<IMessagePublisher>(sp => new MessagePublisher(host, username, password, exchange, queue));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,25 +65,12 @@ namespace Battleship.Audit
             else
                 app.UseHsts();
 
-            app.UseCors(
-                options => options.WithOrigins("http://localhost:4200")
-                   .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .AllowAnyOrigin()
-            );
+            app.UseCors(options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
             app.UseRouting();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
-
-        #endregion
-
-        #region
-
-        private readonly IConfiguration configuration;
-        private readonly string database = "Database=Battleship.Auditing;";
-        private string sqlConnectionString = string.Empty;
 
         #endregion
     }

@@ -2,15 +2,18 @@
 {
     using System;
     using System.Collections.Generic;
-    using Microservices.Infrastructure.Models;
-    using Microservices.Infrastructure.Repository;
-    using Microservices.Infrastructure.Utilities;
+    using System.Threading.Tasks;
+
+    using Battleship.Microservices.Infrastructure.Models;
+    using Battleship.Microservices.Infrastructure.Repository;
+    using Battleship.Microservices.Infrastructure.Utilities;
 
     public class AuditRepository : RepositoryCore, IAuditRepository
     {
         #region Constructors
 
-        public AuditRepository(string database) : base(database)
+        public AuditRepository(string database)
+            : base(database)
         {
         }
 
@@ -18,19 +21,31 @@
 
         #region Methods
 
-        public IEnumerable<Audit> GetAuditMessages()
+        public async Task<IEnumerable<Audit>> GetAuditMessages()
         {
-            throw new NotImplementedException();
+            return await this.ExecuteAsync<Audit>();
         }
 
-        public IEnumerable<Audit> GetAuditMessagesByAuditType(AuditType auditType)
+        public async Task<IEnumerable<Audit>> GetAuditMessagesByAuditType(AuditType auditType)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { "AuditTypeId", auditType }
+            };
+
+            return await this.ExecuteAsync<Audit>(parameters);
         }
 
-        public void SaveAuditMessage(AuditType auditType, string content)
+        public Task SaveAuditMessage(AuditType auditType, string message, string username)
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { "AuditTypeId", auditType },
+                { "Message", message },
+                { "Username", username }
+            };
+
+            return this.ExecuteAsync(parameters);
         }
 
         #endregion

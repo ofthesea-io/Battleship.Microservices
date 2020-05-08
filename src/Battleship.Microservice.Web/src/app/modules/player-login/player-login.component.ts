@@ -66,7 +66,7 @@ export class PlayerLoginComponent implements OnInit {
         if (response.status === 200) {
           const player = response.body as Player;
           this.configuration.setAuthHeader(player.sessionToken);
-          this.router.navigate(['gamePlay'], { state: { player } });
+          this.router.navigate(['gamePlay'], { state: { player }});
         }
       },
       error => {

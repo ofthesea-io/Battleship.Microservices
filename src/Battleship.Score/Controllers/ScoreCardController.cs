@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Infrastructure;
     using Microservices.Infrastructure.Messages;
+    using Microservices.Infrastructure.Utilities;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Data.SqlClient;
@@ -58,13 +59,13 @@
             catch (SqlException e)
             {
                 var message = $"Battleship.SoreCard SQL exception: {e.StackTrace}";
-                await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
+                await this.messagePublisher.PublishAuditLogMessageAsync(AuditType.Error, message);
                 return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
             catch (Exception e)
             {
                 var message = $"Battleship.SoreCard: {e.StackTrace}";
-                await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
+                await this.messagePublisher.PublishAuditLogMessageAsync(AuditType.Error, message);
                 return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
         }

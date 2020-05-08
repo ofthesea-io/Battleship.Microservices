@@ -4,6 +4,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>98d5cf7d-b95d-4533-8d33-09c4ced189b5</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <AssemblyVersion>0.0.2.0</AssemblyVersion>
+    <FileVersion>0.0.2.0</FileVersion>
+    <Version>0.0.2</Version>
+    <Company />
+    <Authors />
+    <StartupObject>Battleship.Audit.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,8 +23,29 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference
-      Include="..\Battleship.Microservices.Infrastructure\Battleship.Microservices.Infrastructure.csproj" />
+    <ProjectReference Include="..\Battleship.Microservices.Infrastructure\Battleship.Microservices.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Configuration\Setup.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.Development.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="appsettings.Production.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 

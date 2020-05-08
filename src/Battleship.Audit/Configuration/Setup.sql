@@ -66,15 +66,96 @@ IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[
 ALTER TABLE [dbo].[AuditType] CHECK CONSTRAINT [FK_AuditType_AuditType]
 GO
 
+--PRESETS
 USE [Battleship.Auditing]
 GO
 SET IDENTITY_INSERT [dbo].[AuditType] ON 
 GO
+IF NOT EXISTS (SELECT * FROM [dbo].[AuditType] WHERE [Name] = N'Error')
+BEGIN
 INSERT [dbo].[AuditType] ([AuditTypeId], [Name]) VALUES (1, N'Error')
+END
 GO
+IF NOT EXISTS (SELECT * FROM [dbo].[AuditType] WHERE [Name] = N'Log')
+BEGIN
 INSERT [dbo].[AuditType] ([AuditTypeId], [Name]) VALUES (2, N'Log')
+END
 GO
+IF NOT EXISTS (SELECT * FROM [dbo].[AuditType] WHERE [Name] = N'Log')
+BEGIN
 INSERT [dbo].[AuditType] ([AuditTypeId], [Name]) VALUES (3, N'Message')
+END
 GO
 SET IDENTITY_INSERT [dbo].[AuditType] OFF
+GO
+
+
+USE [Battleship.Auditing]
+GO
+DROP PROCEDURE IF EXISTS [dbo].[spSaveAuditMessage]
+GO
+DROP PROCEDURE IF EXISTS [dbo].[spGetAuditMessagesByAuditType]
+GO
+DROP PROCEDURE IF EXISTS [dbo].[spGetAuditMessages]
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Jakes Potgieter
+-- Create date: 08-05-202
+-- Description:	Gets all audit messages
+-- =============================================
+CREATE PROCEDURE [dbo].[spGetAuditMessages] 
+AS
+BEGIN
+	SELECT a.Timestamp, a.Message, a.AuditTypeId, a.Username
+	FROM [dbo].[Audit] a
+END
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Jakes Potgieter
+-- Create date: 08-05-202
+-- Description:	Gets audit message by audit type
+-- =============================================
+CREATE PROCEDURE [dbo].[spGetAuditMessagesByAuditType]
+@auditTypeId int
+AS
+BEGIN
+	SELECT a.Timestamp, a.Message, a.AuditTypeId, a.Username
+	FROM [dbo].[Audit] a
+	WHERE a.AuditTypeId = @auditTypeId
+END
+GO
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Jakes Potgieter
+-- Create date: 08-05-202
+-- Description:	Save audit message
+-- =============================================
+CREATE PROCEDURE [dbo].[spSaveAuditMessage] 
+	@AuditTypeId int,
+	@Message text,
+	@Username varchar(100)
+AS
+BEGIN
+	INSERT INTO [dbo].[Audit]
+           ([AuditTypeId]
+		   ,[Message]
+           ,[Username])
+     VALUES
+           (@AuditTypeId
+           ,@Message
+           ,@Username)
+END
 GO

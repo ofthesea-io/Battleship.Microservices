@@ -8,8 +8,12 @@
     using Infrastructure;
     using Microservices.Infrastructure.Messages;
     using Microservices.Infrastructure.Models;
+    using Microservices.Infrastructure.Utilities;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Localization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Localization;
+    using Microsoft.Extensions.Localization;
     using Models;
     using Newtonsoft.Json;
 
@@ -25,6 +29,8 @@
         private readonly IGameRepository gameRepository;
         private readonly IGridGenerator gridGenerator;
 
+        private readonly IStringLocalizer<BoardController> localizer;
+
         private readonly JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
@@ -37,11 +43,12 @@
 
         #region Constructors
 
-        public BoardController(IGameRepository gameRepository, IMessagePublisher messagePublisher)
+        public BoardController(IGameRepository gameRepository, IMessagePublisher messagePublisher, IStringLocalizer<BoardController> localizer)
         {
             this.gridGenerator = GridGenerator.Instance();
             this.gameRepository = gameRepository;
             this.messagePublisher = messagePublisher;
+            this.localizer = localizer;
         }
 
         #endregion
@@ -100,19 +107,19 @@
                     var updateShipCoordinates = JsonConvert.SerializeObject(shipCoordinates.ToArray(), Formatting.Indented, this.jsonSerializerSettings);
                     await this.gameRepository.UpdateShipCoordinates(updateShipCoordinates, sessionToken);
                     playerCommand.ScoreCard.Hit++;
-                    playerCommand.ScoreCard.Message = "Boom! You hit a ship!";
+                    playerCommand.ScoreCard.Message = this.localizer["Boom! You hit a ship!"];
                     playerCommand.ScoreCard.IsHit = true;
                     if (shipCoordinate.Value.Ship.IsShipSunk)
                     {
                         playerCommand.ScoreCard.Sunk++;
-                        playerCommand.ScoreCard.Message = "Ship sunk";
+                        playerCommand.ScoreCard.Message = this.localizer["Ship sunk!"];
                     }
                 }
                 else
                 {
                     playerCommand.ScoreCard.Miss++;
                     playerCommand.ScoreCard.Total++;
-                    playerCommand.ScoreCard.Message = "Sorry you missed, try again";
+                    playerCommand.ScoreCard.Message = this.localizer["Sorry you missed, try again!"];
                 }
 
                 playerCommand.ScoreCard.SessionToken = sessionToken;
@@ -122,7 +129,7 @@
             catch (Exception e)
             {
                 var message = $"Battleship.Board: {e.Message}{Environment.NewLine}{e.StackTrace}";
-                await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
+                await this.messagePublisher.PublishAuditLogMessageAsync(AuditType.Error, message);
                 return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
 
@@ -152,7 +159,7 @@
                 var scoreCard = new ScoreCard
                 {
                     SessionToken = sessionToken,
-                    Message = "Let the games begin",
+                    Message = this.localizer["Let the games begin!"].Value,
                     Hit = 0,
                     Miss = 0,
                     Sunk = 0,
@@ -168,7 +175,7 @@
             catch (Exception e)
             {
                 var message = $"Battleship.Board: {e.Message}{Environment.NewLine}{e.StackTrace}";
-                await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
+                await this.messagePublisher.PublishAuditLogMessageAsync(AuditType.Error, message);
                 return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
         }

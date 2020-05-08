@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using Communication;
     using Microservices.Infrastructure.Messages;
+    using Microservices.Infrastructure.Utilities;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
@@ -50,7 +51,7 @@
             catch (Exception e)
             {
                 var message = $"Battleship.Statistic: {e.StackTrace}";
-                await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
+                await this.messagePublisher.PublishAuditLogMessageAsync(AuditType.Error, message);
                 return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
         }

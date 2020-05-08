@@ -28,8 +28,7 @@
                 {new Coordinate(69, 4), new Segment(ShipDirection.Horizontal, firstDestroyer)}
             }; // list of current segments that is not available
 
-            KeyValuePair<Coordinate, Segment> segment = new KeyValuePair<Coordinate, Segment>(new Coordinate(69, 5),
-                new Segment(ShipDirection.Vertical, secondDestroyer));
+            KeyValuePair<Coordinate, Segment> segment = new KeyValuePair<Coordinate, Segment>(new Coordinate(69, 5), new Segment(ShipDirection.Vertical, secondDestroyer));
 
             // Act
             var result = segments.IsSegmentAvailable(segment.Key.X, segment.Key.Y);

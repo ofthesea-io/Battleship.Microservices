@@ -1,11 +1,12 @@
-﻿namespace Battleship.Game.Tests
+﻿namespace Battleship.Game.Tests.Controllers
 {
     using System.Linq;
-    using Controllers;
+    using Game.Controllers;
     using Infrastructure;
     using Microservices.Infrastructure.Messages;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
     using Models;
     using Moq;
     using NUnit.Framework;
@@ -13,15 +14,16 @@
     [TestFixture]
     public class BoardControllerTests
     {
+        private BoardController boardController;
+
         [SetUp]
         public void Setup()
         {
             Mock<IGameRepository> gameRepository = new Mock<IGameRepository>();
             Mock<IMessagePublisher> messagePublisherMoq = new Mock<IMessagePublisher>();
-            this.boardController = new BoardController(gameRepository.Object, messagePublisherMoq.Object);
+            Mock<IStringLocalizer<BoardController>> localiserMoq = new Mock<IStringLocalizer<BoardController>>();
+            this.boardController = new BoardController(gameRepository.Object, messagePublisherMoq.Object, localiserMoq.Object);
         }
-
-        private BoardController boardController;
 
         [Test]
         public void GetGamingGrid_IsValidGamingGrid_ReturnGamingGrid()

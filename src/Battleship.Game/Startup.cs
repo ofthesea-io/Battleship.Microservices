@@ -1,15 +1,19 @@
 ﻿namespace Battleship.Game
 {
+    using System.Globalization;
     using Handlers;
     using Infrastructure;
     using Microservices.Infrastructure.Messages;
     using Microservices.Infrastructure.Repository;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Localization;
+    using Microsoft.AspNetCore.Localization.Routing;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Options;
 
     public class Startup
     {
@@ -38,6 +42,25 @@
             this.sqlConnectionString = this.configuration.GetConnectionString("BattleshipGameCN");
             var databaseConnection = $"{this.sqlConnectionString}{this.database}";
 
+            // Add the localization
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                    new CultureInfo("en-GB"), // English
+                    new CultureInfo("es-ES"), // Spanish
+                    new CultureInfo("de-DE"), // German 
+                    new CultureInfo("fr-FR"), // French
+                };
+
+                options.DefaultRequestCulture = new RequestCulture("en-GB", "en-GB");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+
+            });
+
             services.AddMemoryCache();
             services.AddCors();
             services.AddMvc().AddNewtonsoftJson().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
@@ -49,13 +72,8 @@
             var exchange = configSection["Exchange"];
             var queue = configSection["Queue"];
 
-            var auditSection = this.configuration.GetSection("RabbitMQ");
-            var auditQueue = configSection["AuditQueue"];
-            var auditPath = configSection["auditPath"];
-
             services.AddSingleton<IGameRepository>(new GameRepository(databaseConnection));
-            services.AddTransient<IMessagePublisher>(sp =>
-                new MessagePublisher(host, username, password, exchange, queue));
+            services.AddTransient<IMessagePublisher>(sp => new MessagePublisher(host, username, password, exchange, queue));
             services.AddHostedService<GameMessageHandler>();
         }
 
@@ -63,6 +81,9 @@
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             Initialisation.Setup(this.sqlConnectionString);
+
+            var localizerService = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(localizerService.Value);
 
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();

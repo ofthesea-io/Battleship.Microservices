@@ -1,18 +1,20 @@
 ﻿namespace Battleship.Audit.Infrastructure
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
+
     using Microservices.Infrastructure.Models;
     using Microservices.Infrastructure.Utilities;
 
-    internal interface IAuditRepository
+    public interface IAuditRepository
     {
         #region Methods
 
-        IEnumerable<Audit> GetAuditMessages();
+        Task<IEnumerable<Audit>> GetAuditMessages();
 
-        IEnumerable<Audit> GetAuditMessagesByAuditType(AuditType auditType);
+        Task<IEnumerable<Audit>> GetAuditMessagesByAuditType(AuditType auditType);
 
-        void SaveAuditMessage(AuditType auditType, string content);
+        Task SaveAuditMessage(AuditType auditType, string message, string username);
 
         #endregion
     }
