@@ -1,9 +1,12 @@
 ﻿namespace Battleship.Game.Tests
 {
     using System.Collections.Generic;
+
+    using Battleship.Microservices.Core.Components;
+    using Battleship.Microservices.Core.Models;
+
     using Enums;
-    using Microservices.Infrastructure.Components;
-    using Microservices.Infrastructure.Models;
+
     using Models;
     using NUnit.Framework;
     using Ships;

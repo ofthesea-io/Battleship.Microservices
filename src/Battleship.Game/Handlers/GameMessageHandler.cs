@@ -4,6 +4,9 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+
+    using Battleship.Microservices.Core.Messages;
+
     using Infrastructure;
     using Microservices.Infrastructure.Messages;
     using Microsoft.Extensions.Hosting;

@@ -3,9 +3,12 @@
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+
+    using Battleship.Microservices.Core.Messages;
+    using Battleship.Microservices.Core.Utilities;
+
     using Communication;
-    using Microservices.Infrastructure.Messages;
-    using Microservices.Infrastructure.Utilities;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 

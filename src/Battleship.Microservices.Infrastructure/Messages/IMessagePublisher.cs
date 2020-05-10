@@ -1,7 +1,8 @@
-﻿namespace Battleship.Microservices.Infrastructure.Messages
+﻿namespace Battleship.Microservices.Core.Messages
 {
     using System.Threading.Tasks;
-    using Utilities;
+
+    using Battleship.Microservices.Core.Utilities;
 
     public interface IMessagePublisher
     {

@@ -1,6 +1,6 @@
 ﻿namespace Battleship.Game.Ships
 {
-    using Microservices.Infrastructure.Components;
+    using Battleship.Microservices.Core.Components;
 
     public sealed class BattleShip : ComponentBase, IShip
     {
@@ -46,8 +46,6 @@
         public int ShipLength { get; }
 
         public char ShipChar { get; }
-
-        public int CoordinateStatus { get; set; }
 
         #endregion IShip Members
     }

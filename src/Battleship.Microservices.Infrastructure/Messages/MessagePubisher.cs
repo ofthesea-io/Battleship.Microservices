@@ -3,10 +3,13 @@
     using System;
     using System.Text;
     using System.Threading.Tasks;
-    using Components;
+
+    using Battleship.Microservices.Core.Components;
+    using Battleship.Microservices.Core.Messages;
+    using Battleship.Microservices.Core.Utilities;
+
     using Polly;
     using RabbitMQ.Client;
-    using Utilities;
 
     public class MessagePublisher : ComponentBase, IMessagePublisher
     {

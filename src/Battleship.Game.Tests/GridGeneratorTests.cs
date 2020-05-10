@@ -2,8 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+
+    using Battleship.Microservices.Core.Components;
+
     using Board;
-    using Microservices.Infrastructure.Components;
+
     using NUnit.Framework;
     using Ships;
 

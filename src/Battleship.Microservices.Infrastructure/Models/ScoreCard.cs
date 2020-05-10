@@ -1,4 +1,4 @@
-﻿namespace Battleship.Microservices.Infrastructure.Models
+﻿namespace Battleship.Microservices.Core.Models
 {
     using Newtonsoft.Json;
 

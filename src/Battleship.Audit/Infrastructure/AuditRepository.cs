@@ -4,9 +4,9 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using Battleship.Microservices.Infrastructure.Models;
-    using Battleship.Microservices.Infrastructure.Repository;
-    using Battleship.Microservices.Infrastructure.Utilities;
+    using Battleship.Microservices.Core.Models;
+    using Battleship.Microservices.Core.Repository;
+    using Battleship.Microservices.Core.Utilities;
 
     public class AuditRepository : RepositoryCore, IAuditRepository
     {
@@ -41,7 +41,7 @@
             Dictionary<string, object> parameters = new Dictionary<string, object>
             {
                 { "AuditTypeId", auditType },
-                { "Message", message },
+                { "Content", message },
                 { "Username", username }
             };
 

@@ -11,10 +11,9 @@
     {
         #region Constructors
 
-        public Segment(char character)
+        public Segment()
         {
             this.IsEmpty = true;
-            this.Character = character;
         }
 
         [JsonConstructor]
@@ -30,8 +29,6 @@
         #region Properties
 
         public bool IsEmpty { get; set; }
-
-        public char Character { get; set; }
 
         public ShipDirection ShipDirection { get; set; }
 

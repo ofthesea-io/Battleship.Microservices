@@ -1,7 +1,9 @@
 ﻿namespace Battleship.Player.Models
 {
     using System;
-    using Microservices.Infrastructure.Models;
+
+    using Battleship.Microservices.Core.Models;
+
     using Newtonsoft.Json;
 
     public class Player

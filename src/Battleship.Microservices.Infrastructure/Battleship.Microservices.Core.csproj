@@ -12,9 +12,9 @@
     <FileVersion>1.0.14</FileVersion>
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>Battleship Microservice</PackageTags>
-    <RootNamespace>Battleship.Microservices.Infrastructure</RootNamespace>
+    <RootNamespace>Battleship.Microservices.Core</RootNamespace>
     <PackageReleaseNotes>Core infrastructure elements for the microservice battleship game</PackageReleaseNotes>
-    <PackageId>Battleship.Microservices.Infrastructure</PackageId>
+    <PackageId>Battleship.Microservices.Core</PackageId>
     <Authors>Jakes Potgieter</Authors>
     <Company>VisualSanity</Company>
     <Product>Battleship.Infrastructure.Core</Product>
@@ -53,6 +53,7 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.35" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="1.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Polly" Version="7.2.1" />

@@ -1,8 +1,11 @@
 namespace Battleship.LeaderBoard
 {
+    using Battleship.Microservices.Core.Messages;
+    using Battleship.Microservices.Core.Repository;
+
     using Infrastructure;
     using Microservices.Infrastructure.Messages;
-    using Microservices.Infrastructure.Repository;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;

@@ -5,17 +5,22 @@
     </div>
     <div class="col-md-6">
       <form>
-        <!-- Show demo players -->
-        <div class="form-group row" *ngIf="playerDemoStatus == 1">
-          <label for="demoPlayerInput" class="col-2 ml-2 col-form-label">Demo</label>
-          <div class="col-9">
-            <div class="input-group">
+        <!-- Loading demo players -->
+        <dl class="row">
+          <dt class="col-sm-1">
+            <div *ngIf="playerDemoStatus == 0;"><mat-spinner diameter="20" class="spinner"></mat-spinner></div>
+            <div *ngIf="playerDemoStatus == -1;"><i class="material-icons text-danger">error</i></div>
+          </dt>
+          <dd class="col-sm-11">
+            <div *ngIf="playerDemoStatus == 0;">Waiting for the Battleship demo players to load...</div>
+            <div *ngIf="playerDemoStatus == -1;">Player Service currently not available!</div>
+            <div *ngIf="playerDemoStatus == 1;" class="input-group">
               <div class="input-group-prepend">
                 <div class="input-group-text">
-                  <i class="fa fa-lock fa-fw"></i>
+                  <i class="material-icons">account_box</i>
                 </div>
               </div>
-              <select id="demoPlayerInput" class="form-control col-10" ngModel required
+              <select id="demoPlayerInput" class="form-control col-sm-10" ngModel required
                 (ngModelChange)="onChange($event)" name="demoPlayers">
                 <option value="" disabled>Select Player</option>
                 <option *ngFor="let demoPlayer of demoPlayers" [value]="demoPlayer.playerId">
@@ -23,20 +28,9 @@
                 </option>
               </select>
             </div>
-          </div>
-        </div>
-        <!-- Loading demo players -->
-        <div *ngIf="playerDemoStatus == 0">
-          <i class="fa fa-cog fa-spin"></i>&nbsp;Waiting for the Battleship demo players to load...
-        </div>
-
-        <!-- Loading demo players -->
-        <div *ngIf="playerDemoStatus == -1">
-          <i class="fa fa-exclamation-triangle warning text-warning"></i>&nbsp;Unable to connect to player service
-        </div>
-        <dl class="row mt-3">
+          </dd>
           <dt class="col-sm-1">
-            <i class="fa fa-fire text-danger fa-2x"></i>
+            <i class="material-icons text-info">info</i>
           </dt>
           <dd class="col-sm-11">
             Demo accounts do not contain admin functionality such as top players and audits.
@@ -45,18 +39,18 @@
         </dl>
       </form>
 
+
       <!-- Personal account login -->
       <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm.value)" class="border border-light p-5">
         <p class="h4 mb-4 text-center">Sign in</p>
         <!-- Username -->
-        <div class="input-group  mb-4">
+        <div class="input-group mb-4">
           <div class="input-group-prepend">
             <div class="input-group-text">
-              <i class="fa fa-envelope-o fa-fw"></i>
+              <i class="material-icons">email</i>
             </div>
           </div>
-          <input type="password" class="form-control" name="email" placeholder="Email" [(ngModel)]="email"
-            required #emailInput="ngModel" />
+          <input type="password" class="form-control" name="email" placeholder="Email" [(ngModel)]="email" required #emailInput="ngModel" />
           <div *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)" class="col-sm-12">
             <div *ngIf="emailInput.hasError('required')" class="text-danger">Please enter your e-mail address</div>
           </div>
@@ -65,12 +59,12 @@
         <div class="input-group mb-4">
           <div class="input-group-prepend">
             <div class="input-group-text">
-              <i class="fa fa-lock fa-fw"></i>
+              <i class="material-icons">lock</i>
             </div>
           </div>
           <input type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="password"
             required #passwordInput="ngModel" />
-          <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)"  class="col-sm-12">
+          <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)" class="col-sm-12">
             <div *ngIf="passwordInput.hasError('required')" class="text-danger">Please enter your password</div>
           </div>
         </div>

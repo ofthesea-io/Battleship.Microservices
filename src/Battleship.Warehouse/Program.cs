@@ -2,9 +2,12 @@
 {
     using System;
     using System.Threading.Tasks;
+
+    using Battleship.Microservices.Core.Repository;
+
     using Communication;
     using Infrastructure;
-    using Microservices.Infrastructure.Repository;
+
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;

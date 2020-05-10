@@ -1,8 +1,11 @@
 ﻿namespace Battleship.Game.Tests
 {
     using System;
+
+    using Battleship.Microservices.Core.Components;
+
     using Enums;
-    using Microservices.Infrastructure.Components;
+
     using NUnit.Framework;
 
     [TestFixture]

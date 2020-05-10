@@ -1,6 +1,9 @@
 ﻿namespace Battleship.Game.Tests.Controllers
 {
     using System.Linq;
+
+    using Battleship.Microservices.Core.Messages;
+
     using Game.Controllers;
     using Infrastructure;
     using Microservices.Infrastructure.Messages;

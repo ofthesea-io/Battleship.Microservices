@@ -3,8 +3,8 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using Microservices.Infrastructure.Models;
-    using Microservices.Infrastructure.Utilities;
+    using Battleship.Microservices.Core.Models;
+    using Battleship.Microservices.Core.Utilities;
 
     public interface IAuditRepository
     {

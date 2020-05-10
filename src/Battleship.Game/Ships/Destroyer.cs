@@ -1,6 +1,6 @@
 ﻿namespace Battleship.Game.Ships
 {
-    using Microservices.Infrastructure.Components;
+    using Battleship.Microservices.Core.Components;
 
     public sealed class Destroyer : ComponentBase, IShip
     {
@@ -47,8 +47,6 @@
         public int ShipIndex { get; }
 
         public bool IsShipSunk { get; set; }
-
-        public int CoordinateStatus { get; set; }
 
         #endregion IShip Members
     }

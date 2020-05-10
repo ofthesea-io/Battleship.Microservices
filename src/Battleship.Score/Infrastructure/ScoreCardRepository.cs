@@ -2,7 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Microservices.Infrastructure.Repository;
+
+    using Battleship.Microservices.Core.Repository;
 
     public class ScoreCardRepository : RepositoryCore, IScoreCardRepository
     {

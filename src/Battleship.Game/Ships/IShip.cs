@@ -1,5 +1,7 @@
 ﻿namespace Battleship.Game.Ships
 {
+    using Newtonsoft.Json;
+
     public interface IShip
     {
         #region Properties
@@ -9,9 +11,6 @@
 
         // The type if char
         char ShipChar { get; }
-
-        // Ship hit counter
-        int CoordinateStatus { get; set; }
 
         // Ship hit counter
         int ShipHit { get; set; }

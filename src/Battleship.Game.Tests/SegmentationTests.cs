@@ -2,14 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
-    using Board;
-    using Enums;
-    using Microservices.Infrastructure.Components;
-    using Microservices.Infrastructure.Models;
-    using Models;
+
+    using Battleship.Game.Board;
+    using Battleship.Game.Enums;
+    using Battleship.Game.Models;
+    using Battleship.Game.Ships;
+    using Battleship.Game.Utilities;
+    using Battleship.Microservices.Core.Components;
+    using Battleship.Microservices.Core.Models;
+
     using NUnit.Framework;
-    using Ships;
-    using Utilities;
 
     [TestFixture]
     public class SegmentationTests : ComponentBase
@@ -28,10 +30,10 @@
         public void Add_AddSegmentYAxisNotInGridDimension_ThrowIndexOutOfRangeException()
         {
             // Arrange 
-            var x = this.XInitialPoint;
-            var y = this.GridDimension + this.Index;
-            var coordinate = new Coordinate(x, y);
-            var segment = new Segment(ComponentBase.Water);
+            int x = this.XInitialPoint;
+            int y = this.GridDimension + this.Index;
+            Coordinate coordinate = new Coordinate(x, y);
+            Segment segment = new Segment();
 
             // Act and Assert
             try
@@ -49,10 +51,10 @@
         public void UpdateSegment_SegmentOutOfRange_ThrowIndexOutOfRangeException()
         {
             // Arrange 
-            var x = this.XInitialPoint;
-            var y = this.GridDimension + this.Index;
-            var coordinate = new Coordinate(x, y);
-            var segment = new Segment(ShipDirection.Vertical, new Destroyer(1));
+            int x = this.XInitialPoint;
+            int y = this.GridDimension + this.Index;
+            Coordinate coordinate = new Coordinate(x, y);
+            Segment segment = new Segment(ShipDirection.Vertical, new Destroyer(1));
 
             // Act and Assert
             try
@@ -70,18 +72,15 @@
         public void UpdateSegmentRange_CantUpdateAEmptySegmentWithAnotherEmptySegment_TrowArgumentException()
         {
             // Arrange 
-            var x = this.XInitialPoint;
-            var y = this.GridDimension;
-            var coordinate = new Coordinate(x, y);
+            int x = this.XInitialPoint;
+            int y = this.GridDimension;
+            Coordinate coordinate = new Coordinate(x, y);
 
             // Act and Assert
             try
             {
-                this.segmentation.AddSegment(coordinate, new Segment(ComponentBase.Water));
-                SortedDictionary<Coordinate, Segment> range = new SortedDictionary<Coordinate, Segment>(new CoordinateComparer())
-                {
-                    {coordinate, new Segment(ComponentBase.Water)}
-                };
+                this.segmentation.AddSegment(coordinate, new Segment());
+                SortedDictionary<Coordinate, Segment> range = new SortedDictionary<Coordinate, Segment>(new CoordinateComparer()) { { coordinate, new Segment() } };
                 this.segmentation.UpdateSegmentRange(range);
                 Assert.Fail();
             }
@@ -95,19 +94,15 @@
         public void UpdateSegmentRange_CantUpdateFilledSegmentWithEmptySegment_TrowArgumentException()
         {
             // Arrange 
-            var x = this.XInitialPoint;
-            var y = this.GridDimension;
-            var coordinate = new Coordinate(x, y);
+            int x = this.XInitialPoint;
+            int y = this.GridDimension;
+            Coordinate coordinate = new Coordinate(x, y);
 
-
-// Act and Assert
+            // Act and Assert
             try
             {
                 this.segmentation.AddSegment(coordinate, new Segment(ShipDirection.Horizontal, new BattleShip(1)));
-                SortedDictionary<Coordinate, Segment> range = new SortedDictionary<Coordinate, Segment>
-                {
-                    {coordinate, new Segment(ComponentBase.Water)}
-                };
+                SortedDictionary<Coordinate, Segment> range = new SortedDictionary<Coordinate, Segment> { { coordinate, new Segment() } };
                 this.segmentation.UpdateSegmentRange(range);
                 Assert.Fail();
             }
@@ -116,7 +111,6 @@
                 Assert.Pass();
             }
         }
-
 
         // This test does NOT fail in debug mode. The test runner has an issue which has been logged to the NUnit Team
         // [Test]

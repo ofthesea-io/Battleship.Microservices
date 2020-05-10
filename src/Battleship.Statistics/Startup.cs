@@ -1,5 +1,7 @@
 ﻿namespace Battleship.Statistics
 {
+    using Battleship.Microservices.Core.Messages;
+
     using Communication;
     using Microservices.Infrastructure.Messages;
     using Microsoft.AspNetCore.Builder;

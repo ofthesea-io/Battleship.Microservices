@@ -3,8 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microservices.Infrastructure.Components;
-    using Microservices.Infrastructure.Models;
+
+    using Battleship.Microservices.Core.Components;
+    using Battleship.Microservices.Core.Models;
+
     using Models;
     using Utilities;
 
@@ -50,7 +52,7 @@
             if (!BattleshipExtensions.IsSegmentWithInGridRange(coordinate.X, coordinate.Y))
                 throw new IndexOutOfRangeException();
 
-            this.segmentation.Add(coordinate, new Segment(segment.Character));
+            this.segmentation.Add(coordinate, new Segment());
         }
 
         public void UpdateSegment(Coordinate coordinate, Segment segment)
@@ -63,7 +65,6 @@
             if (item != null)
             {
                 item.IsEmpty = false;
-                item.Character = segment.Character;
 
                 if (segment.Ship != null)
                 {

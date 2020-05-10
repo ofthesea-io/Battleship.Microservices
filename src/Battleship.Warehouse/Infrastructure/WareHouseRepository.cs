@@ -1,7 +1,9 @@
 ﻿namespace Battleship.Warehouse.Infrastructure
 {
     using System.Collections.Generic;
-    using Microservices.Infrastructure.Repository;
+
+    using Battleship.Microservices.Core.Repository;
+
     using Model;
 
     public class WareHouseRepository : RepositoryCore, IWareHouseRepository

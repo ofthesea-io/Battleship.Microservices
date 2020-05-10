@@ -3,7 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Threading;
-    using Microservices.Infrastructure.Components;
+
+    using Battleship.Microservices.Core.Components;
 
     public class TaskScheduler : ComponentBase
     {

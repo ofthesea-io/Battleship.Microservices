@@ -4,9 +4,13 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+
+    using Battleship.Microservices.Core.Messages;
+    using Battleship.Microservices.Core.Models;
+
     using Infrastructure;
     using Microservices.Infrastructure.Messages;
-    using Microservices.Infrastructure.Models;
+
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
     using Newtonsoft.Json;

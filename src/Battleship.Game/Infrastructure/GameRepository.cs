@@ -4,8 +4,10 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Microservices.Infrastructure.Models;
-    using Microservices.Infrastructure.Repository;
+
+    using Battleship.Microservices.Core.Models;
+    using Battleship.Microservices.Core.Repository;
+
     using Models;
     using Newtonsoft.Json;
     using Ships;

@@ -4,9 +4,10 @@
     using System.Threading.Tasks;
 
     using Battleship.Audit.Infrastructure;
+    using Battleship.Microservices.Core.Messages;
+    using Battleship.Microservices.Core.Models;
+    using Battleship.Microservices.Core.Utilities;
     using Battleship.Microservices.Infrastructure.Messages;
-    using Battleship.Microservices.Infrastructure.Models;
-    using Battleship.Microservices.Infrastructure.Utilities;
 
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;

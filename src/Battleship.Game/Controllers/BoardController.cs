@@ -4,11 +4,15 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
+    using Battleship.Microservices.Core.Components;
+    using Battleship.Microservices.Core.Messages;
+    using Battleship.Microservices.Core.Models;
+
     using Board;
     using Infrastructure;
     using Microservices.Infrastructure.Messages;
-    using Microservices.Infrastructure.Models;
-    using Microservices.Infrastructure.Utilities;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Localization;
     using Microsoft.AspNetCore.Mvc;
@@ -22,7 +26,7 @@
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class BoardController : ControllerBase, IBoardController
+    public class BoardController : ContextBase, IBoardController
     {
         #region Fields
 
@@ -43,7 +47,8 @@
 
         #region Constructors
 
-        public BoardController(IGameRepository gameRepository, IMessagePublisher messagePublisher, IStringLocalizer<BoardController> localizer)
+        public BoardController(IGameRepository gameRepository, IMessagePublisher messagePublisher, IStringLocalizer<BoardController> localizer) 
+            : base(messagePublisher)
         {
             this.gridGenerator = GridGenerator.Instance();
             this.gameRepository = gameRepository;
@@ -103,7 +108,7 @@
                 playerCommand.ScoreCard.IsHit = false;
                 if (shipCoordinate.Value != null)
                 {
-                    shipCoordinate.Value.Ship.CoordinateStatus++;
+                    shipCoordinate.Value.Ship.ShipHit++;
                     var updateShipCoordinates = JsonConvert.SerializeObject(shipCoordinates.ToArray(), Formatting.Indented, this.jsonSerializerSettings);
                     await this.gameRepository.UpdateShipCoordinates(updateShipCoordinates, sessionToken);
                     playerCommand.ScoreCard.Hit++;
@@ -118,18 +123,17 @@
                 else
                 {
                     playerCommand.ScoreCard.Miss++;
-                    playerCommand.ScoreCard.Total++;
                     playerCommand.ScoreCard.Message = this.localizer["Sorry you missed, try again!"];
                 }
 
+                playerCommand.ScoreCard.Total++;
                 playerCommand.ScoreCard.SessionToken = sessionToken;
 
                 await this.messagePublisher.PublishMessageAsync(JsonConvert.SerializeObject(playerCommand.ScoreCard), "ScoreCard");
             }
             catch (Exception e)
             {
-                var message = $"Battleship.Board: {e.Message}{Environment.NewLine}{e.StackTrace}";
-                await this.messagePublisher.PublishAuditLogMessageAsync(AuditType.Error, message);
+                this.Log(e);
                 return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
 
@@ -174,8 +178,7 @@
             }
             catch (Exception e)
             {
-                var message = $"Battleship.Board: {e.Message}{Environment.NewLine}{e.StackTrace}";
-                await this.messagePublisher.PublishAuditLogMessageAsync(AuditType.Error, message);
+                this.Log(e);
                 return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
         }

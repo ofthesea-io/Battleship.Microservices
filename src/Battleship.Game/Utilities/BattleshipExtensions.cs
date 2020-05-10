@@ -3,7 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Microservices.Infrastructure.Models;
+
+    using Battleship.Microservices.Core.Models;
+
     using Models;
     using Ships;
 

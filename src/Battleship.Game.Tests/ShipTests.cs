@@ -1,6 +1,7 @@
 ﻿namespace Battleship.Game.Tests
 {
-    using Microservices.Infrastructure.Components;
+    using Battleship.Microservices.Core.Components;
+
     using NUnit.Framework;
     using Ships;
 

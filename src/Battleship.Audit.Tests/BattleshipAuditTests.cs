@@ -2,13 +2,15 @@ namespace Battleship.Audit.Tests
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Battleship.Audit.Controllers;
     using Battleship.Audit.Infrastructure;
+    using Battleship.Microservices.Core.Messages;
+    using Battleship.Microservices.Core.Models;
+    using Battleship.Microservices.Core.Utilities;
     using Battleship.Microservices.Infrastructure.Messages;
-    using Battleship.Microservices.Infrastructure.Models;
-    using Battleship.Microservices.Infrastructure.Utilities;
 
     using Moq;
 
@@ -40,7 +42,7 @@ namespace Battleship.Audit.Tests
             {
                new Audit { AuditType = AuditType.Log, Message = "Log message", Username = "jakes@email.com", Timestamp = this.timestamp },
                new Audit { AuditType = AuditType.Error, Message = "Error message", Username = "jakes@email.com" , Timestamp = this.timestamp },
-               new Audit { AuditType = AuditType.Message, Message = "Message content", Username = "jakes@email.com", Timestamp = this.timestamp }
+               new Audit { AuditType = AuditType.Content, Message = "Content content", Username = "jakes@email.com", Timestamp = this.timestamp }
             };
 
             this.moqAuditRepository = new Mock<IAuditRepository>();
@@ -49,7 +51,7 @@ namespace Battleship.Audit.Tests
         }
 
         [Test]
-        public async Task GetAuditLog_WhenGivenNothing_GetsAllLogs()
+        public async Task GetAuditLog_WhenGivenNothing_ReturnsAllLogs()
         {
             // Arrange
             this.moqAuditRepository.Reset();
@@ -60,6 +62,21 @@ namespace Battleship.Audit.Tests
 
             // Assert
             Assert.AreEqual(this.auditLogs, result);
+        }
+
+        [Test]
+        public async Task GetAuditLog_WhenGivenAType_ReturnAuditLogsByType()
+        {
+            // Arrange
+            this.moqAuditRepository.Reset();
+            this.moqAuditRepository.Setup(q => q.GetAuditMessagesByAuditType(AuditType.Log))
+                                    .Returns(Task.FromResult(this.auditLogs.Where(q => q.AuditType == AuditType.Log)));
+
+            // Act
+            var result = await this.moqAuditRepository.Object.GetAuditMessagesByAuditType(AuditType.Log);
+
+            // Assert - return one or more
+            Assert.GreaterOrEqual(1, result.Count());
         }
 
         #endregion

@@ -1,9 +1,10 @@
-﻿namespace Battleship.Microservices.Infrastructure.Repository
+﻿namespace Battleship.Microservices.Core.Repository
 {
     using System;
     using System.IO;
     using System.Reflection;
     using System.Text.RegularExpressions;
+
     using Microsoft.Data.SqlClient;
 
     public class Initialisation

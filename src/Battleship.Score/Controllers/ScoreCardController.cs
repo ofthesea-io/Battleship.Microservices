@@ -2,9 +2,13 @@
 {
     using System;
     using System.Threading.Tasks;
+
+    using Battleship.Microservices.Core.Messages;
+    using Battleship.Microservices.Core.Utilities;
+
     using Infrastructure;
     using Microservices.Infrastructure.Messages;
-    using Microservices.Infrastructure.Utilities;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Data.SqlClient;

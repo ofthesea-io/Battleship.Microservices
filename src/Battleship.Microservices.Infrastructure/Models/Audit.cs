@@ -1,10 +1,10 @@
-﻿namespace Battleship.Microservices.Infrastructure.Models
+﻿namespace Battleship.Microservices.Core.Models
 {
     using System;
 
-    using Newtonsoft.Json;
+    using Battleship.Microservices.Core.Utilities;
 
-    using Utilities;
+    using Newtonsoft.Json;
 
     public class Audit
     {

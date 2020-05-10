@@ -2,7 +2,8 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Microservices.Infrastructure.Models;
+
+    using Battleship.Microservices.Core.Models;
 
     public interface IGameRepository
     {

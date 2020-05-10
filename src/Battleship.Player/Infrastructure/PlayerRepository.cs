@@ -3,7 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Microservices.Infrastructure.Repository;
+
+    using Battleship.Microservices.Core.Repository;
+
     using Models;
 
     public class PlayerRepository : RepositoryCore, IPlayerRepository

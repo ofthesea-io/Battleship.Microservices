@@ -1,7 +1,9 @@
 ﻿namespace Battleship.Game.Board
 {
     using System.Collections.Generic;
-    using Microservices.Infrastructure.Models;
+
+    using Battleship.Microservices.Core.Models;
+
     using Models;
 
     /// <summary>

@@ -1,4 +1,4 @@
-﻿namespace Battleship.Microservices.Infrastructure.Repository
+﻿namespace Battleship.Microservices.Core.Repository
 {
     public interface IRepositoryCore
     {

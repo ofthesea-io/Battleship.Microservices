@@ -1,23 +1,25 @@
-<div class="container-flex">
-<ul class="list-inline" *ngIf="scoreCard != null">
-    <li class="list-inline-item">
+<div class="d-flex justify-content-between mt-2" *ngIf="scoreCard != null">
+    <div>
         {{scoreCard.message}}
-    </li>
-    <li class="list-inline-item">
-        Hit
-        <span class="badge badge-danger badge-pill">{{scoreCard.hit}}</span>
-    </li>
-    <li class="list-inline-item">
-        Miss
-        <span class="badge badge-warning badge-pill">{{scoreCard.miss}}</span>
-    </li>
-    <li class="list-inline-item">
-        Sunk
-        <span class="badge badge-danger badge-pill">{{scoreCard.sunk}}</span>
-    </li>
-    <li class="list-inline-item">
-        Total
-        <span class="badge badge-success badge-pill">{{scoreCard.total}}</span>
-    </li>
-</ul>
+    </div>
+    <div>
+        <ul class="list-inline">
+            <li class="list-inline-item">
+                Hit
+                <span class="badge badge-danger badge-pill">{{scoreCard.hit}}</span>
+            </li>
+            <li class="list-inline-item">
+                Miss
+                <span class="badge badge-warning badge-pill">{{scoreCard.miss}}</span>
+            </li>
+            <li class="list-inline-item">
+                Sunk
+                <span class="badge badge-danger badge-pill">{{scoreCard.sunk}}</span>
+            </li>
+            <li class="list-inline-item">
+                Total
+                <span class="badge badge-success badge-pill">{{scoreCard.total}}</span>
+            </li>
+        </ul>
+    </div>    
 </div>
