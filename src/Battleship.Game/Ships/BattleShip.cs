@@ -10,8 +10,6 @@
 
         private readonly char shipType = ComponentBase.BattleShipCode;
 
-        private int shipHit;
-
         #endregion
 
         #region Constructors
@@ -19,7 +17,7 @@
         public BattleShip(int shipIndex)
         {
             this.ShipLength = this.shipLength;
-            this.ShipChar = this.shipType;
+            this.ShipCode = this.shipType;
             this.ShipIndex = shipIndex;
         }
 
@@ -27,25 +25,13 @@
 
         #region IShip Members
 
-        public int ShipHit
-        {
-            get => this.shipHit;
-            set
-            {
-                if (this.shipHit == this.ShipLength - this.Index)
-                    this.IsShipSunk = true;
-                else
-                    this.shipHit++;
-            }
-        }
+        public sbyte ShipSegmentHit { get; set; }
 
         public int ShipIndex { get; }
 
-        public bool IsShipSunk { get; set; }
-
         public int ShipLength { get; }
 
-        public char ShipChar { get; }
+        public char ShipCode { get; }
 
         #endregion IShip Members
     }

@@ -1,6 +1,5 @@
 ﻿namespace Battleship.Game.Utilities
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -79,13 +78,6 @@
             }
 
             return ships;
-        }
-
-        public static string AuthorisationToken(string bearer)
-        {
-            if (string.IsNullOrEmpty(bearer)) throw new NullReferenceException();
-
-            return bearer.Split(' ')[1];
         }
 
         #endregion

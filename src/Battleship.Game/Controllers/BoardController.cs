@@ -11,6 +11,7 @@
     using Battleship.Microservices.Core.Components;
     using Battleship.Microservices.Core.Messages;
     using Battleship.Microservices.Core.Models;
+    using Battleship.Microservices.Core.Utilities;
 
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -90,7 +91,13 @@
                     throw new ArgumentException();
 
                 string coordinates = await this.gameRepository.GetShipCoordinates(sessionToken);
+                if (coordinates == null)
+                {
+                    this.Log(new NullReferenceException("Coordinates not found"));
+                    return this.StatusCode(StatusCodes.Status204NoContent);
+                }
 
+                // get into a object
                 Dictionary<Coordinate, Segment> shipCoordinates = JsonConvert.DeserializeObject<KeyValuePair<Coordinate, Segment>[]>(coordinates, this.jsonSerializerSettings).ToDictionary(kv => kv.Key, kv => kv.Value);
 
                 KeyValuePair<Coordinate, Segment> shipCoordinate = shipCoordinates.FirstOrDefault(q => q.Key.X == playerCommand.Coordinate.X && q.Key.Y == playerCommand.Coordinate.Y);
@@ -98,13 +105,19 @@
                 playerCommand.ScoreCard.IsHit = false;
                 if (shipCoordinate.Value != null)
                 {
-                    shipCoordinate.Value.Ship.ShipHit++;
+                    // Meta
+                    shipCoordinate.Value.Ship.ShipSegmentHit = 0x01;
+                    int numberOfSegmentsHit = shipCoordinates.Count(q => q.Value.Ship.ShipIndex == shipCoordinate.Value.Ship.ShipIndex && q.Value.Ship.ShipSegmentHit == 0x01);
+
+                    // Save
                     string updateShipCoordinates = JsonConvert.SerializeObject(shipCoordinates.ToArray(), Formatting.Indented, this.jsonSerializerSettings);
                     await this.gameRepository.UpdateShipCoordinates(updateShipCoordinates, sessionToken);
+
+                    // Display
                     playerCommand.ScoreCard.Hit++;
-                    playerCommand.ScoreCard.Message = this.localizer["Boom! You hit a ship!"];
                     playerCommand.ScoreCard.IsHit = true;
-                    if (shipCoordinate.Value.Ship.IsShipSunk)
+                    playerCommand.ScoreCard.Message = this.localizer["Boom! You hit a ship!"];
+                    if (numberOfSegmentsHit == shipCoordinate.Value.Ship.ShipLength)
                     {
                         playerCommand.ScoreCard.Sunk++;
                         playerCommand.ScoreCard.Message = this.localizer["Ship sunk!"];

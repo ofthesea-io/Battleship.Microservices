@@ -31,7 +31,7 @@
             SortedDictionary<Coordinate, Segment> segments = this.shipRandomiser.GetRandomisedShipCoordinates(ships);
 
             // Make sure that the HashCodes are different
-            IEnumerable<IShip> battleship = segments.Where(s => s.Value.Ship.ShipChar == ComponentBase.BattleShipCode).Select(s => s.Value.Ship);
+            IEnumerable<IShip> battleship = segments.Where(s => s.Value.Ship.ShipCode == ComponentBase.BattleShipCode).Select(s => s.Value.Ship);
             int counter = battleship.GroupBy(q => q.GetHashCode()).Count();
 
             // Assert
@@ -49,7 +49,7 @@
 
             // Make sure we only get one set of hash codes
             SortedDictionary<Coordinate, Segment> segments = this.shipRandomiser.GetRandomisedShipCoordinates(ships);
-            IEnumerable<IShip> battleship = segments.Where(s => s.Value.Ship.ShipChar == ComponentBase.DestroyerCode).Select(s => s.Value.Ship);
+            IEnumerable<IShip> battleship = segments.Where(s => s.Value.Ship.ShipCode == ComponentBase.DestroyerCode).Select(s => s.Value.Ship);
 
             int counter = battleship.GroupBy(q => q.GetHashCode()).Count();
 
@@ -66,7 +66,7 @@
 
             // Act
             SortedDictionary<Coordinate, Segment> segments = this.shipRandomiser.GetRandomisedShipCoordinates(ships);
-            int counter = segments.Count(q => q.Value.Ship.ShipChar == ComponentBase.BattleShipCode);
+            int counter = segments.Count(q => q.Value.Ship.ShipCode == ComponentBase.BattleShipCode);
 
             // Assert
             Assert.AreEqual(counter, numberOfSegments);
@@ -81,7 +81,7 @@
 
             // Act
             SortedDictionary<Coordinate, Segment> segments = this.shipRandomiser.GetRandomisedShipCoordinates(ships);
-            int counter = segments.Count(q => q.Value.Ship.ShipChar == ComponentBase.DestroyerCode);
+            int counter = segments.Count(q => q.Value.Ship.ShipCode == ComponentBase.DestroyerCode);
 
             // Assert
             Assert.AreEqual(counter, numberOfSegments);

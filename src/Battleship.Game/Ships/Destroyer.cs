@@ -19,7 +19,7 @@
         public Destroyer(int shipIndex)
         {
             this.ShipLength = this.shipLength;
-            this.ShipChar = this.shipType;
+            this.ShipCode = this.shipType;
             this.ShipIndex = shipIndex;
         }
 
@@ -29,23 +29,11 @@
 
         public int ShipLength { get; }
 
-        public char ShipChar { get; }
+        public char ShipCode { get; }
 
-        public int ShipHit
-        {
-            get => this.shipHit;
-            set
-            {
-                if (this.shipHit == this.ShipLength - this.Index)
-                    this.IsShipSunk = true;
-                else
-                    this.shipHit++;
-            }
-        }
+        public sbyte ShipSegmentHit { get; set; }
 
         public int ShipIndex { get; }
-
-        public bool IsShipSunk { get; set; }
 
         #endregion IShip Members
     }
