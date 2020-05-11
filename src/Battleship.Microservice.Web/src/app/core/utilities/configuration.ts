@@ -7,15 +7,15 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class Configuration {
   shipCounter = [
-    { Id: 1, option: 'One' },
-    { Id: 2, option: 'Two' },
-    { Id: 3, option: 'Three' },
-    { Id: 4, option: 'Four' },
+    { Id: 9, option: 'One' },
+    { Id: 8, option: 'Two' },
+    { Id: 7, option: 'Three' },
+    { Id: 6, option: 'Four' },
     { Id: 5, option: 'Five' },
-    { Id: 6, option: 'Six' },
-    { Id: 7, option: 'Seven' },
-    { Id: 8, option: 'Eight' },
-    { Id: 9, option: 'Nine' }
+    { Id: 4, option: 'Six' },
+    { Id: 3, option: 'Seven' },
+    { Id: 2, option: 'Eight' },
+    { Id: 1, option: 'Nine' }
   ];
 
     readonly hit: string = 'You\'ve hit a ship!';
@@ -28,7 +28,7 @@ export class Configuration {
     readonly start: string = 'Start Game';
     readonly applicationError: string = 'Application Error. Please contain your administrator!';
     readonly demoLoginError: string = 'No demo users found. Please create an account.';
-    readonly gameNotStarted: string = 'To start the game, first select you number of ships!';
+    readonly gameNotStarted: string = 'To start the game, select your Battleship gaming level';
     readonly gameStarted: string = 'Let the games begin!';
     readonly demoAccountSaveError: string = 'Can\'t save demo account game!';
     readonly gameIncomplete: string = 'Continue previous game?';

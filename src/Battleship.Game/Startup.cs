@@ -2,17 +2,15 @@
 {
     using System.Globalization;
 
+    using Battleship.Game.Handlers;
+    using Battleship.Game.Infrastructure;
     using Battleship.Microservices.Core.Messages;
     using Battleship.Microservices.Core.Repository;
-
-    using Handlers;
-    using Infrastructure;
-    using Microservices.Infrastructure.Messages;
+    using Battleship.Microservices.Infrastructure.Messages;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Localization;
-    using Microsoft.AspNetCore.Localization.Routing;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +22,9 @@
         #region Fields
 
         private readonly IConfiguration configuration;
+
         private readonly string database = "Database=Battleship.Game;";
+
         private string sqlConnectionString = string.Empty;
 
         #endregion
@@ -44,37 +44,37 @@
         public void ConfigureServices(IServiceCollection services)
         {
             this.sqlConnectionString = this.configuration.GetConnectionString("BattleshipGameCN");
-            var databaseConnection = $"{this.sqlConnectionString}{this.database}";
+            string databaseConnection = $"{this.sqlConnectionString}{this.database}";
 
             // Add the localization
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-            services.Configure<RequestLocalizationOptions>(options =>
-            {
-                var supportedCultures = new[]
-                {
-                    new CultureInfo("en-GB"), // English
-                    new CultureInfo("es-ES"), // Spanish
-                    new CultureInfo("de-DE"), // German 
-                    new CultureInfo("fr-FR"), // French
-                };
+            services.Configure<RequestLocalizationOptions>(
+                options =>
+                    {
+                        CultureInfo[] supportedCultures =
+                            {
+                                new CultureInfo("en-GB"), // English
+                                new CultureInfo("es-ES"), // Spanish
+                                new CultureInfo("de-DE"), // German 
+                                new CultureInfo("fr-FR")  // French
+                            };
 
-                options.DefaultRequestCulture = new RequestCulture("en-GB", "en-GB");
-                options.SupportedCultures = supportedCultures;
-                options.SupportedUICultures = supportedCultures;
-
-            });
+                        options.DefaultRequestCulture = new RequestCulture("en-GB", "en-GB");
+                        options.SupportedCultures = supportedCultures;
+                        options.SupportedUICultures = supportedCultures;
+                    });
 
             services.AddMemoryCache();
             services.AddCors();
             services.AddMvc().AddNewtonsoftJson().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-            var configSection = this.configuration.GetSection("RabbitMQ");
-            var host = configSection["Host"];
-            var username = configSection["UserName"];
-            var password = configSection["Password"];
-            var exchange = configSection["Exchange"];
-            var queue = configSection["Queue"];
+            IConfigurationSection configSection = this.configuration.GetSection("RabbitMQ");
+            string host = configSection["Host"];
+            string username = configSection["UserName"];
+            string password = configSection["Password"];
+            string exchange = configSection["Exchange"];
+            string queue = configSection["Queue"];
 
             services.AddSingleton<IGameRepository>(new GameRepository(databaseConnection));
             services.AddTransient<IMessagePublisher>(sp => new MessagePublisher(host, username, password, exchange, queue));
@@ -86,7 +86,7 @@
         {
             Initialisation.Setup(this.sqlConnectionString);
 
-            var localizerService = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            IOptions<RequestLocalizationOptions> localizerService = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
             app.UseRequestLocalization(localizerService.Value);
 
             if (env.IsDevelopment())
@@ -94,11 +94,7 @@
             else
                 app.UseHsts();
 
-            app.UseCors(
-                options => options.WithOrigins("http://localhost:4200")
-                   .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .AllowAnyOrigin());
+            app.UseCors(options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
             app.UseRouting();
 

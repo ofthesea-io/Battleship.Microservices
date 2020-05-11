@@ -17,11 +17,8 @@
         public DateTime Timestamp { get; set; }
 
         [JsonProperty("message", DefaultValueHandling = DefaultValueHandling.Include)]
-        public string Message { get; set; }
+        public string Content { get; set; }
 
-        [JsonProperty("username", DefaultValueHandling = DefaultValueHandling.Include)]
-        public string Username { get; set; }
-        
         #endregion
     }
 }

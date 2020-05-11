@@ -1,9 +1,11 @@
-using NUnit.Framework;
-
 namespace Battleship.Microservices.Core.Tests
 {
+    using NUnit.Framework;
+
     public class Tests
     {
+        #region Methods
+
         [SetUp]
         public void Setup()
         {
@@ -14,5 +16,7 @@ namespace Battleship.Microservices.Core.Tests
         {
             Assert.Pass();
         }
+
+        #endregion
     }
 }

@@ -43,7 +43,6 @@
             }
         }
 
-
         public int ShipIndex { get; }
 
         public bool IsShipSunk { get; set; }

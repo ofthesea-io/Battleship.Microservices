@@ -1,8 +1,5 @@
 ﻿namespace Battleship.Game.Board
 {
-    using System.Collections.Generic;
-
-    using Battleship.Game.Ships;
     using Battleship.Microservices.Core.Components;
 
     public class GridGenerator : ComponentBase, IGridGenerator
@@ -11,14 +8,12 @@
 
         private static volatile GridGenerator instance;
 
-
         #endregion
 
         #region Constructors
 
         protected GridGenerator()
         {
-        
         }
 
         #endregion
@@ -34,24 +29,6 @@
         #endregion
 
         #region Methods
-
-        /// <summary>
-        ///     Creates a singleton object that is thread safe
-        /// </summary>
-        /// <returns>Returns a single instance o GridGenerator</returns>
-        public static GridGenerator Instance()
-        {
-            if (GridGenerator.instance == null)
-                lock (ComponentBase.SyncObject)
-                {
-                    if (instance == null)
-                    {
-                        GridGenerator.instance = new GridGenerator();
-                    }
-                }
-
-            return GridGenerator.instance;
-        }
 
         /// <summary>
         ///     Gets the x dimension column
@@ -76,16 +53,31 @@
         /// <returns>Array of string</returns>
         public string[] GetAlphaColumnChars()
         {
-            int xDimention = this.XInitialPoint + this.GridDimension;
+            int xDimension = this.XInitialPoint + this.GridDimension;
             string[] column = new string[this.GridDimension];
             int counter = 0;
-            for (int i = this.XInitialPoint; i < xDimention; i++)
+            for (int i = this.XInitialPoint; i < xDimension; i++)
             {
                 column[counter] = ((char)i).ToString();
                 counter++;
             }
 
             return column;
+        }
+
+        /// <summary>
+        ///     Creates a singleton object that is thread safe
+        /// </summary>
+        /// <returns>Returns a single instance o GridGenerator</returns>
+        public static GridGenerator Instance()
+        {
+            if (GridGenerator.instance == null)
+                lock (ComponentBase.SyncObject)
+                {
+                    if (GridGenerator.instance == null) GridGenerator.instance = new GridGenerator();
+                }
+
+            return GridGenerator.instance;
         }
 
         #endregion

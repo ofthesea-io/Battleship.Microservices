@@ -19,9 +19,8 @@ BEGIN
 CREATE TABLE [dbo].[Audit](
 	[AuditId] [int] IDENTITY(1,1) NOT NULL,
 	[Timestamp] [datetime2](7) NOT NULL,
-	[Message] [text] NOT NULL,
+	[Content] [text] NOT NULL,
 	[AuditTypeId] [int] NOT NULL,
-	[Username] [varchar](50) NOT NULL,
  CONSTRAINT [PK_Audit] PRIMARY KEY CLUSTERED 
 (
 	[AuditId] ASC
@@ -76,14 +75,14 @@ BEGIN
 INSERT [dbo].[AuditType] ([AuditTypeId], [Name]) VALUES (1, N'Error')
 END
 GO
-IF NOT EXISTS (SELECT * FROM [dbo].[AuditType] WHERE [Name] = N'Log')
+IF NOT EXISTS (SELECT * FROM [dbo].[AuditType] WHERE [Name] = N'Warning')
 BEGIN
-INSERT [dbo].[AuditType] ([AuditTypeId], [Name]) VALUES (2, N'Log')
+INSERT [dbo].[AuditType] ([AuditTypeId], [Name]) VALUES (2, N'Warning')
 END
 GO
-IF NOT EXISTS (SELECT * FROM [dbo].[AuditType] WHERE [Name] = N'Log')
+IF NOT EXISTS (SELECT * FROM [dbo].[AuditType] WHERE [Name] = N'Info')
 BEGIN
-INSERT [dbo].[AuditType] ([AuditTypeId], [Name]) VALUES (3, N'Message')
+INSERT [dbo].[AuditType] ([AuditTypeId], [Name]) VALUES (3, N'Info')
 END
 GO
 SET IDENTITY_INSERT [dbo].[AuditType] OFF
@@ -92,11 +91,11 @@ GO
 
 USE [Battleship.Auditing]
 GO
-DROP PROCEDURE IF EXISTS [dbo].[spSaveAuditMessage]
+DROP PROCEDURE IF EXISTS [dbo].[spSaveAuditContent]
 GO
-DROP PROCEDURE IF EXISTS [dbo].[spGetAuditMessagesByAuditType]
+DROP PROCEDURE IF EXISTS [dbo].[spGetAuditContentByAuditType]
 GO
-DROP PROCEDURE IF EXISTS [dbo].[spGetAuditMessages]
+DROP PROCEDURE IF EXISTS [dbo].[spGetAuditContent]
 GO
 SET ANSI_NULLS ON
 GO
@@ -105,12 +104,12 @@ GO
 -- =============================================
 -- Author:		Jakes Potgieter
 -- Create date: 08-05-202
--- Description:	Gets all audit messages
+-- Description:	Gets all audit Content
 -- =============================================
-CREATE PROCEDURE [dbo].[spGetAuditMessages] 
+CREATE PROCEDURE [dbo].[spGetAuditContent] 
 AS
 BEGIN
-	SELECT a.Timestamp, a.Message, a.AuditTypeId, a.Username
+	SELECT a.Timestamp, a.Content, a.AuditTypeId
 	FROM [dbo].[Audit] a
 END
 GO
@@ -122,13 +121,13 @@ GO
 -- =============================================
 -- Author:		Jakes Potgieter
 -- Create date: 08-05-202
--- Description:	Gets audit message by audit type
+-- Description:	Gets audit Content by audit type
 -- =============================================
-CREATE PROCEDURE [dbo].[spGetAuditMessagesByAuditType]
+CREATE PROCEDURE [dbo].[spGetAuditContentByAuditType]
 @auditTypeId int
 AS
 BEGIN
-	SELECT a.Timestamp, a.Message, a.AuditTypeId, a.Username
+	SELECT a.Timestamp, a.Content, a.AuditTypeId
 	FROM [dbo].[Audit] a
 	WHERE a.AuditTypeId = @auditTypeId
 END
@@ -140,22 +139,23 @@ SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
 -- Author:		Jakes Potgieter
--- Create date: 08-05-202
--- Description:	Save audit message
+-- Create date: 08-05-2020
+--				11-05-2020 : Removed username field from the audit table
+-- Description:	Save audit Content
 -- =============================================
-CREATE PROCEDURE [dbo].[spSaveAuditMessage] 
+CREATE PROCEDURE [dbo].[spSaveAuditContent] 
 	@AuditTypeId int,
-	@Message text,
-	@Username varchar(100)
+	@Content text,
+	@Timestamp datetime2
 AS
 BEGIN
 	INSERT INTO [dbo].[Audit]
            ([AuditTypeId]
-		   ,[Message]
-           ,[Username])
+		   ,[Content]
+		   ,[Timestamp])
      VALUES
            (@AuditTypeId
-           ,@Message
-           ,@Username)
+           ,@Content
+           ,@Timestamp)
 END
 GO

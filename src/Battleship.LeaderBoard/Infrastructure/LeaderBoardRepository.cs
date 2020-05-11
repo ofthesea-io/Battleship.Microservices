@@ -6,7 +6,8 @@
     {
         #region Constructors
 
-        public LeaderBoardRepository(string database) : base(database)
+        public LeaderBoardRepository(string database)
+            : base(database)
         {
         }
 

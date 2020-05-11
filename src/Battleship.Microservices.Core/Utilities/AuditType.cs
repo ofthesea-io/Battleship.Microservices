@@ -3,18 +3,18 @@
     public enum AuditType
     {
         /// <summary>
-        /// An exception or Error within the application
+        ///     An exception or Error within the application
         /// </summary>
         Error = 1,
 
         /// <summary>
-        /// Log errors
+        ///     Warning errors
         /// </summary>
-        Log = 2,
+        Warning = 2,
 
         /// <summary>
-        /// Content to save
+        ///     Info to save
         /// </summary>
-        Content = 3
+        Info = 3
     }
 }

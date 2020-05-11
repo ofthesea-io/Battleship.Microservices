@@ -1,7 +1,5 @@
 ﻿namespace Battleship.Game.Ships
 {
-    using Newtonsoft.Json;
-
     public interface IShip
     {
         #region Properties

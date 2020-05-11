@@ -4,11 +4,10 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Battleship.Game.Models;
+    using Battleship.Game.Utilities;
     using Battleship.Microservices.Core.Components;
     using Battleship.Microservices.Core.Models;
-
-    using Models;
-    using Utilities;
 
     public class Segmentation : ComponentBase, ISegmentation
     {
@@ -60,7 +59,7 @@
             if (!BattleshipExtensions.IsSegmentWithInGridRange(coordinate.X, coordinate.Y))
                 throw new IndexOutOfRangeException();
 
-            var item = this.segmentation.FirstOrDefault(q => q.Key.X == coordinate.X && q.Key.Y == coordinate.Y).Value;
+            Segment item = this.segmentation.FirstOrDefault(q => q.Key.X == coordinate.X && q.Key.Y == coordinate.Y).Value;
 
             if (item != null)
             {
@@ -81,8 +80,7 @@
                 if (!BattleshipExtensions.IsSegmentWithInGridRange(segment.Key.X, segment.Key.Y))
                     throw new IndexOutOfRangeException();
 
-                var item = this.segmentation.FirstOrDefault(q => q.Key.X == segment.Key.X && q.Key.Y == segment.Key.Y)
-                   .Value;
+                Segment item = this.segmentation.FirstOrDefault(q => q.Key.X == segment.Key.X && q.Key.Y == segment.Key.Y).Value;
 
                 if (item != null)
                 {

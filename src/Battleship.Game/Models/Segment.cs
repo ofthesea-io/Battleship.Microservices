@@ -1,8 +1,9 @@
 ﻿namespace Battleship.Game.Models
 {
-    using Enums;
+    using Battleship.Game.Enums;
+    using Battleship.Game.Ships;
+
     using Newtonsoft.Json;
-    using Ships;
 
     /// <summary>
     ///     Individual segment (cell) in the segmentation list on the grid

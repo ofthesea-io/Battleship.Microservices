@@ -4,10 +4,9 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Battleship.Game.Models;
+    using Battleship.Game.Ships;
     using Battleship.Microservices.Core.Models;
-
-    using Models;
-    using Ships;
 
     public static class BattleshipExtensions
     {
@@ -25,26 +24,25 @@
 
         public static bool IsSegmentAvailable<TSource>(this IEnumerable<TSource> source, int x, int y)
         {
-            var result = true;
+            bool result = true;
 
             if (source.Any())
             {
-                SortedDictionary<Coordinate, Segment> segments = (SortedDictionary<Coordinate, Segment>) source;
-                var isTaken = segments.Any(q => q.Key.X == x && q.Key.Y == y && !q.Value.IsEmpty);
+                SortedDictionary<Coordinate, Segment> segments = (SortedDictionary<Coordinate, Segment>)source;
+                bool isTaken = segments.Any(q => q.Key.X == x && q.Key.Y == y && !q.Value.IsEmpty);
                 if (isTaken) result = false;
             }
 
             return result;
         }
 
-        public static bool AddRange<TSource>(this IEnumerable<TSource> source,
-            SortedDictionary<Coordinate, Segment> range)
+        public static bool AddRange<TSource>(this IEnumerable<TSource> source, SortedDictionary<Coordinate, Segment> range)
         {
-            var result = true;
+            bool result = true;
 
             if (range.Any())
             {
-                SortedDictionary<Coordinate, Segment> segments = (SortedDictionary<Coordinate, Segment>) source;
+                SortedDictionary<Coordinate, Segment> segments = (SortedDictionary<Coordinate, Segment>)source;
 
                 if (segments != null)
                     foreach (KeyValuePair<Coordinate, Segment> pair in range)
@@ -56,11 +54,11 @@
 
         public static bool IsSegmentWithInGridRange(int? x, int? y)
         {
-            var result = false;
+            bool result = false;
 
             if (x == null || y == null) return false;
 
-            var maxXLength = BattleshipExtensions.XInitialPoint + BattleshipExtensions.GridDimension - BattleshipExtensions.Index;
+            int maxXLength = BattleshipExtensions.XInitialPoint + BattleshipExtensions.GridDimension - BattleshipExtensions.Index;
 
             // Test the X and Y Axis coordinates
             if (x >= BattleshipExtensions.XInitialPoint && x <= maxXLength && y >= BattleshipExtensions.Index && y <= BattleshipExtensions.GridDimension) result = true;
@@ -72,7 +70,7 @@
         {
             List<IShip> ships = new List<IShip>(numberOfShips);
 
-            for (var i = 1; i <= numberOfShips; i++)
+            for (int i = 1; i <= numberOfShips; i++)
             {
                 if (i % 2 == 0)
                     ships.Add(new Destroyer(i));

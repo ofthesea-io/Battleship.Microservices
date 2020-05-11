@@ -21,29 +21,21 @@
 
         #region Methods
 
-        public async Task<IEnumerable<Audit>> GetAuditMessages()
+        public async Task<IEnumerable<Audit>> GetAuditContent()
         {
             return await this.ExecuteAsync<Audit>();
         }
 
-        public async Task<IEnumerable<Audit>> GetAuditMessagesByAuditType(AuditType auditType)
+        public async Task<IEnumerable<Audit>> GetAuditContentByAuditType(AuditType auditType)
         {
-            Dictionary<string, object> parameters = new Dictionary<string, object>
-            {
-                { "AuditTypeId", auditType }
-            };
+            Dictionary<string, object> parameters = new Dictionary<string, object> { { "AuditTypeId", auditType } };
 
             return await this.ExecuteAsync<Audit>(parameters);
         }
 
-        public Task SaveAuditMessage(AuditType auditType, string message, string username)
+        public Task SaveAuditContent(string content, AuditType auditType, DateTime timestamp)
         {
-            Dictionary<string, object> parameters = new Dictionary<string, object>
-            {
-                { "AuditTypeId", auditType },
-                { "Content", message },
-                { "Username", username }
-            };
+            Dictionary<string, object> parameters = new Dictionary<string, object> { { "AuditTypeId", auditType }, { "Content", content }, { "Timestamp", timestamp } };
 
             return this.ExecuteAsync(parameters);
         }

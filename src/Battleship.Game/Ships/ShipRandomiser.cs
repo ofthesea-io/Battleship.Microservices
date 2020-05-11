@@ -4,13 +4,11 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Battleship.Game.Enums;
+    using Battleship.Game.Models;
+    using Battleship.Game.Utilities;
     using Battleship.Microservices.Core.Components;
     using Battleship.Microservices.Core.Models;
-
-    using Enums;
-
-    using Models;
-    using Utilities;
 
     public class ShipRandomiser : ComponentBase, IShipRandomiser
     {
@@ -50,7 +48,7 @@
         {
             if (ships != null && this.segments != null)
             {
-                var totalShipLength = ships.Sum(q => q.ShipLength);
+                int totalShipLength = ships.Sum(q => q.ShipLength);
 
                 // Create a temporary segment list and pass it along by reference
                 // Once done, we can clear it out and make sure the GC does its job
@@ -59,11 +57,9 @@
                 this.segments.Clear();
 
                 if (totalShipLength != this.segments.Count)
-                    foreach (var ship in ships)
+                    foreach (IShip ship in ships)
                     {
-                        var direction = ShipRandomiser.Randomise.Next(this.GridDimension) % 2 == 0
-                            ? ShipDirection.Horizontal
-                            : ShipDirection.Vertical;
+                        ShipDirection direction = ShipRandomiser.Randomise.Next(this.GridDimension) % 2 == 0 ? ShipDirection.Horizontal : ShipDirection.Vertical;
 
                         while (temporarySegments != null && temporarySegments.Count != ship.ShipLength)
                         {
@@ -115,17 +111,17 @@
             this.coordinate = this.GenerateCoordinate();
 
             // Top is 1 to 5 and Bottom is 5 to 10
-            var orientation = this.coordinate.Y > this.yMidPoint ? Boundaries.Top : Boundaries.Bottom;
+            Boundaries orientation = this.coordinate.Y > this.yMidPoint ? Boundaries.Top : Boundaries.Bottom;
 
             if (orientation == Boundaries.Top)
-                for (var y = this.coordinate.Y; y > this.coordinate.Y - ship.ShipLength; y--)
+                for (int y = this.coordinate.Y; y > this.coordinate.Y - ship.ShipLength; y--)
                 {
                     if (!this.AddToYAxis(this.coordinate.X, y, ship, ref temporarySegments))
                         break;
                 }
 
             if (orientation == Boundaries.Bottom)
-                for (var y = this.coordinate.Y; y < this.coordinate.Y + ship.ShipLength; y++)
+                for (int y = this.coordinate.Y; y < this.coordinate.Y + ship.ShipLength; y++)
                 {
                     if (!this.AddToYAxis(this.coordinate.X, y, ship, ref temporarySegments))
                         break;
@@ -137,34 +133,31 @@
             this.coordinate = this.GenerateCoordinate();
 
             // Left to Right 65 to 69 Right to Left 74 to 70
-            var orientation = this.coordinate.X >= this.xMidPoint ? Boundaries.RightToLeft : Boundaries.LeftToRight;
+            Boundaries orientation = this.coordinate.X >= this.xMidPoint ? Boundaries.RightToLeft : Boundaries.LeftToRight;
 
             if (orientation == Boundaries.LeftToRight)
-                for (var x = this.coordinate.X; x < this.coordinate.X + ship.ShipLength; x++)
+                for (int x = this.coordinate.X; x < this.coordinate.X + ship.ShipLength; x++)
                 {
                     if (!this.AddToXAxis(x, this.coordinate.Y, ship, ref temporarySegments))
                         break;
                 }
 
             if (orientation == Boundaries.RightToLeft)
-                for (var x = this.coordinate.X; x > this.coordinate.X - ship.ShipLength; x--)
+                for (int x = this.coordinate.X; x > this.coordinate.X - ship.ShipLength; x--)
                 {
                     if (!this.AddToXAxis(x, this.coordinate.Y, ship, ref temporarySegments))
                         break;
                 }
         }
 
-        private bool AddToYAxis(int currentXPosition, int currentYPosition, IShip ship,
-            ref SortedDictionary<Coordinate, Segment> temporarySegments)
+        private bool AddToYAxis(int currentXPosition, int currentYPosition, IShip ship, ref SortedDictionary<Coordinate, Segment> temporarySegments)
         {
-            var result = false;
+            bool result = false;
 
             // If the current segment position is valid add to the temporary list, otherwise clear the list and start again
-            if (this.segments.IsSegmentAvailable(currentXPosition, currentYPosition)
-                && BattleshipExtensions.IsSegmentWithInGridRange(currentXPosition, currentYPosition))
+            if (this.segments.IsSegmentAvailable(currentXPosition, currentYPosition) && BattleshipExtensions.IsSegmentWithInGridRange(currentXPosition, currentYPosition))
             {
-                temporarySegments.Add(new Coordinate(currentXPosition, currentYPosition),
-                    new Segment(ShipDirection.Vertical, ship));
+                temporarySegments.Add(new Coordinate(currentXPosition, currentYPosition), new Segment(ShipDirection.Vertical, ship));
                 result = true;
             }
             else
@@ -175,17 +168,14 @@
             return result;
         }
 
-        private bool AddToXAxis(int currentXPosition, int currentYPosition, IShip ship,
-            ref SortedDictionary<Coordinate, Segment> temporarySegments)
+        private bool AddToXAxis(int currentXPosition, int currentYPosition, IShip ship, ref SortedDictionary<Coordinate, Segment> temporarySegments)
         {
-            var result = false;
+            bool result = false;
 
             // If the current segment position is valid add to the temporary list, otherwise clear the list and start again
-            if (this.segments.IsSegmentAvailable(currentXPosition, currentYPosition)
-                && BattleshipExtensions.IsSegmentWithInGridRange(currentXPosition, currentYPosition))
+            if (this.segments.IsSegmentAvailable(currentXPosition, currentYPosition) && BattleshipExtensions.IsSegmentWithInGridRange(currentXPosition, currentYPosition))
             {
-                temporarySegments.Add(new Coordinate(currentXPosition, currentYPosition),
-                    new Segment(ShipDirection.Horizontal, ship));
+                temporarySegments.Add(new Coordinate(currentXPosition, currentYPosition), new Segment(ShipDirection.Horizontal, ship));
                 result = true;
             }
             else
@@ -203,20 +193,20 @@
 
         private Coordinate GenerateCoordinate()
         {
-            var positionX = ShipRandomiser.Randomise.Next(this.XInitialPoint, this.XInitialPoint + this.GridDimension);
-            var positionY = ShipRandomiser.Randomise.Next(this.Index, this.GridDimension);
+            int positionX = ShipRandomiser.Randomise.Next(this.XInitialPoint, this.XInitialPoint + this.GridDimension);
+            int positionY = ShipRandomiser.Randomise.Next(this.Index, this.GridDimension);
 
             // if we hit the xMidPoint seed and add/subtract to positionX
             if (positionX == this.xMidPoint)
             {
-                var seed = ShipRandomiser.Randomise.Next(this.XInitialPoint, this.xMidPoint);
+                int seed = ShipRandomiser.Randomise.Next(this.XInitialPoint, this.xMidPoint);
                 positionX = seed % 2 == 0 ? positionX + seed : positionX - seed;
             }
 
             // if we hit the yMidPoint seed and add/subtract to positionY
             if (positionY == this.yMidPoint)
             {
-                var seed = ShipRandomiser.Randomise.Next(this.Index, this.yMidPoint);
+                int seed = ShipRandomiser.Randomise.Next(this.Index, this.yMidPoint);
                 positionY = seed % 2 == 0 ? positionY + seed : positionY - seed;
             }
 

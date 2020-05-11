@@ -1,5 +1,6 @@
 ﻿namespace Battleship.Audit.Infrastructure
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -10,11 +11,11 @@
     {
         #region Methods
 
-        Task<IEnumerable<Audit>> GetAuditMessages();
+        Task<IEnumerable<Audit>> GetAuditContent();
 
-        Task<IEnumerable<Audit>> GetAuditMessagesByAuditType(AuditType auditType);
+        Task<IEnumerable<Audit>> GetAuditContentByAuditType(AuditType auditType);
 
-        Task SaveAuditMessage(AuditType auditType, string message, string username);
+        Task SaveAuditContent(string content, AuditType auditType, DateTime timestamp);
 
         #endregion
     }

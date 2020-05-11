@@ -2,8 +2,10 @@
 {
     using System;
     using System.Threading.Tasks;
+
+    using Battleship.Player.Models;
+
     using Microsoft.AspNetCore.Mvc;
-    using Models;
 
     public interface IPlayerController
     {

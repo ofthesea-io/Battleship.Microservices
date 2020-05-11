@@ -2,10 +2,9 @@
 {
     using Battleship.Microservices.Core.Messages;
     using Battleship.Microservices.Core.Repository;
-
-    using Handlers;
-    using Infrastructure;
-    using Microservices.Infrastructure.Messages;
+    using Battleship.Microservices.Infrastructure.Messages;
+    using Battleship.Score.Handlers;
+    using Battleship.Score.Infrastructure;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -19,7 +18,9 @@
         #region Fields
 
         private readonly string database = "Database=Battleship.ScoreCard;";
+
         public IConfiguration configuration;
+
         private string sqlConnectionString = string.Empty;
 
         #endregion
@@ -41,16 +42,15 @@
             services.AddMemoryCache();
 
             this.sqlConnectionString = this.configuration.GetConnectionString("BattleshipGameCN");
-            var databaseConnection = $"{this.sqlConnectionString}{this.database}";
-
+            string databaseConnection = $"{this.sqlConnectionString}{this.database}";
 
             // add message publisher classes
-            var configSection = this.configuration.GetSection("RabbitMQ");
-            var host = configSection["Host"];
-            var username = configSection["UserName"];
-            var password = configSection["Password"];
-            var exchange = configSection["Exchange"];
-            var queue = configSection["Queue"];
+            IConfigurationSection configSection = this.configuration.GetSection("RabbitMQ");
+            string host = configSection["Host"];
+            string username = configSection["UserName"];
+            string password = configSection["Password"];
+            string exchange = configSection["Exchange"];
+            string queue = configSection["Queue"];
 
             services.AddSingleton<IScoreCardRepository>(new ScoreCardRepository(databaseConnection));
             services.AddTransient<IMessagePublisher>(sp => new MessagePublisher(host, username, password, exchange, queue));
@@ -69,11 +69,7 @@
                 app.UseDeveloperExceptionPage();
             else
                 app.UseHsts();
-            app.UseCors(options => options
-               .AllowAnyMethod()
-               .AllowAnyHeader()
-               .AllowAnyOrigin()
-            );
+            app.UseCors(options => options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
             app.UseRouting();
 

@@ -2,9 +2,8 @@
 {
     using System.Collections.Generic;
 
+    using Battleship.Game.Models;
     using Battleship.Microservices.Core.Models;
-
-    using Models;
 
     /// <summary>
     ///     List of segments Controls each individual segment on the grid.

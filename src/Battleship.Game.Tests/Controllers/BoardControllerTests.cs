@@ -2,23 +2,22 @@
 {
     using System.Linq;
 
+    using Battleship.Game.Controllers;
+    using Battleship.Game.Infrastructure;
+    using Battleship.Game.Models;
     using Battleship.Microservices.Core.Messages;
 
-    using Game.Controllers;
-    using Infrastructure;
-    using Microservices.Infrastructure.Messages;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Localization;
-    using Models;
+
     using Moq;
+
     using NUnit.Framework;
 
     [TestFixture]
     public class BoardControllerTests
     {
-        private BoardController boardController;
-
         [SetUp]
         public void Setup()
         {
@@ -27,6 +26,8 @@
             Mock<IStringLocalizer<BoardController>> localiserMoq = new Mock<IStringLocalizer<BoardController>>();
             this.boardController = new BoardController(gameRepository.Object, messagePublisherMoq.Object, localiserMoq.Object);
         }
+
+        private BoardController boardController;
 
         [Test]
         public void GetGamingGrid_IsValidGamingGrid_ReturnGamingGrid()
@@ -47,13 +48,12 @@
 
             // Act
             ActionResult<GamingGrid> gamingGrid = this.boardController.GetGamingGrid().Result;
-            var counter = gamingGrid.Value.X.Count();
-            var result = counter > 0;
+            int counter = gamingGrid.Value.X.Count();
+            bool result = counter > 0;
 
             // Assert
             Assert.IsTrue(result);
         }
-
 
         [Test]
         public void GetGamingGrid_YAxis_ReturnMoreThanOne()
@@ -62,8 +62,8 @@
 
             // Act
             ActionResult<GamingGrid> gamingGrid = this.boardController.GetGamingGrid().Result;
-            var counter = gamingGrid.Value.Y.Count();
-            var result = counter > 0;
+            int counter = gamingGrid.Value.Y.Count();
+            bool result = counter > 0;
 
             // Assert
             Assert.IsTrue(result);
@@ -75,7 +75,7 @@
             // Arrange
 
             // Act
-            var result = this.boardController.StartGame(1).Result as StatusCodeResult;
+            StatusCodeResult result = this.boardController.StartGame(1).Result as StatusCodeResult;
 
             // Assert
             Assert.IsInstanceOf<StatusCodeResult>(result);
@@ -85,16 +85,13 @@
         public void StartGame_IfAuthorizationIsLoaded_StartGame()
         {
             // Arrange
-            var httpContext = new DefaultHttpContext();
+            DefaultHttpContext httpContext = new DefaultHttpContext();
             httpContext.Request.Headers["Authorization"] = "YWxhZGRpbjpvcGVuc2VzYW1l";
-            var controllerContext = new ControllerContext
-            {
-                HttpContext = httpContext
-            };
+            ControllerContext controllerContext = new ControllerContext { HttpContext = httpContext };
             this.boardController.ControllerContext = controllerContext;
 
             // Act
-            var result = this.boardController.StartGame(1).Result as StatusCodeResult;
+            StatusCodeResult result = this.boardController.StartGame(1).Result as StatusCodeResult;
 
             // Assert
             Assert.IsInstanceOf<StatusCodeResult>(result);

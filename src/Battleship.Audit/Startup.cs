@@ -1,5 +1,6 @@
 namespace Battleship.Audit
 {
+    using Battleship.Audit.Handlers;
     using Battleship.Audit.Infrastructure;
     using Battleship.Microservices.Core.Messages;
     using Battleship.Microservices.Core.Repository;
@@ -39,21 +40,22 @@ namespace Battleship.Audit
         public void ConfigureServices(IServiceCollection services)
         {
             this.sqlConnectionString = this.configuration.GetConnectionString("BattleshipAuditCN");
-            var databaseConnection = $"{this.sqlConnectionString}{this.database}";
+            string databaseConnection = $"{this.sqlConnectionString}{this.database}";
 
             services.AddMemoryCache();
             services.AddCors();
             services.AddMvc().AddNewtonsoftJson().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-            var configSection = this.configuration.GetSection("RabbitMQ");
-            var host = configSection["Host"];
-            var username = configSection["UserName"];
-            var password = configSection["Password"];
-            var exchange = configSection["Exchange"];
-            var queue = configSection["Queue"];
+            IConfigurationSection configSection = this.configuration.GetSection("RabbitMQ");
+            string host = configSection["Host"];
+            string username = configSection["UserName"];
+            string password = configSection["Password"];
+            string exchange = configSection["Exchange"];
+            string queue = configSection["Queue"];
 
             services.AddSingleton<IAuditRepository>(new AuditRepository(databaseConnection));
             services.AddTransient<IMessagePublisher>(sp => new MessagePublisher(host, username, password, exchange, queue));
+            services.AddHostedService<AuditMessageHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

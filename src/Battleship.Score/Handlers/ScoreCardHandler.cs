@@ -7,13 +7,13 @@
 
     using Battleship.Microservices.Core.Messages;
     using Battleship.Microservices.Core.Models;
-
-    using Infrastructure;
-    using Microservices.Infrastructure.Messages;
+    using Battleship.Score.Infrastructure;
 
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
+
     using Newtonsoft.Json;
+
     using RabbitMQ.Client;
     using RabbitMQ.Client.Events;
 
@@ -22,17 +22,20 @@
         #region Fields
 
         private readonly IConfiguration configuration;
+
         private readonly IMessagePublisher messagePublisher;
+
         private readonly IScoreCardRepository scoreCardRepository;
+
         private IModel channel;
+
         private IConnection connection;
 
         #endregion
 
         #region Constructors
 
-        public ScoreCardHandler(IConfiguration configuration, IScoreCardRepository scoreCardRepository,
-            IMessagePublisher messagePublisher)
+        public ScoreCardHandler(IConfiguration configuration, IScoreCardRepository scoreCardRepository, IMessagePublisher messagePublisher)
         {
             this.configuration = configuration;
             this.scoreCardRepository = scoreCardRepository;
@@ -46,12 +49,7 @@
 
         private void Initialise()
         {
-            var factory = new ConnectionFactory
-            {
-                HostName = this.messagePublisher.Host,
-                UserName = this.messagePublisher.Username,
-                Password = this.messagePublisher.Password
-            };
+            ConnectionFactory factory = new ConnectionFactory { HostName = this.messagePublisher.Host, UserName = this.messagePublisher.Username, Password = this.messagePublisher.Password };
 
             // create connection
             this.connection = factory.CreateConnection();
@@ -74,31 +72,31 @@
         {
             stoppingToken.ThrowIfCancellationRequested();
 
-            var consumer = new EventingBasicConsumer(this.channel);
+            EventingBasicConsumer consumer = new EventingBasicConsumer(this.channel);
             consumer.Received += (sender, args) =>
-            {
-                // received message
-                var content = Encoding.UTF8.GetString(args.Body.ToArray());
-
-                // handle the received message
-                try
                 {
-                    if (!string.IsNullOrEmpty(content))
+                    // received message
+                    string content = Encoding.UTF8.GetString(args.Body.ToArray());
+
+                    // handle the received message
+                    try
                     {
-                        var scoreCard = JsonConvert.DeserializeObject<ScoreCard>(content);
-                        if (scoreCard != null && !string.IsNullOrEmpty(scoreCard.Message))
+                        if (!string.IsNullOrEmpty(content))
                         {
-                            var data = JsonConvert.SerializeObject(scoreCard);
-                            this.scoreCardRepository.ManagePlayerScoreCard(scoreCard.SessionToken, data);
-                            this.channel.BasicAck(args.DeliveryTag, true);
+                            ScoreCard scoreCard = JsonConvert.DeserializeObject<ScoreCard>(content);
+                            if (scoreCard != null && !string.IsNullOrEmpty(scoreCard.Message))
+                            {
+                                string data = JsonConvert.SerializeObject(scoreCard);
+                                this.scoreCardRepository.ManagePlayerScoreCard(scoreCard.SessionToken, data);
+                                this.channel.BasicAck(args.DeliveryTag, true);
+                            }
                         }
                     }
-                }
-                catch (Exception e)
-                {
-                    var message = $"Battleship.Board: {e.Message}{Environment.NewLine}{e.StackTrace}";
-                }
-            };
+                    catch (Exception e)
+                    {
+                        string message = $"Battleship.Board: {e.Message}{Environment.NewLine}{e.StackTrace}";
+                    }
+                };
 
             this.channel.BasicConsume(this.messagePublisher.Queue, false, consumer);
             return Task.CompletedTask;

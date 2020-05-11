@@ -1,7 +1,8 @@
 ﻿namespace Battleship.Warehouse
 {
     using System;
-    using Scheduler;
+
+    using Battleship.Warehouse.Scheduler;
 
     public static class WareHousing
     {

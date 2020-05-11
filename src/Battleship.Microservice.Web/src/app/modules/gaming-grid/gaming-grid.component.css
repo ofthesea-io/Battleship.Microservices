@@ -19,7 +19,9 @@
 }
 
 .coordinate {
-	display: block;
-	position: absolute;
-	top: 0%;
-  }
+    display: block;
+    position: absolute;
+    top: 0%;
+    left: 33%;
+    font-weight: bold;
+}

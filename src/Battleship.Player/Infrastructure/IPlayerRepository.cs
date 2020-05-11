@@ -3,7 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Models;
+
+    using Battleship.Player.Models;
 
     public interface IPlayerRepository
     {
@@ -22,6 +23,8 @@
         Task<bool> PlayerLogout(Guid playerId);
 
         Task<Player> DemoLogin(Guid playerId);
+
+        Task<bool> IsAuthenticated(string auth);
 
         #endregion
     }

@@ -3,12 +3,11 @@
     using System;
     using System.Collections.Generic;
 
+    using Battleship.Game.Board;
+    using Battleship.Game.Ships;
     using Battleship.Microservices.Core.Components;
 
-    using Board;
-
     using NUnit.Framework;
-    using Ships;
 
     [TestFixture]
     public class GridGeneratorTests : ComponentBase
@@ -21,7 +20,7 @@
         public void Board_WhenGridGenerated_ReturnOneHundredSegments()
         {
             // Arrange
-            var totalSegments = this.GridDimension * this.GridDimension;
+            int totalSegments = this.GridDimension * this.GridDimension;
             int? result = 0;
 
             // Act
@@ -47,9 +46,9 @@
         public void Board_WhenGridGenerated_ReturnThirteenOccupiedSegments()
         {
             // Arrange
-            List<IShip> ships = new List<IShip> {new BattleShip(1), new Destroyer(2), new Destroyer(3)};
+            List<IShip> ships = new List<IShip> { new BattleShip(1), new Destroyer(2), new Destroyer(3) };
             this.shipRandomiser = ShipRandomiser.Instance();
-            var occupiedSegments = this.shipRandomiser.GetRandomisedShipCoordinates(ships).Count;
+            int occupiedSegments = this.shipRandomiser.GetRandomisedShipCoordinates(ships).Count;
 
             // Act
             int? result = this.gridGenerator.NumberOfOccupiedSegments;

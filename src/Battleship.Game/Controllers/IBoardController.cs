@@ -1,8 +1,10 @@
 ﻿namespace Battleship.Game.Controllers
 {
     using System.Threading.Tasks;
+
+    using Battleship.Game.Models;
+
     using Microsoft.AspNetCore.Mvc;
-    using Models;
 
     public interface IBoardController
     {

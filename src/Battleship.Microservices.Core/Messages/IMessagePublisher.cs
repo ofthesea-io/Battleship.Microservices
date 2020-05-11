@@ -2,8 +2,6 @@
 {
     using System.Threading.Tasks;
 
-    using Battleship.Microservices.Core.Utilities;
-
     public interface IMessagePublisher
     {
         #region Properties
@@ -23,8 +21,6 @@
         #region Methods
 
         Task PublishMessageAsync(string message, string queue);
-
-        Task PublishAuditLogMessageAsync(AuditType auditType, string message);
 
         #endregion
     }

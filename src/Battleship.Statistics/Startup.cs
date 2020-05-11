@@ -1,9 +1,9 @@
 ﻿namespace Battleship.Statistics
 {
     using Battleship.Microservices.Core.Messages;
+    using Battleship.Microservices.Infrastructure.Messages;
+    using Battleship.Statistics.Communication;
 
-    using Communication;
-    using Microservices.Infrastructure.Messages;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -16,7 +16,9 @@
         #region Fields
 
         private readonly IConfiguration configuration;
+
         private readonly string database = "Database=Battleship.Player;";
+
         private string sqlConnectionString = string.Empty;
 
         #endregion
@@ -38,20 +40,20 @@
             services.AddMemoryCache();
 
             this.sqlConnectionString = this.configuration.GetConnectionString("BattleshipGameCN");
-            var databaseConnection = $"{this.sqlConnectionString}{this.database}";
+            string databaseConnection = $"{this.sqlConnectionString}{this.database}";
 
             // add message publisher classes
-            var configSection = this.configuration.GetSection("RabbitMQ");
-            var host = configSection["Host"];
-            var username = configSection["UserName"];
-            var password = configSection["Password"];
-            var exchange = configSection["Exchange"];
-            var queue = configSection["Queue"];
-            var rpcQueue = configSection["RPCQueue"];
+            IConfigurationSection configSection = this.configuration.GetSection("RabbitMQ");
+            string host = configSection["Host"];
+            string username = configSection["UserName"];
+            string password = configSection["Password"];
+            string exchange = configSection["Exchange"];
+            string queue = configSection["Queue"];
+            string rpcQueue = configSection["RPCQueue"];
 
-            var logPathConfigSection = this.configuration.GetSection("AuditLog");
-            var auditPath = logPathConfigSection["AuditPath"];
-            var auditQueue = configSection["AuditQueue"];
+            IConfigurationSection logPathConfigSection = this.configuration.GetSection("AuditLog");
+            string auditPath = logPathConfigSection["AuditPath"];
+            string auditQueue = configSection["AuditQueue"];
 
             services.AddTransient<IMessagePublisher>(sp => new MessagePublisher(host, username, password, exchange, queue));
             services.AddTransient<IRpcClient>(sp => new RpcClient(host, username, password, exchange, rpcQueue, databaseConnection));
@@ -67,12 +69,7 @@
                 app.UseDeveloperExceptionPage();
             else
                 app.UseHsts();
-            app.UseCors(
-                options => options.WithOrigins("http://localhost:4200")
-                   .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .AllowAnyOrigin()
-            );
+            app.UseCors(options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
             app.UseRouting();
 

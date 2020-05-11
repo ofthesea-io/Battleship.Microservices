@@ -5,15 +5,17 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Battleship.Game.Infrastructure;
+    using Battleship.Game.Models;
     using Battleship.Microservices.Core.Messages;
 
-    using Infrastructure;
-    using Microservices.Infrastructure.Messages;
     using Microsoft.Extensions.Hosting;
-    using Models;
+
     using Newtonsoft.Json;
+
     using RabbitMQ.Client;
     using RabbitMQ.Client.Events;
+
     using Serilog;
 
     public class GameMessageHandler : BackgroundService
@@ -21,8 +23,11 @@
         #region Fields
 
         private readonly IGameRepository gameRepository;
+
         private readonly IMessagePublisher messagePublisher;
+
         private IModel channel;
+
         private IConnection connection;
 
         #endregion
@@ -52,26 +57,26 @@
         {
             stoppingToken.ThrowIfCancellationRequested();
 
-            var consumer = new EventingBasicConsumer(this.channel);
+            EventingBasicConsumer consumer = new EventingBasicConsumer(this.channel);
             consumer.Received += (ch, ea) =>
-            {
-                var content = Encoding.UTF8.GetString(ea.Body.ToArray());
+                {
+                    string content = Encoding.UTF8.GetString(ea.Body.ToArray());
 
-                try
-                {
-                    if (!string.IsNullOrEmpty(content))
+                    try
                     {
-                        var player = JsonConvert.DeserializeObject<Player>(content);
-                        this.gameRepository.CreatePlayer(player.SessionToken, player.PlayerId);
-                        this.channel.BasicAck(ea.DeliveryTag, true);
+                        if (!string.IsNullOrEmpty(content))
+                        {
+                            Player player = JsonConvert.DeserializeObject<Player>(content);
+                            this.gameRepository.CreatePlayer(player.SessionToken, player.PlayerId);
+                            this.channel.BasicAck(ea.DeliveryTag, true);
+                        }
                     }
-                }
-                catch (Exception exp)
-                {
-                    Log.Error(exp, exp.Message);
-                    this.channel.BasicAck(ea.DeliveryTag, false);
-                }
-            };
+                    catch (Exception exp)
+                    {
+                        Log.Error(exp, exp.Message);
+                        this.channel.BasicAck(ea.DeliveryTag, false);
+                    }
+                };
 
             this.channel.BasicConsume(this.messagePublisher.Queue, false, consumer);
             return Task.CompletedTask;
@@ -79,11 +84,7 @@
 
         private void Initialise()
         {
-            var factory = new ConnectionFactory
-            {
-                HostName = this.messagePublisher.Host, UserName = this.messagePublisher.Username,
-                Password = this.messagePublisher.Password
-            };
+            ConnectionFactory factory = new ConnectionFactory { HostName = this.messagePublisher.Host, UserName = this.messagePublisher.Username, Password = this.messagePublisher.Password };
 
             // create connection
             this.connection = factory.CreateConnection();

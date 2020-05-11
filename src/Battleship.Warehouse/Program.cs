@@ -4,9 +4,8 @@
     using System.Threading.Tasks;
 
     using Battleship.Microservices.Core.Repository;
-
-    using Communication;
-    using Infrastructure;
+    using Battleship.Warehouse.Communication;
+    using Battleship.Warehouse.Infrastructure;
 
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +19,7 @@
         {
             Console.Write("WareHouse Microservice started.");
 
-            var host = Program.CreateHostBuilder(args).Build();
+            IHost host = Program.CreateHostBuilder(args).Build();
             await host.RunAsync();
 
             Console.ReadLine();
@@ -28,28 +27,27 @@
 
         private static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var hostBuilder = new HostBuilder()
-               .ConfigureAppConfiguration((hostContext, config) => { config.AddJsonFile("appsettings.json", false); })
-               .ConfigureServices((hostContext, services) =>
-                {
-                    var sqlConnectionString = hostContext.Configuration.GetSection("ConnectionStrings");
-                    Initialisation.Setup(sqlConnectionString["BattleshipWarehouseCN"]);
-                    var database = "Database=Battleship.WareHouse;";
-                    var databaseConnection = $"{sqlConnectionString}{database}";
-                    IWareHouseRepository warehouseRepository = new WareHouseRepository(databaseConnection);
-                    services.AddTransient(svc =>
+            IHostBuilder hostBuilder = new HostBuilder().ConfigureAppConfiguration((hostContext, config) => { config.AddJsonFile("appsettings.json", false); }).ConfigureServices(
+                (hostContext, services) =>
                     {
-                        var configSection = hostContext.Configuration.GetSection("RabbitMQ");
-                        var host = configSection["Host"];
-                        var username = configSection["UserName"];
-                        var password = configSection["Password"];
-                        var exchange = configSection["Exchange"];
-                        var rpcQueue = configSection["RpcQueue"];
+                        IConfigurationSection sqlConnectionString = hostContext.Configuration.GetSection("ConnectionStrings");
+                        Initialisation.Setup(sqlConnectionString["BattleshipWarehouseCN"]);
+                        string database = "Database=Battleship.WareHouse;";
+                        string databaseConnection = $"{sqlConnectionString}{database}";
+                        IWareHouseRepository warehouseRepository = new WareHouseRepository(databaseConnection);
+                        services.AddTransient(
+                            svc =>
+                                {
+                                    IConfigurationSection configSection = hostContext.Configuration.GetSection("RabbitMQ");
+                                    string host = configSection["Host"];
+                                    string username = configSection["UserName"];
+                                    string password = configSection["Password"];
+                                    string exchange = configSection["Exchange"];
+                                    string rpcQueue = configSection["RpcQueue"];
 
-                        return new RpcServer(host, username, password, exchange, rpcQueue, warehouseRepository);
-                    });
-                })
-               .UseConsoleLifetime();
+                                    return new RpcServer(host, username, password, exchange, rpcQueue, warehouseRepository);
+                                });
+                    }).UseConsoleLifetime();
 
             return hostBuilder;
         }
@@ -63,11 +61,14 @@
         {
             try
             {
-                WareHousing.IntervalInDays(23, 59, 1,
+                WareHousing.IntervalInDays(
+                    23,
+                    59,
+                    1,
                     () =>
-                    {
-                        // TODO - execute SQL Proc at midnight
-                    });
+                        {
+                            // TODO - execute SQL Proc at midnight
+                        });
             }
             catch (Exception e)
             {

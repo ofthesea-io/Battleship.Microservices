@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Battleship.Audit\Battleship.Audit.csproj" />
-    <ProjectReference Include="..\Battleship.Microservices.Infrastructure\Battleship.Microservices.Core.csproj" />
   </ItemGroup>
 
 </Project>

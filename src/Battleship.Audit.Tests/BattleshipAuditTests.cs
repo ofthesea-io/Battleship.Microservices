@@ -10,7 +10,6 @@ namespace Battleship.Audit.Tests
     using Battleship.Microservices.Core.Messages;
     using Battleship.Microservices.Core.Models;
     using Battleship.Microservices.Core.Utilities;
-    using Battleship.Microservices.Infrastructure.Messages;
 
     using Moq;
 
@@ -22,11 +21,11 @@ namespace Battleship.Audit.Tests
 
         private AuditController auditController;
 
+        private IEnumerable<Audit> auditLogs;
+
         private Mock<IAuditRepository> moqAuditRepository;
 
         private Mock<IMessagePublisher> moqMessagePublisher;
-
-        private IEnumerable<Audit> auditLogs;
 
         private DateTime timestamp;
 
@@ -39,11 +38,11 @@ namespace Battleship.Audit.Tests
         {
             this.timestamp = DateTime.Now;
             this.auditLogs = new List<Audit>
-            {
-               new Audit { AuditType = AuditType.Log, Message = "Log message", Username = "jakes@email.com", Timestamp = this.timestamp },
-               new Audit { AuditType = AuditType.Error, Message = "Error message", Username = "jakes@email.com" , Timestamp = this.timestamp },
-               new Audit { AuditType = AuditType.Content, Message = "Content content", Username = "jakes@email.com", Timestamp = this.timestamp }
-            };
+                                 {
+                                     new Audit { AuditType = AuditType.Warning, Content = "Warning message",  Timestamp = this.timestamp },
+                                     new Audit { AuditType = AuditType.Error, Content = "Error message",  Timestamp = this.timestamp },
+                                     new Audit { AuditType = AuditType.Info, Content = "Info content",  Timestamp = this.timestamp }
+                                 };
 
             this.moqAuditRepository = new Mock<IAuditRepository>();
             this.moqMessagePublisher = new Mock<IMessagePublisher>();
@@ -55,10 +54,10 @@ namespace Battleship.Audit.Tests
         {
             // Arrange
             this.moqAuditRepository.Reset();
-            this.moqAuditRepository.Setup(q => q.GetAuditMessages()).Returns(Task.FromResult(this.auditLogs));
+            this.moqAuditRepository.Setup(q => q.GetAuditContent()).Returns(Task.FromResult(this.auditLogs));
 
             // Act
-            var result = await this.moqAuditRepository.Object.GetAuditMessages();
+            IEnumerable<Audit> result = await this.moqAuditRepository.Object.GetAuditContent();
 
             // Assert
             Assert.AreEqual(this.auditLogs, result);
@@ -69,11 +68,10 @@ namespace Battleship.Audit.Tests
         {
             // Arrange
             this.moqAuditRepository.Reset();
-            this.moqAuditRepository.Setup(q => q.GetAuditMessagesByAuditType(AuditType.Log))
-                                    .Returns(Task.FromResult(this.auditLogs.Where(q => q.AuditType == AuditType.Log)));
+            this.moqAuditRepository.Setup(q => q.GetAuditContentByAuditType(AuditType.Warning)).Returns(Task.FromResult(this.auditLogs.Where(q => q.AuditType == AuditType.Warning)));
 
             // Act
-            var result = await this.moqAuditRepository.Object.GetAuditMessagesByAuditType(AuditType.Log);
+            IEnumerable<Audit> result = await this.moqAuditRepository.Object.GetAuditContentByAuditType(AuditType.Warning);
 
             // Assert - return one or more
             Assert.GreaterOrEqual(1, result.Count());

@@ -1,10 +1,9 @@
 namespace Battleship.LeaderBoard
 {
+    using Battleship.LeaderBoard.Infrastructure;
     using Battleship.Microservices.Core.Messages;
     using Battleship.Microservices.Core.Repository;
-
-    using Infrastructure;
-    using Microservices.Infrastructure.Messages;
+    using Battleship.Microservices.Infrastructure.Messages;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -20,7 +19,9 @@ namespace Battleship.LeaderBoard
         private const string Origins = "http://localhost:4200";
 
         private readonly IConfiguration configuration;
+
         private readonly string database = "Database=Battleship.Player;";
+
         private string sqlConnectionString = string.Empty;
 
         #endregion
@@ -40,22 +41,21 @@ namespace Battleship.LeaderBoard
         public void ConfigureServices(IServiceCollection services)
         {
             this.sqlConnectionString = this.configuration.GetConnectionString("BattleshipLeaderBoardCN");
-            var databaseConnection = $"{this.sqlConnectionString}{this.database}";
+            string databaseConnection = $"{this.sqlConnectionString}{this.database}";
 
             services.AddMemoryCache();
             services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             // add message publisher classes
-            var configSection = this.configuration.GetSection("RabbitMQ");
-            var host = configSection["Host"];
-            var userName = configSection["UserName"];
-            var password = configSection["Password"];
-            var exchange = configSection["Exchange"];
-            var queue = configSection["Queue"];
+            IConfigurationSection configSection = this.configuration.GetSection("RabbitMQ");
+            string host = configSection["Host"];
+            string userName = configSection["UserName"];
+            string password = configSection["Password"];
+            string exchange = configSection["Exchange"];
+            string queue = configSection["Queue"];
 
-            services.AddTransient<IMessagePublisher>(sp =>
-                new MessagePublisher(host, userName, password, exchange, queue));
+            services.AddTransient<IMessagePublisher>(sp => new MessagePublisher(host, userName, password, exchange, queue));
             services.AddSingleton<ILeaderBoardRepository>(new LeaderBoardRepository(databaseConnection));
         }
 
@@ -69,12 +69,7 @@ namespace Battleship.LeaderBoard
             else
                 app.UseHsts();
 
-            app.UseCors(
-                options => options.WithOrigins(Startup.Origins)
-                   .AllowAnyMethod()
-                   .AllowAnyHeader()
-                   .AllowAnyOrigin()
-            );
+            app.UseCors(options => options.WithOrigins(Startup.Origins).AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
             app.UseRouting();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

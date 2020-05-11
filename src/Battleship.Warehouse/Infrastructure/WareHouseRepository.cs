@@ -3,14 +3,14 @@
     using System.Collections.Generic;
 
     using Battleship.Microservices.Core.Repository;
-
-    using Model;
+    using Battleship.Warehouse.Model;
 
     public class WareHouseRepository : RepositoryCore, IWareHouseRepository
     {
         #region Constructors
 
-        public WareHouseRepository(string databaseName) : base(databaseName)
+        public WareHouseRepository(string databaseName)
+            : base(databaseName)
         {
         }
 
