@@ -4,6 +4,8 @@ namespace Battleship.Statistics.Tests
 
     public class BattleshipStatisticsTests
     {
+        #region Methods
+
         [SetUp]
         public void Setup()
         {
@@ -14,5 +16,7 @@ namespace Battleship.Statistics.Tests
         {
             Assert.Pass();
         }
+
+        #endregion
     }
 }

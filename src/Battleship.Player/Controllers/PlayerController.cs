@@ -1,14 +1,19 @@
 ﻿namespace Battleship.Player.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
-    using Battleship.Microservices.Infrastructure.Messages;
-    using Infrastructure;
-    using Microservices.Infrastructure.Models;
+
+    using Battleship.Microservices.Core.Components;
+    using Battleship.Microservices.Core.Messages;
+    using Battleship.Microservices.Core.Utilities;
+    using Battleship.Player.Infrastructure;
+    using Battleship.Player.Models;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using Models;
+
     using Newtonsoft.Json;
 
     /// <summary>
@@ -16,16 +21,28 @@
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class PlayerController : ControllerBase, IPlayerController
+    public class PlayerController : ContextBase, IPlayerController
     {
+        #region Fields
+
         private readonly IMessagePublisher messagePublisher;
+
         private readonly IPlayerRepository playerRepository;
 
+        #endregion
+
+        #region Constructors
+
         public PlayerController(IPlayerRepository playerRepository, IMessagePublisher messagePublisher)
+            : base(messagePublisher)
         {
             this.playerRepository = playerRepository;
             this.messagePublisher = messagePublisher;
         }
+
+        #endregion
+
+        #region Methods
 
         [HttpPost]
         [Route("PlayerLogin")]
@@ -33,30 +50,28 @@
         {
             try
             {
-                var result = await this.playerRepository.PlayerLogin(player);
+                Player result = await this.playerRepository.PlayerLogin(player);
                 if (result == null)
                 {
-                    var message = $"Battleship.Board: Login failed";
-                    await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
-                    return StatusCode(StatusCodes.Status204NoContent);
+                    this.Log($"401 Unauthorized {player.Email}", this.AuditQueue, AuditType.Warning);
+                    return this.StatusCode(StatusCodes.Status401Unauthorized);
                 }
 
                 // publish the message to the GamePlay Queue
-                result.SessionToken = generateToken(result.SessionGuid);
+                result.SessionToken = this.GenerateToken(result.SessionGuid);
                 await this.messagePublisher.PublishMessageAsync(JsonConvert.SerializeObject(result), "GamePlay");
 
                 // convert the guid to a string
-                result.SessionToken = generateToken(result.SessionGuid);
+                result.SessionToken = this.GenerateToken(result.SessionGuid);
 
                 // convert the session token
-                var token = JsonConvert.SerializeObject(result);
-                return Ok(token);
+                string token = JsonConvert.SerializeObject(result);
+                return this.Ok(token);
             }
             catch (Exception e)
             {
-                var message = $"Battleship.Player: {e.StackTrace}";
-                await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                this.Log(e);
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -66,21 +81,20 @@
         {
             try
             {
-                var result = await this.playerRepository.CreatePlayer(player);
-                if (result == Guid.Empty) return StatusCode(StatusCodes.Status400BadRequest);
+                Guid result = await this.playerRepository.CreatePlayer(player);
+                if (result == Guid.Empty) return this.StatusCode(StatusCodes.Status400BadRequest);
 
-                var token = generateToken(result);
+                string token = this.GenerateToken(result);
                 player.SessionToken = token;
 
-                var data = JsonConvert.SerializeObject(player);
+                string data = JsonConvert.SerializeObject(player);
 
-                return Ok(data);
+                return this.Ok(data);
             }
             catch (Exception e)
             {
-                var message = $"Battleship.Player: {e.StackTrace}";
-                await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                this.Log(e);
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -90,19 +104,17 @@
         {
             try
             {
-                var result = await this.playerRepository.GetDemoPlayers();
-                if (result == null) return BadRequest(false);
+                IEnumerable<Player> result = await this.playerRepository.GetDemoPlayers();
+                if (result == null) return this.BadRequest(false);
 
-                var token = JsonConvert.SerializeObject(result);
-                return Ok(token);
+                string json = JsonConvert.SerializeObject(result);
+                return this.Ok(json);
             }
             catch (Exception e)
             {
-                var message = $"Battleship.Player: {e.StackTrace}";
-                await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
+                this.Log(e);
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
-
-            return StatusCode(StatusCodes.Status403Forbidden);
         }
 
         [HttpGet]
@@ -111,24 +123,25 @@
         {
             try
             {
-                if (playerId == Guid.Empty) return StatusCode(StatusCodes.Status403Forbidden);
+                if (playerId == Guid.Empty) return this.StatusCode(StatusCodes.Status403Forbidden);
 
                 // session is created in the database
-                Player result = await this.playerRepository.DemoLogin(playerId);
-                if (result == null) return BadRequest(false);
+                Player player = await this.playerRepository.DemoLogin(playerId);
+                if (player == null) return this.BadRequest(false);
+
+                this.Log($"Demo Player {player.Firstname} {player.Lastname} Login");
 
                 // publish the message to the GamePlay Queue
-                result.SessionToken = generateToken(result.SessionGuid);
-                var serializedPlayer = JsonConvert.SerializeObject(result);
+                player.SessionToken = this.GenerateToken(player.SessionGuid);
+                string serializedPlayer = JsonConvert.SerializeObject(player);
                 await this.messagePublisher.PublishMessageAsync(serializedPlayer, "GamePlay");
 
-                return Ok(serializedPlayer);
+                return this.Ok(serializedPlayer);
             }
             catch (Exception e)
             {
-                var message = $"Battleship.Player: {e.Message}{Environment.NewLine}{e.StackTrace}";
-                await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                this.Log(e);
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -138,21 +151,21 @@
         {
             try
             {
-                var result = await this.playerRepository.PlayerLogout(player.PlayerId);
+                this.Log($"Player {player.Firstname} {player.Lastname} Logout");
+                bool result = await this.playerRepository.PlayerLogout(player.PlayerId);
                 if (!result)
                 {
-                    var message = $"Logout failed {player?.Firstname} {player?.Lastname}";
+                    string message = $"Logout failed {player.Firstname} {player.Lastname}";
                     await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
-                    return StatusCode(StatusCodes.Status500InternalServerError);
+                    return this.StatusCode(StatusCodes.Status500InternalServerError);
                 }
 
-                return Ok();
+                return this.Ok();
             }
             catch (Exception e)
             {
-                var message = $"Battleship.Board: {e.Message}{Environment.NewLine}{e.StackTrace}";
-                await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                this.Log(e);
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -162,10 +175,12 @@
             return "Player API started.";
         }
 
-        private string generateToken(Guid result)
+        private string GenerateToken(Guid result)
         {
-            var sessionBytes = Encoding.UTF8.GetBytes(result.ToString());
+            byte[] sessionBytes = Encoding.UTF8.GetBytes(result.ToString());
             return Convert.ToBase64String(sessionBytes);
         }
+
+        #endregion
     }
 }

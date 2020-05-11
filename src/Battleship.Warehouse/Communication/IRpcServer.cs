@@ -2,6 +2,10 @@
 {
     public interface IRpcServer
     {
+        #region Methods
+
         void Execute();
+
+        #endregion
     }
 }

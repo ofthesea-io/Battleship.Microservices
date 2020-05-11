@@ -1,19 +1,27 @@
-/* .grid-container {
-	position: relative;
-	top: 30px;
-	outline:2px solid #000;
-	font-size: 0;
-	margin:auto;
-	height:600px;
-	width: 600px;
-	padding: 0;
-	border: none;
+.icon::before {
+	display: inline-block;
+	font-style: normal;
+	font-variant: normal;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
 }
 
-.grid {
-	margin:0;
-	padding:0;
-	border:none;
-	outline:1px solid #000;
-	display:inline-block;
-} */
+.water::before {
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	content: "\f773";
+}
+
+.ship::before {
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	content: "\f21a";
+}
+
+.coordinate {
+    display: block;
+    position: absolute;
+    top: 0%;
+    left: 33%;
+    font-weight: bold;
+}

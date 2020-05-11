@@ -2,14 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
-    using Board;
-    using Enums;
-    using Microservices.Infrastructure.Components;
-    using Microservices.Infrastructure.Models;
-    using Models;
+
+    using Battleship.Game.Board;
+    using Battleship.Game.Enums;
+    using Battleship.Game.Models;
+    using Battleship.Game.Ships;
+    using Battleship.Game.Utilities;
+    using Battleship.Microservices.Core.Components;
+    using Battleship.Microservices.Core.Models;
+
     using NUnit.Framework;
-    using Ships;
-    using Utilities;
 
     [TestFixture]
     public class SegmentationTests : ComponentBase
@@ -31,7 +33,7 @@
             int x = this.XInitialPoint;
             int y = this.GridDimension + this.Index;
             Coordinate coordinate = new Coordinate(x, y);
-            Segment segment = new Segment(Water);
+            Segment segment = new Segment();
 
             // Act and Assert
             try
@@ -52,7 +54,7 @@
             int x = this.XInitialPoint;
             int y = this.GridDimension + this.Index;
             Coordinate coordinate = new Coordinate(x, y);
-            var segment = new Segment(ShipDirection.Vertical, new Destroyer(1));
+            Segment segment = new Segment(ShipDirection.Vertical, new Destroyer(1));
 
             // Act and Assert
             try
@@ -77,11 +79,8 @@
             // Act and Assert
             try
             {
-                this.segmentation.AddSegment(coordinate, new Segment(Water));
-                SortedDictionary<Coordinate, Segment> range = new SortedDictionary<Coordinate, Segment>(new CoordinateComparer())
-                   {
-                       { coordinate, new Segment(Water) }
-                   };
+                this.segmentation.AddSegment(coordinate, new Segment());
+                SortedDictionary<Coordinate, Segment> range = new SortedDictionary<Coordinate, Segment>(new CoordinateComparer()) { { coordinate, new Segment() } };
                 this.segmentation.UpdateSegmentRange(range);
                 Assert.Fail();
             }
@@ -98,14 +97,12 @@
             int x = this.XInitialPoint;
             int y = this.GridDimension;
             Coordinate coordinate = new Coordinate(x, y);
+
             // Act and Assert
             try
             {
                 this.segmentation.AddSegment(coordinate, new Segment(ShipDirection.Horizontal, new BattleShip(1)));
-                SortedDictionary<Coordinate, Segment> range = new SortedDictionary<Coordinate, Segment>()
-                                       {
-                                           { coordinate, new Segment(Water) }
-                                       };
+                SortedDictionary<Coordinate, Segment> range = new SortedDictionary<Coordinate, Segment> { { coordinate, new Segment() } };
                 this.segmentation.UpdateSegmentRange(range);
                 Assert.Fail();
             }
@@ -115,31 +112,30 @@
             }
         }
 
-
         // This test does NOT fail in debug mode. The test runner has an issue which has been logged to the NUnit Team
-        //[Test]
-        //public void UpdateSegmentRange_CanUpdateSegmentWithFilledSegment_ReturnsVoidOrThrowsException()
-        //{
-        //    // Arrange 
-        //    int x = this.XInitialPoint;
-        //    int y = this.GridDimension;
-        //    Coordinate coordinate = new Coordinate(x, y);
+        // [Test]
+        // public void UpdateSegmentRange_CanUpdateSegmentWithFilledSegment_ReturnsVoidOrThrowsException()
+        // {
+        // // Arrange 
+        // int x = this.XInitialPoint;
+        // int y = this.GridDimension;
+        // Coordinate coordinate = new Coordinate(x, y);
 
-        //    // Act and Assert
-        //    try
-        //    {
-        //        this.segmentation.AddSegment(coordinate, new Segment(Water));
-        //        SortedDictionary<Coordinate, Segment> range = new SortedDictionary<Coordinate, Segment>(new CoordinateComparer())
-        //           {
-        //               { coordinate, new Segment(ShipDirection.Horizontal, new BattleShip(1)) }
-        //           };
-        //        this.segmentation.UpdateSegmentRange(range);
-        //        Assert.IsTrue(true);
-        //    }
-        //    catch (ArgumentException)
-        //    {
-        //       Assert.Fail();
-        //    }
-        //}
+        // // Act and Assert
+        // try
+        // {
+        // this.segmentation.AddSegment(coordinate, new Segment(Water));
+        // SortedDictionary<Coordinate, Segment> range = new SortedDictionary<Coordinate, Segment>(new CoordinateComparer())
+        // {
+        // { coordinate, new Segment(ShipDirection.Horizontal, new BattleShip(1)) }
+        // };
+        // this.segmentation.UpdateSegmentRange(range);
+        // Assert.IsTrue(true);
+        // }
+        // catch (ArgumentException)
+        // {
+        // Assert.Fail();
+        // }
+        // }
     }
 }

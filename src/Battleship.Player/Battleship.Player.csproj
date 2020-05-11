@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Battleship.Microservices.Infrastructure\Battleship.Microservices.Infrastructure.csproj" />
+    <ProjectReference Include="..\Battleship.Microservices.Core\Battleship.Microservices.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

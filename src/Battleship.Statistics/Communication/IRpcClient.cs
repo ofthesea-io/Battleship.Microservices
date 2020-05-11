@@ -5,6 +5,10 @@
 
     public interface IRpcClient
     {
+        #region Methods
+
         Task<string> CallAsync(CancellationToken cancellationToken = default);
+
+        #endregion
     }
 }

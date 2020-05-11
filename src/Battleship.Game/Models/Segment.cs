@@ -1,18 +1,20 @@
 ﻿namespace Battleship.Game.Models
 {
-    using Enums;
+    using Battleship.Game.Enums;
+    using Battleship.Game.Ships;
+
     using Newtonsoft.Json;
-    using Ships;
 
     /// <summary>
     ///     Individual segment (cell) in the segmentation list on the grid
     /// </summary>
     public class Segment
     {
-        public Segment(char character)
+        #region Constructors
+
+        public Segment()
         {
             this.IsEmpty = true;
-            this.Character = character;
         }
 
         [JsonConstructor]
@@ -23,12 +25,16 @@
             this.IsEmpty = false;
         }
 
-        public bool IsEmpty { get; set; }
+        #endregion
 
-        public char Character { get; set; }
+        #region Properties
+
+        public bool IsEmpty { get; set; }
 
         public ShipDirection ShipDirection { get; set; }
 
         public IShip Ship { get; set; }
+
+        #endregion
     }
 }

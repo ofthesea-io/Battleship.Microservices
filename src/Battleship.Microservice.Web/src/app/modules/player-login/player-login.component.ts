@@ -17,8 +17,10 @@ export enum PlayerDemoStatus {
   styleUrls: ['./player-login.component.css']
 })
 export class PlayerLoginComponent implements OnInit {
+
+  public playerDemoStatus: PlayerDemoStatus;
+
   demoPlayers: Array<Player> = [];
-  playerDemoStatus: PlayerDemoStatus;
   email: string;
   password: string;
   errorMessage: string;
@@ -43,6 +45,10 @@ export class PlayerLoginComponent implements OnInit {
       } else {
         this.playerDemoStatus = PlayerDemoStatus.unavailable;
       }
+    },
+    error => {
+      this.playerDemoStatus = PlayerDemoStatus.unavailable;
+      this.configuration.handleError(error);
     });
   }
 
@@ -60,7 +66,7 @@ export class PlayerLoginComponent implements OnInit {
         if (response.status === 200) {
           const player = response.body as Player;
           this.configuration.setAuthHeader(player.sessionToken);
-          this.router.navigate(['gamePlay'], { state: { player } });
+          this.router.navigate(['gamePlay'], { state: { player }});
         }
       },
       error => {

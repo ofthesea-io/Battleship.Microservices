@@ -169,6 +169,7 @@ export class GamingGridComponent implements OnInit {
         if (result.status === HttpStatusCode.OK) {
           if (result.body.isHit) {
             target.className = this.config.hitClass;
+            target.innerHTML = '<i class="material-icons">directions_boat</i>';
           } else {
             target.className = this.config.missClass;
           }

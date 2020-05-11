@@ -1,49 +1,37 @@
 ﻿namespace Battleship.Game.Ships
 {
-    using Battleship.Microservices.Infrastructure.Components;
+    using Battleship.Microservices.Core.Components;
 
     public sealed class BattleShip : ComponentBase, IShip
     {
+        #region Fields
+
         private readonly int shipLength = 5;
 
-        private readonly char shipType = BattleShipCode;
+        private readonly char shipType = ComponentBase.BattleShipCode;
 
-        private int shipHit;
+        #endregion
+
+        #region Constructors
 
         public BattleShip(int shipIndex)
         {
             this.ShipLength = this.shipLength;
-            this.ShipChar = this.shipType;
+            this.ShipCode = this.shipType;
             this.ShipIndex = shipIndex;
         }
 
+        #endregion
+
         #region IShip Members
 
-        public int ShipHit
-        {
-            get => shipHit;
-            set
-            {
-                if (shipHit == this.ShipLength - Index)
-                {
-                    this.IsShipSunk = true;
-                }
-                else
-                {
-                    shipHit++;
-                }
-            }
-        }
+        public sbyte ShipSegmentHit { get; set; }
 
         public int ShipIndex { get; }
 
-        public bool IsShipSunk { get; set; }
-
         public int ShipLength { get; }
 
-        public char ShipChar { get; }
-
-        public int CoordinateStatus { get; set; }
+        public char ShipCode { get; }
 
         #endregion IShip Members
     }

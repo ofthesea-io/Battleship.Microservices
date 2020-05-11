@@ -4,8 +4,12 @@
 
     public class GamingGrid
     {
+        #region Properties
+
         public IEnumerable<string> X { get; set; }
 
         public IEnumerable<int> Y { get; set; }
+
+        #endregion
     }
 }

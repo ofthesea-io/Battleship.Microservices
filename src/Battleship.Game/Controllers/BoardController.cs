@@ -4,14 +4,20 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Battleship.Microservices.Infrastructure.Messages;
-    using Battleship.Microservices.Infrastructure.Models;
-    using Board;
-    using Infrastructure;
+
+    using Battleship.Game.Board;
+    using Battleship.Game.Infrastructure;
+    using Battleship.Game.Models;
+    using Battleship.Microservices.Core.Components;
+    using Battleship.Microservices.Core.Messages;
+    using Battleship.Microservices.Core.Models;
+    using Battleship.Microservices.Core.Utilities;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Localization;
     using Microsoft.Extensions.Primitives;
-    using Models;
+
     using Newtonsoft.Json;
 
     /// <summary>
@@ -19,25 +25,36 @@
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class BoardController : ControllerBase, IBoardController
+    public class BoardController : ContextBase, IBoardController
     {
+        #region Fields
+
         private readonly IGameRepository gameRepository;
+
         private readonly IGridGenerator gridGenerator;
 
-        private readonly JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.All,
-            DefaultValueHandling = DefaultValueHandling.Ignore
-        };
+        private readonly JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, DefaultValueHandling = DefaultValueHandling.Ignore };
+
+        private readonly IStringLocalizer<BoardController> localizer;
 
         private readonly IMessagePublisher messagePublisher;
 
-        public BoardController(IGameRepository gameRepository, IMessagePublisher messagePublisher)
+        #endregion
+
+        #region Constructors
+
+        public BoardController(IGameRepository gameRepository, IMessagePublisher messagePublisher, IStringLocalizer<BoardController> localizer)
+            : base(messagePublisher)
         {
             this.gridGenerator = GridGenerator.Instance();
             this.gameRepository = gameRepository;
             this.messagePublisher = messagePublisher;
+            this.localizer = localizer;
         }
+
+        #endregion
+
+        #region Methods
 
         [HttpGet]
         [Route("GenerateBoard")]
@@ -45,13 +62,9 @@
         {
             try
             {
-                var result = await Task.Run(() =>
+                GamingGrid result = await Task.Run(() =>
                 {
-                    var gamingGrid = new GamingGrid
-                    {
-                        X = GetXAxis(),
-                        Y = GetYAxis()
-                    };
+                    GamingGrid gamingGrid = new GamingGrid { X = this.GetXAxis(), Y = this.GetYAxis() };
 
                     return gamingGrid;
                 });
@@ -60,7 +73,7 @@
             }
             catch (Exception)
             {
-                return BadRequest();
+                return this.BadRequest();
             }
         }
 
@@ -70,57 +83,64 @@
         {
             try
             {
-                string sessionToken = IsAuthenticated(this.HttpContext);
-                if (string.IsNullOrEmpty(sessionToken)) return StatusCode(StatusCodes.Status401Unauthorized);
+                string sessionToken = this.IsAuthenticated(this.HttpContext);
+                if (string.IsNullOrEmpty(sessionToken))
+                    return this.StatusCode(StatusCodes.Status401Unauthorized);
 
-                if (playerCommand.Coordinate.X == 0 || playerCommand.Coordinate.Y == 0 ||
-                    string.IsNullOrEmpty(sessionToken))
+                if (playerCommand.Coordinate.X == 0 || playerCommand.Coordinate.Y == 0 || string.IsNullOrEmpty(sessionToken))
                     throw new ArgumentException();
 
-                var coordinates = await this.gameRepository.GetShipCoordinates(sessionToken);
+                string coordinates = await this.gameRepository.GetShipCoordinates(sessionToken);
+                if (coordinates == null)
+                {
+                    this.Log(new NullReferenceException("Coordinates not found"));
+                    return this.StatusCode(StatusCodes.Status204NoContent);
+                }
 
-                var shipCoordinates = JsonConvert
-                    .DeserializeObject<KeyValuePair<Coordinate, Segment>[]>(coordinates, this.jsonSerializerSettings)
-                    .ToDictionary(kv => kv.Key, kv => kv.Value);
+                // get into a object
+                Dictionary<Coordinate, Segment> shipCoordinates = JsonConvert.DeserializeObject<KeyValuePair<Coordinate, Segment>[]>(coordinates, this.jsonSerializerSettings).ToDictionary(kv => kv.Key, kv => kv.Value);
 
-                var shipCoordinate = shipCoordinates.FirstOrDefault(q =>
-                    q.Key.X == playerCommand.Coordinate.X && q.Key.Y == playerCommand.Coordinate.Y);
+                KeyValuePair<Coordinate, Segment> shipCoordinate = shipCoordinates.FirstOrDefault(q => q.Key.X == playerCommand.Coordinate.X && q.Key.Y == playerCommand.Coordinate.Y);
 
                 playerCommand.ScoreCard.IsHit = false;
                 if (shipCoordinate.Value != null)
                 {
-                    shipCoordinate.Value.Ship.CoordinateStatus++;
-                    var updateShipCoordinates = JsonConvert.SerializeObject(shipCoordinates.ToArray(), Formatting.Indented, this.jsonSerializerSettings);
+                    // Meta
+                    shipCoordinate.Value.Ship.ShipSegmentHit = 0x01;
+                    int numberOfSegmentsHit = shipCoordinates.Count(q => q.Value.Ship.ShipIndex == shipCoordinate.Value.Ship.ShipIndex && q.Value.Ship.ShipSegmentHit == 0x01);
+
+                    // Save
+                    string updateShipCoordinates = JsonConvert.SerializeObject(shipCoordinates.ToArray(), Formatting.Indented, this.jsonSerializerSettings);
                     await this.gameRepository.UpdateShipCoordinates(updateShipCoordinates, sessionToken);
+
+                    // Display
                     playerCommand.ScoreCard.Hit++;
-                    playerCommand.ScoreCard.Message = "Boom! You hit a ship!";
                     playerCommand.ScoreCard.IsHit = true;
-                    if (shipCoordinate.Value.Ship.IsShipSunk)
+                    playerCommand.ScoreCard.Message = this.localizer["Boom! You hit a ship!"];
+                    if (numberOfSegmentsHit == shipCoordinate.Value.Ship.ShipLength)
                     {
                         playerCommand.ScoreCard.Sunk++;
-                        playerCommand.ScoreCard.Message = "Ship sunk";
+                        playerCommand.ScoreCard.Message = this.localizer["Ship sunk!"];
                     }
                 }
                 else
                 {
                     playerCommand.ScoreCard.Miss++;
-                    playerCommand.ScoreCard.Total++;
-                    playerCommand.ScoreCard.Message = "Sorry you missed, try again";
+                    playerCommand.ScoreCard.Message = this.localizer["Sorry you missed, try again!"];
                 }
 
+                playerCommand.ScoreCard.Total++;
                 playerCommand.ScoreCard.SessionToken = sessionToken;
 
-                await this.messagePublisher.PublishMessageAsync(JsonConvert.SerializeObject(playerCommand.ScoreCard),
-                    "ScoreCard");
+                await this.messagePublisher.PublishMessageAsync(JsonConvert.SerializeObject(playerCommand.ScoreCard), "ScoreCard");
             }
             catch (Exception e)
             {
-                var message = $"Battleship.Board: {e.Message}{Environment.NewLine}{e.StackTrace}";
-                await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                this.Log(e);
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
 
-            return Ok(JsonConvert.SerializeObject(playerCommand.ScoreCard));
+            return this.Ok(JsonConvert.SerializeObject(playerCommand.ScoreCard));
         }
 
         [HttpGet]
@@ -135,35 +155,36 @@
         {
             try
             {
-                if (numberOfShips == 0) return BadRequest();
+                if (numberOfShips == 0) return this.BadRequest();
 
-                string sessionToken = IsAuthenticated(this.HttpContext);
-                if (string.IsNullOrEmpty(sessionToken)) return StatusCode(StatusCodes.Status401Unauthorized);
+                string sessionToken = this.IsAuthenticated(this.HttpContext);
+                if (string.IsNullOrEmpty(sessionToken)) return this.StatusCode(StatusCodes.Status401Unauthorized);
 
                 await this.gameRepository.StartGame(sessionToken, numberOfShips);
 
+                this.Log($"Game started on {sessionToken}");
+
                 // Publish the message to the ScoreCard Queue
-                var scoreCard = new ScoreCard
-                {
-                    SessionToken = sessionToken,
-                    Message = "Let the games begin",
-                    Hit = 0,
-                    Miss = 0,
-                    Sunk = 0,
-                    IsCompleted = false,
-                    IsHit = false,
-                    Total = 0
-                };
-                var serializedScoreCard = JsonConvert.SerializeObject(scoreCard);
+                ScoreCard scoreCard = new ScoreCard
+                                          {
+                                              SessionToken = sessionToken,
+                                              Message = this.localizer["Let the games begin!"].Value,
+                                              Hit = 0,
+                                              Miss = 0,
+                                              Sunk = 0,
+                                              IsCompleted = false,
+                                              IsHit = false,
+                                              Total = 0
+                                          };
+                string serializedScoreCard = JsonConvert.SerializeObject(scoreCard);
                 await this.messagePublisher.PublishMessageAsync(serializedScoreCard, "ScoreCard");
 
-                return  StatusCode(StatusCodes.Status200OK);
+                return this.StatusCode(StatusCodes.Status200OK);
             }
             catch (Exception e)
             {
-                var message = $"Battleship.Board: {e.Message}{Environment.NewLine}{e.StackTrace}";
-                await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                this.Log(e);
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -194,12 +215,11 @@
         private string IsAuthenticated(HttpContext httpContext)
         {
             string result = string.Empty;
-            if (httpContext.Request.Headers.TryGetValue("Authorization", out StringValues values))
-            {
-                result = values.FirstOrDefault();
-            }
+            if (httpContext.Request.Headers.TryGetValue("Authorization", out StringValues values)) result = values.FirstOrDefault();
 
             return result;
         }
+
+        #endregion
     }
 }

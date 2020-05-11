@@ -13,7 +13,7 @@ USE [Battleship.Game]
 	BEGIN
 		CREATE TABLE [dbo].[GamePlay](
 			[PlayerId] [uniqueidentifier] NOT NULL,
-			[ShipCoordinates] [varchar](max) NULL,
+			[ShipCoordinates] [Text] NULL,
 			[SessionToken] [varchar](100) NOT NULL,
 			[SessionExpiry] [datetime2](7) NOT NULL,
 			[IsCompleted] [bit] NOT NULL,

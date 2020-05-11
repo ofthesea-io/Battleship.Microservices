@@ -1,8 +1,9 @@
 ﻿namespace Battleship.Game.Tests
 {
-    using Microservices.Infrastructure.Components;
+    using Battleship.Game.Ships;
+    using Battleship.Microservices.Core.Components;
+
     using NUnit.Framework;
-    using Ships;
 
     [TestFixture]
     public class ShipTests : ComponentBase
@@ -14,11 +15,8 @@
             IShip battleShip = new BattleShip(1);
 
             // Act
-            for (int i = 0; i <= battleShip.ShipLength; i++)
-            {
-                battleShip.ShipHit++;
-            }
-            
+            for (int i = 0; i <= battleShip.ShipLength; i++) battleShip.ShipSegmentHit++;
+
             bool isSunk = battleShip.IsShipSunk;
 
             // Assert
@@ -32,10 +30,7 @@
             IShip destroyer = new Destroyer(1);
 
             // Act
-            for (int i = 0; i <= destroyer.ShipLength; i++)
-            {
-                destroyer.ShipHit++;
-            }
+            for (int i = 0; i <= destroyer.ShipLength; i++) destroyer.ShipSegmentHit++;
 
             bool isSunk = destroyer.IsShipSunk;
 

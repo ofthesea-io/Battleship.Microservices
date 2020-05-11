@@ -3,23 +3,35 @@
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Communication;
-    using Battleship.Microservices.Infrastructure.Messages;
+
+    using Battleship.Microservices.Core.Components;
+    using Battleship.Microservices.Core.Messages;
+    using Battleship.Statistics.Communication;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/[controller]")]
     [ApiController]
-    public class StatisticController : ControllerBase
+    public class StatisticController : ContextBase
     {
-        private readonly IMessagePublisher messagePublisher;
+        #region Fields
+
         private readonly IRpcClient rpcClient;
 
+        #endregion
+
+        #region Constructors
+
         public StatisticController(IMessagePublisher messagePublisher, IRpcClient rpcClient)
+            : base(messagePublisher)
         {
-            this.messagePublisher = messagePublisher;
             this.rpcClient = rpcClient;
         }
+
+        #endregion
+
+        #region Methods
 
         [HttpGet]
         public string Get()
@@ -33,16 +45,17 @@
         {
             try
             {
-                var token = new CancellationToken(false);
-                var result = await this.rpcClient.CallAsync(token);
-                return Ok();
+                CancellationToken token = new CancellationToken(false);
+                string result = await this.rpcClient.CallAsync(token);
+                return this.Ok();
             }
             catch (Exception e)
             {
-                var message = $"Battleship.Statistic: {e.StackTrace}";
-                await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                this.Log(e);
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        #endregion
     }
 }

@@ -1,18 +1,28 @@
 ﻿namespace Battleship.Warehouse.Infrastructure
 {
     using System.Collections.Generic;
-    using Battleship.Microservices.Infrastructure.Repository;
-    using Model;
+
+    using Battleship.Microservices.Core.Repository;
+    using Battleship.Warehouse.Model;
 
     public class WareHouseRepository : RepositoryCore, IWareHouseRepository
     {
-        public WareHouseRepository(string databaseName) : base(databaseName)
+        #region Constructors
+
+        public WareHouseRepository(string databaseName)
+            : base(databaseName)
         {
         }
 
+        #endregion
+
+        #region Methods
+
         public IEnumerable<Player> GetTopTenPlayers()
         {
-            return Execute<Player>();
+            return this.Execute<Player>();
         }
+
+        #endregion
     }
 }

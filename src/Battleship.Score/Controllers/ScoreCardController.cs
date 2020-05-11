@@ -2,12 +2,15 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Battleship.Microservices.Infrastructure.Messages;
-    using Battleship.Microservices.Infrastructure.Models;
-    using Infrastructure;
+
+    using Battleship.Microservices.Core.Components;
+    using Battleship.Microservices.Core.Messages;
+    using Battleship.Score.Infrastructure;
+
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Data.SqlClient;
+
     using Newtonsoft.Json;
 
     /// <summary>
@@ -15,16 +18,28 @@
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class ScoreCardController : ControllerBase, IScoreCardController
+    public class ScoreCardController : ContextBase, IScoreCardController
     {
+        #region Fields
+
         private readonly IMessagePublisher messagePublisher;
+
         private readonly IScoreCardRepository scoreCardRepository;
 
+        #endregion
+
+        #region Constructors
+
         public ScoreCardController(IScoreCardRepository scoreCardRepository, IMessagePublisher messagePublisher)
+            : base(messagePublisher)
         {
             this.scoreCardRepository = scoreCardRepository;
             this.messagePublisher = messagePublisher;
         }
+
+        #endregion
+
+        #region Methods
 
         [HttpGet]
         [Route("GetPlayerScoreCard")]
@@ -32,33 +47,32 @@
         {
             try
             {
-                var card = string.Empty;
+                string card = string.Empty;
                 string sessionToken = this.HttpContext.Request.Headers["Authorization"];
-                if (string.IsNullOrEmpty(sessionToken)) return BadRequest();
+                if (string.IsNullOrEmpty(sessionToken)) return this.BadRequest();
 
-                var scoreCard = await this.scoreCardRepository.GetPlayerScoreCard(sessionToken);
+                string scoreCard = await this.scoreCardRepository.GetPlayerScoreCard(sessionToken);
 
                 // if scorecard has not been created, just return 200
-                if (string.IsNullOrEmpty(scoreCard)) return  StatusCode(StatusCodes.Status200OK);
+                if (string.IsNullOrEmpty(scoreCard)) return this.StatusCode(StatusCodes.Status200OK);
                 card = JsonConvert.SerializeObject(scoreCard);
 
-                if (string.IsNullOrEmpty(card)) return StatusCode(StatusCodes.Status400BadRequest);
+                if (string.IsNullOrEmpty(card)) return this.StatusCode(StatusCodes.Status400BadRequest);
 
-                return Ok(card);
-
+                return this.Ok(card);
             }
             catch (SqlException e)
             {
-                var message = $"Battleship.SoreCard SQL exception: {e.StackTrace}";
-                await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                this.Log(e);
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
             catch (Exception e)
             {
-                var message = $"Battleship.SoreCard: {e.StackTrace}";
-                await this.messagePublisher.PublishMessageAsync(message, "AuditLog");
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                this.Log(e);
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        #endregion
     }
 }

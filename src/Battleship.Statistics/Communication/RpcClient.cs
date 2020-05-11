@@ -5,27 +5,39 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
+
     using RabbitMQ.Client;
     using RabbitMQ.Client.Events;
 
     public class RpcClient : IRpcClient
     {
-        private readonly ConcurrentDictionary<string, TaskCompletionSource<string>> callbackMapper =
-            new ConcurrentDictionary<string, TaskCompletionSource<string>>();
+        #region Fields
+
+        private readonly ConcurrentDictionary<string, TaskCompletionSource<string>> callbackMapper = new ConcurrentDictionary<string, TaskCompletionSource<string>>();
 
         private readonly IModel channel;
 
         private readonly IConnection connection;
+
         private readonly EventingBasicConsumer consumer;
+
         private readonly string exchange;
+
         private readonly string host;
+
         private readonly string password;
+
         private readonly string replyQueueName;
+
         private readonly string rpcQueue;
+
         private readonly string username;
 
-        public RpcClient(string host, string username, string password, string exchange, string rpcQueue,
-            string datbaseString)
+        #endregion
+
+        #region Constructors
+
+        public RpcClient(string host, string username, string password, string exchange, string rpcQueue, string datbaseString)
         {
             this.host = host;
             this.username = username;
@@ -33,47 +45,43 @@
             this.exchange = exchange;
             this.rpcQueue = rpcQueue;
 
-            var factory = new ConnectionFactory
-                {HostName = this.host, UserName = this.username, Password = this.password};
+            ConnectionFactory factory = new ConnectionFactory { HostName = this.host, UserName = this.username, Password = this.password };
 
             this.connection = factory.CreateConnection();
             this.channel = this.connection.CreateModel();
             this.replyQueueName = this.channel.QueueDeclare().QueueName;
             this.consumer = new EventingBasicConsumer(this.channel);
             this.consumer.Received += (model, ea) =>
-            {
-                if (!this.callbackMapper.TryRemove(ea.BasicProperties.CorrelationId, out var tcs)) return;
-                var body = ea.Body.ToArray();
-                var response = Encoding.UTF8.GetString(body);
-                tcs.TrySetResult(response);
-            };
+                {
+                    if (!this.callbackMapper.TryRemove(ea.BasicProperties.CorrelationId, out TaskCompletionSource<string> tcs)) return;
+                    byte[] body = ea.Body.ToArray();
+                    string response = Encoding.UTF8.GetString(body);
+                    tcs.TrySetResult(response);
+                };
         }
+
+        #endregion
+
+        #region Methods
 
         public Task<string> CallAsync(CancellationToken cancellationToken = default)
         {
-            var props = this.channel.CreateBasicProperties();
-            var correlationId = Guid.NewGuid().ToString();
+            IBasicProperties props = this.channel.CreateBasicProperties();
+            string correlationId = Guid.NewGuid().ToString();
             props.CorrelationId = correlationId;
             props.ReplyTo = this.replyQueueName;
 
-            var message = "hello world !!!!";
+            string message = "hello world !!!!";
 
-            var messageBytes = Encoding.UTF8.GetBytes(message);
-            var tcs = new TaskCompletionSource<string>();
+            byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+            TaskCompletionSource<string> tcs = new TaskCompletionSource<string>();
             this.callbackMapper.TryAdd(correlationId, tcs);
 
-            this.channel.BasicPublish(
-                "",
-                this.rpcQueue,
-                props,
-                messageBytes);
+            this.channel.BasicPublish(string.Empty, this.rpcQueue, props, messageBytes);
 
-            this.channel.BasicConsume(
-                consumer: this.consumer,
-                queue: this.replyQueueName,
-                autoAck: true);
+            this.channel.BasicConsume(consumer: this.consumer, queue: this.replyQueueName, autoAck: true);
 
-            cancellationToken.Register(() => this.callbackMapper.TryRemove(correlationId, out var tmp));
+            cancellationToken.Register(() => this.callbackMapper.TryRemove(correlationId, out TaskCompletionSource<string> tmp));
             return tcs.Task;
         }
 
@@ -81,5 +89,7 @@
         {
             this.connection.Close();
         }
+
+        #endregion
     }
 }

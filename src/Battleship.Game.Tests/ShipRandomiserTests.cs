@@ -1,12 +1,13 @@
-﻿namespace Battleship.Core.Tests
+﻿namespace Battleship.Game.Tests
 {
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
-    using Game.Models;
-    using Game.Ships;
-    using Microservices.Infrastructure.Components;
-    using Microservices.Infrastructure.Models;
+
+    using Battleship.Game.Models;
+    using Battleship.Game.Ships;
+    using Battleship.Microservices.Core.Components;
+    using Battleship.Microservices.Core.Models;
+
     using NUnit.Framework;
 
     [TestFixture]
@@ -16,7 +17,7 @@
 
         public ShipRandomiserTests()
         {
-            shipRandomiser = ShipRandomiser.Instance();
+            this.shipRandomiser = ShipRandomiser.Instance();
         }
 
         [Test]
@@ -27,10 +28,10 @@
             List<IShip> ships = new List<IShip> { new BattleShip(1), new Destroyer(2), new Destroyer(3) };
 
             // Act
-            SortedDictionary<Coordinate, Segment> segments = shipRandomiser.GetRandomisedShipCoordinates(ships);
+            SortedDictionary<Coordinate, Segment> segments = this.shipRandomiser.GetRandomisedShipCoordinates(ships);
 
             // Make sure that the HashCodes are different
-            IEnumerable<IShip> battleship = segments.Where(s => s.Value.Ship.ShipChar == BattleShipCode).Select(s => s.Value.Ship);       
+            IEnumerable<IShip> battleship = segments.Where(s => s.Value.Ship.ShipCode == ComponentBase.BattleShipCode).Select(s => s.Value.Ship);
             int counter = battleship.GroupBy(q => q.GetHashCode()).Count();
 
             // Assert
@@ -47,10 +48,11 @@
             // Act
 
             // Make sure we only get one set of hash codes
-            SortedDictionary<Coordinate, Segment> segments = shipRandomiser.GetRandomisedShipCoordinates(ships);
-            IEnumerable<IShip> battleship = segments.Where(s => s.Value.Ship.ShipChar == DestroyerCode).Select(s => s.Value.Ship);
+            SortedDictionary<Coordinate, Segment> segments = this.shipRandomiser.GetRandomisedShipCoordinates(ships);
+            IEnumerable<IShip> battleship = segments.Where(s => s.Value.Ship.ShipCode == ComponentBase.DestroyerCode).Select(s => s.Value.Ship);
 
             int counter = battleship.GroupBy(q => q.GetHashCode()).Count();
+
             // Assert
             Assert.AreEqual(counter, numberOfDestroyers);
         }
@@ -63,8 +65,8 @@
             List<IShip> ships = new List<IShip> { new BattleShip(1), new Destroyer(2), new Destroyer(3) };
 
             // Act
-            SortedDictionary<Coordinate, Segment> segments = shipRandomiser.GetRandomisedShipCoordinates(ships);
-            int counter = segments.Count(q => q.Value.Ship.ShipChar == BattleShipCode);
+            SortedDictionary<Coordinate, Segment> segments = this.shipRandomiser.GetRandomisedShipCoordinates(ships);
+            int counter = segments.Count(q => q.Value.Ship.ShipCode == ComponentBase.BattleShipCode);
 
             // Assert
             Assert.AreEqual(counter, numberOfSegments);
@@ -78,8 +80,8 @@
             List<IShip> ships = new List<IShip> { new BattleShip(1), new Destroyer(2), new Destroyer(3) };
 
             // Act
-            SortedDictionary<Coordinate, Segment> segments = shipRandomiser.GetRandomisedShipCoordinates(ships);
-            int counter = segments.Count(q => q.Value.Ship.ShipChar == DestroyerCode);
+            SortedDictionary<Coordinate, Segment> segments = this.shipRandomiser.GetRandomisedShipCoordinates(ships);
+            int counter = segments.Count(q => q.Value.Ship.ShipCode == ComponentBase.DestroyerCode);
 
             // Assert
             Assert.AreEqual(counter, numberOfSegments);
@@ -97,7 +99,7 @@
             List<IShip> ships = new List<IShip> { new BattleShip(1), new Destroyer(2), new Destroyer(3) };
 
             // Act
-            SortedDictionary<Coordinate, Segment> segments = shipRandomiser.GetRandomisedShipCoordinates(ships);
+            SortedDictionary<Coordinate, Segment> segments = this.shipRandomiser.GetRandomisedShipCoordinates(ships);
 
             // Assert
             Assert.AreEqual(segmentCounter, segments.Count);

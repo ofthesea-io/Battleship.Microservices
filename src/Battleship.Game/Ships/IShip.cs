@@ -2,22 +2,28 @@
 {
     public interface IShip
     {
-        // The length of the ship
+        #region Properties
+
+        /// <summary>
+        ///    Gets the Ship Length
+        /// </summary>
         int ShipLength { get; }
 
-        // The type if char
-        char ShipChar { get; }
+        /// <summary>
+        ///     Gets the Ship code
+        /// </summary>
+        char ShipCode { get; }
 
-        // Ship hit counter
-        int CoordinateStatus { get; set; }
+        /// <summary>
+        ///     Gets or sets Ship hit counter
+        /// </summary>
+        sbyte ShipSegmentHit { get; set; }
 
-        // Ship hit counter
-        int ShipHit { get; set; }
-
-        // Ship Index
+        /// <summary>
+        ///    Gets the Ship index  
+        /// </summary>
         int ShipIndex { get; }
 
-        // Ship Sunk
-        bool IsShipSunk { get; set; }
+        #endregion
     }
 }

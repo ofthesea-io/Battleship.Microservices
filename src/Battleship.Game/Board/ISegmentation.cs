@@ -1,14 +1,17 @@
 ﻿namespace Battleship.Game.Board
 {
     using System.Collections.Generic;
-    using Battleship.Microservices.Infrastructure.Models;
-    using Models;
+
+    using Battleship.Game.Models;
+    using Battleship.Microservices.Core.Models;
 
     /// <summary>
     ///     List of segments Controls each individual segment on the grid.
     /// </summary>
     public interface ISegmentation
     {
+        #region Methods
+
         /// <summary>
         ///     Add a segment to the segmentation grid
         /// </summary>
@@ -42,5 +45,7 @@
         /// <param name="y">The y coordinate.</param>
         /// <returns>Returns a single segment</returns>
         Segment GetSegment(int x, int y);
+
+        #endregion
     }
 }

@@ -4,15 +4,19 @@ namespace Battleship.Warehouse.Tests
 
     public class BattleshipWarehouseTests
     {
+        #region Methods
+
         [SetUp]
         public void Setup()
         {
         }
 
         [Test]
-        public void Test1()
+        public void Audit_WhenInitialized_IsRepositoryCreated()
         {
             Assert.Pass();
         }
+
+        #endregion
     }
 }
