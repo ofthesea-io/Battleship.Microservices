@@ -1,5 +1,4 @@
-name: dotnet core - Continuous Integration for Microservices Web Application
-
+name: dotnet core build
 on:
   push:
     branches: [ master ]
