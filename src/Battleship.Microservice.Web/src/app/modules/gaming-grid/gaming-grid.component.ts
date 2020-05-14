@@ -69,7 +69,7 @@ export class GamingGridComponent implements OnInit {
     }
   }
 
-  onCancelGame(data: any) {
+  onExitGame(data: any) {
     this.router.navigate(['login'], { state: { player: this.player } });
   }
 

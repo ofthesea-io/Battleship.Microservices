@@ -6,6 +6,7 @@ export interface APIServer {
   ScoreCard: Uri;
   Statistics: Uri;
   Leaderboard: Uri;
+  AuditLog: Uri;
 }
 
 export interface Settings {

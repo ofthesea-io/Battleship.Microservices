@@ -36,45 +36,79 @@ namespace Battleship.Audit.Tests
         [SetUp]
         public void Setup()
         {
-            this.timestamp = DateTime.Now;
+            this.timestamp = DateTime.Parse("3/2/2020 12:00:00 PM");
             this.auditLogs = new List<Audit>
-                                 {
-                                     new Audit { AuditType = AuditType.Warning, Content = "Warning message",  Timestamp = this.timestamp },
-                                     new Audit { AuditType = AuditType.Error, Content = "Error message",  Timestamp = this.timestamp },
-                                     new Audit { AuditType = AuditType.Info, Content = "Info content",  Timestamp = this.timestamp }
-                                 };
+             {
+                 new Audit { AuditTypeId = AuditType.Warning, Content = "Warning message",  Timestamp = DateTime.Parse("1/2/2020 12:00:00 AM") },
+                 new Audit { AuditTypeId = AuditType.Error, Content = "Error message",  Timestamp = DateTime.Parse("1/2/2020 12:00:00 AM") },
+                 new Audit { AuditTypeId = AuditType.Info, Content = "Info content",  Timestamp = DateTime.Parse("1/2/2020 12:00:00 AM") },
+                 new Audit { AuditTypeId = AuditType.Warning, Content = "Warning message",  Timestamp = DateTime.Parse("1/2/2020 05:00:00 AM") },
+                 new Audit { AuditTypeId = AuditType.Error, Content = "Error message",  Timestamp = DateTime.Parse("1/2/2020 05:00:00 AM") },
+                 new Audit { AuditTypeId = AuditType.Info, Content = "Info content",  Timestamp = DateTime.Parse("1/2/2020 05:00:00 AM") },
+                 new Audit { AuditTypeId = AuditType.Warning, Content = "Warning message",  Timestamp = DateTime.Parse("1/2/2020 10:00:00 AM") },
+                 new Audit { AuditTypeId = AuditType.Error, Content = "Error message",  Timestamp = DateTime.Parse("1/2/2020 10:00:00 AM") },
+                 new Audit { AuditTypeId = AuditType.Info, Content = "Info content",  Timestamp = DateTime.Parse("1/2/2020 10:00:00 AM") },
+                 new Audit { AuditTypeId = AuditType.Warning, Content = "Warning message",  Timestamp = DateTime.Parse("2/2/2020 12:00:00 PM") },
+                 new Audit { AuditTypeId = AuditType.Error, Content = "Error message",  Timestamp = DateTime.Parse("2/2/2020 12:00:00 PM") },
+                 new Audit { AuditTypeId = AuditType.Info, Content = "Info content",  Timestamp = DateTime.Parse("2/2/2020 12:00:00 PM") },
+                 new Audit { AuditTypeId = AuditType.Warning, Content = "Warning message",  Timestamp = DateTime.Parse("2/2/2020 11:00:00 PM") },
+                 new Audit { AuditTypeId = AuditType.Error, Content = "Error message",  Timestamp = DateTime.Parse("3/2/2020 12:00:00 PM") },
+                 new Audit { AuditTypeId = AuditType.Info, Content = "Info content",  Timestamp = DateTime.Parse("3/2/2020 12:00:00 PM") },
+             };
 
             this.moqAuditRepository = new Mock<IAuditRepository>();
             this.moqMessagePublisher = new Mock<IMessagePublisher>();
             this.auditController = new AuditController(this.moqAuditRepository.Object, this.moqMessagePublisher.Object);
         }
 
+
         [Test]
-        public async Task GetAuditLog_WhenGivenNothing_ReturnsAllLogs()
+        public async Task GetAuditLog_WhenGivenAWarningIdAnd0HoursReturnAllWarnings()
         {
             // Arrange
+            var warning = AuditType.Warning;
             this.moqAuditRepository.Reset();
-            this.moqAuditRepository.Setup(q => q.GetAuditContent()).Returns(Task.FromResult(this.auditLogs));
+            this.moqAuditRepository.Setup(q => q.GetAuditContentByAuditTypeHourRange(warning, 0)).Returns(Task.FromResult(this.auditLogs.Where(q => q.AuditTypeId == warning)));
+            int expectedResult = this.auditLogs.Count(q => q.AuditTypeId == warning);
 
             // Act
-            IEnumerable<Audit> result = await this.moqAuditRepository.Object.GetAuditContent();
+            IEnumerable<Audit> result = await this.moqAuditRepository.Object.GetAuditContentByAuditTypeHourRange(warning);
 
-            // Assert
-            Assert.AreEqual(this.auditLogs, result);
+            // Assert - return one or more
+            Assert.AreEqual(expectedResult, result.Count());
+        }
+
+
+        [Test]
+        public async Task GetAuditLog_WhenGivenErrorIdAnd0Hours_ReturnAllErrors()
+        {
+            // Arrange
+            var error = AuditType.Error;
+            this.moqAuditRepository.Reset();
+            this.moqAuditRepository.Setup(q => q.GetAuditContentByAuditTypeHourRange(error, 0)).Returns(Task.FromResult(this.auditLogs.Where(q => q.AuditTypeId == error)));
+            int expectedResult = this.auditLogs.Count(q => q.AuditTypeId == error);
+
+            // Act
+            IEnumerable<Audit> result = await this.moqAuditRepository.Object.GetAuditContentByAuditTypeHourRange(error);
+
+            // Assert - return one or more
+            Assert.AreEqual(expectedResult, result.Count());
         }
 
         [Test]
-        public async Task GetAuditLog_WhenGivenAType_ReturnAuditLogsByType()
+        public async Task GetAuditLog_WhenGivenInfoIdAnd0Hours_ReturnAllInfo()
         {
             // Arrange
+            var info = AuditType.Error;
             this.moqAuditRepository.Reset();
-            this.moqAuditRepository.Setup(q => q.GetAuditContentByAuditType(AuditType.Warning)).Returns(Task.FromResult(this.auditLogs.Where(q => q.AuditType == AuditType.Warning)));
+            this.moqAuditRepository.Setup(q => q.GetAuditContentByAuditTypeHourRange(info, 0)).Returns(Task.FromResult(this.auditLogs.Where(q => q.AuditTypeId == info)));
+            int expectedResult = this.auditLogs.Count(q => q.AuditTypeId == info);
 
             // Act
-            IEnumerable<Audit> result = await this.moqAuditRepository.Object.GetAuditContentByAuditType(AuditType.Warning);
+            IEnumerable<Audit> result = await this.moqAuditRepository.Object.GetAuditContentByAuditTypeHourRange(info);
 
             // Assert - return one or more
-            Assert.GreaterOrEqual(1, result.Count());
+            Assert.AreEqual(expectedResult, result.Count());
         }
 
         #endregion

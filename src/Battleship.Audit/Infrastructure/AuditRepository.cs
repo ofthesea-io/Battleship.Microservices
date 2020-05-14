@@ -26,9 +26,9 @@
             return await this.ExecuteAsync<Audit>();
         }
 
-        public async Task<IEnumerable<Audit>> GetAuditContentByAuditType(AuditType auditType)
+        public async Task<IEnumerable<Audit>> GetAuditContentByAuditTypeHourRange(AuditType auditType, int hours = 0)
         {
-            Dictionary<string, object> parameters = new Dictionary<string, object> { { "AuditTypeId", auditType } };
+            Dictionary<string, object> parameters = new Dictionary<string, object> { { "AuditTypeId", (int)auditType }, { "Hours", hours } };
 
             return await this.ExecuteAsync<Audit>(parameters);
         }

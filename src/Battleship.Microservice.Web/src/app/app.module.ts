@@ -36,6 +36,8 @@ import { ScoreCardService } from './core/services/score-card.service';
 import { PlayerService } from './core/services/player.service';
 import { PlayerStatisticsComponent } from './modules/player-statistics/player-statistics.component';
 import 'hammerjs';
+import { AuditLogComponent } from './modules/audit-log/audit-log.component';
+import { AuditService } from './core/services/audit.service';
 
 export function initializeApp(appConfig: AppConfig) {
   return () => appConfig.load();
@@ -51,6 +53,7 @@ export function initializeApp(appConfig: AppConfig) {
     ErrorHandlerComponent,
     ConfirmationDialogComponent,
     PlayerStatisticsComponent,
+    AuditLogComponent,
   ],
   imports: [
     BrowserModule,
@@ -88,6 +91,7 @@ export function initializeApp(appConfig: AppConfig) {
     BoardService,
     ScoreCardService,
     PlayerService,
+    AuditService,
     AppConfig,
     { provide: APP_INITIALIZER,
       useFactory: initializeApp,

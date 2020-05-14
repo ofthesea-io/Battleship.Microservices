@@ -11,13 +11,11 @@
 
     using Microsoft.Data.SqlClient;
 
-    public class RepositoryCore : IRepositoryCore
+    public class RepositoryCore 
     {
         #region Fields
 
         private readonly string databaseName;
-
-        private readonly int timeout = 360;
 
         #endregion
 
@@ -53,7 +51,7 @@
                     if (parameters != null && parameters.Count > 0)
                         dynamicParameters = this.SetupDynamicParameters(parameters);
 
-                    result = connection.Query<T>(this.SetName(procedure), dynamicParameters, commandType: CommandType.StoredProcedure, commandTimeout: this.timeout);
+                    result = connection.Query<T>(this.SetName(procedure), dynamicParameters, commandType: CommandType.StoredProcedure, commandTimeout: connection.ConnectionTimeout);
                 }
             }
             catch (SqlException exp)
@@ -84,7 +82,8 @@
             SqlConnection connection = this.GetOpenConnection();
             try
             {
-                using (connection) return connection.Query<T>(this.SetName(procedure), commandType: CommandType.StoredProcedure, commandTimeout: this.timeout);
+                using (connection) 
+                    return connection.Query<T>(this.SetName(procedure), commandType: CommandType.StoredProcedure, commandTimeout: connection.ConnectionTimeout);
             }
             catch (SqlException exp)
             {
@@ -101,18 +100,18 @@
         }
 
         /// <summary>
-        ///     Executes the specified parameters and stored procedure via dapper
+        ///     Executes the specified parameters and stored procedure via dapper QueryAsync query and returns IEnumerable of type T
         /// </summary>
         /// <typeparam name="T">Parameter to pass</typeparam>
         /// <param name="parameters">The parameters.</param>
         /// <param name="procedure">The procedure name.</param>
-        /// <returns>Type of T</returns>
+        /// <returns>IEnumerable Type of T</returns>
         /// <exception cref="System.Exception">Execution failed.</exception>
-        protected Task<IEnumerable<T>> ExecuteAsync<T>(Dictionary<string, object> parameters, [CallerMemberName] string procedure = "")
+        protected async Task<IEnumerable<T>> ExecuteAsync<T>(Dictionary<string, object> parameters, [CallerMemberName] string procedure = "")
             where T : class
         {
             SqlConnection connection = this.GetOpenConnection();
-            Task<IEnumerable<T>> result;
+            IEnumerable<T> result;
             try
             {
                 using (connection)
@@ -121,7 +120,7 @@
                     if (parameters != null && parameters.Count > 0)
                         dynamicParameters = this.SetupDynamicParameters(parameters);
 
-                    result = connection.QueryAsync<T>(this.SetName(procedure), dynamicParameters, commandType: CommandType.StoredProcedure, commandTimeout: this.timeout);
+                    result = await connection.QueryAsync<T>(this.SetName(procedure), dynamicParameters, commandType: CommandType.StoredProcedure, commandTimeout: connection.ConnectionTimeout);
                 }
             }
             catch (SqlException exp)
@@ -158,7 +157,7 @@
                     if (parameters != null && parameters.Count > 0)
                         dynamicParameters = this.SetupDynamicParameters(parameters);
 
-                    return connection.Execute(this.SetName(procedure), dynamicParameters, commandType: CommandType.StoredProcedure, commandTimeout: this.timeout);
+                    return connection.Execute(this.SetName(procedure), dynamicParameters, commandType: CommandType.StoredProcedure, commandTimeout: connection.ConnectionTimeout);
                 }
             }
             catch (SqlException exp)
@@ -195,9 +194,7 @@
 
                     string sql = this.SetName(procedure);
 
-                    CommandType commandType = CommandType.StoredProcedure;
-                    int? commandTimeout = this.timeout;
-                    result = await connection.ExecuteAsync(sql, dynamicParameters, null, commandTimeout, commandType);
+                    result = await connection.ExecuteAsync(sql, dynamicParameters, null, connection.ConnectionTimeout, CommandType.StoredProcedure);
                 }
             }
             catch (SqlException ex)
@@ -232,9 +229,7 @@
                 using (connection)
                 {
                     string sql = this.SetName(procedure);
-                    CommandType? commandType = CommandType.StoredProcedure;
-                    int commandTimeout = this.timeout;
-                    result = await connection.QueryAsync<T>(sql, null, null, commandTimeout, commandType);
+                    result = await connection.QueryAsync<T>(sql, null, null, connection.ConnectionTimeout, CommandType.StoredProcedure);
                 }
             }
             catch (SqlException exp)

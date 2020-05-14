@@ -68,7 +68,7 @@
                   {
                       Content = content,
                       Timestamp = DateTime.Now,
-                      AuditType = auditType
+                      AuditTypeId = auditType
                   };
 
                 result = JsonConvert.SerializeObject(audit);

@@ -68,10 +68,8 @@ namespace Battleship.Audit
             else
                 app.UseHsts();
 
-            app.UseCors(options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
-
+            app.UseCors(options => options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
             app.UseRouting();
-
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
 

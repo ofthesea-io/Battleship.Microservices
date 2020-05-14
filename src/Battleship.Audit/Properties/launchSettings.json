@@ -2,6 +2,7 @@
   "profiles": {
     "Battleship.Audit": {
       "commandName": "Project",
+      "nativeDebugging": true,
       "applicationUrl": "http://localhost:8086"
     }
   }
