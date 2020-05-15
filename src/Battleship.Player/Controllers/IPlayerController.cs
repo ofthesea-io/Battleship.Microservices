@@ -19,6 +19,8 @@
 
         Task<ActionResult> PlayerLogin([FromBody] Player player);
 
+        Task<ActionResult> IsAuthenticated(string sessionId);
+
         #endregion
     }
 }

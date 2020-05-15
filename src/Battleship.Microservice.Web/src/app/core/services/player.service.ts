@@ -50,6 +50,14 @@ export class PlayerService {
     }).pipe(catchError(this.config.handleError));
   }
 
+  getAuthorization(session: string): Observable<HttpResponse<any>> {
+    const authenticationUri: string = this.apiServerUrl() + 'GetAuthorization'.concat('?sessionId=' + session);
+    return this.httpClient.get<any>(authenticationUri, {
+      headers: this.config.getHeaders(),
+      observe: 'response'
+    }).pipe(catchError(this.config.handleError));
+  }
+
    apiServerUrl(): string {
     const server: string =  AppConfig.settings.apiServer.Player.host + AppConfig.settings.apiServer.Player.url;
     return server;

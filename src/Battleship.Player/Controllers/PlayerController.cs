@@ -75,6 +75,23 @@
             }
         }
 
+        public async Task<ActionResult> IsAuthenticated(string sessionId)
+        {
+
+            try
+            {
+                Authenticated result = await this.playerRepository.IsAuthenticated(sessionId);
+                if (result == null) return this.StatusCode(StatusCodes.Status401Unauthorized);
+                string data = JsonConvert.SerializeObject(result);
+                return this.Ok(data);
+            }
+            catch (Exception e)
+            {
+                this.Log(e);
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpPost]
         [Route("CreatePlayer")]
         public async Task<ActionResult> CreatePlayer([FromBody] Player player)

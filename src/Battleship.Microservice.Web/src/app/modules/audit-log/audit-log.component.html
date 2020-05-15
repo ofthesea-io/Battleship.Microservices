@@ -15,14 +15,14 @@
                     <button type="button" class="btn btn-danger" (click)="auditType = 1; getAuditContentByAuditTypeHourRange()">Danger</button>
                 </li>
                 <li class="list-inline-item">
-                    <button type="button" class="btn btn-light" (click)="auditType = 0; getAuditContentByAuditTypeHourRange()">All</button>
+                    <button type="button" class="btn btn-light" [ngClass]="{'active': auditType == 0}"  (click)="auditType = 0; getAuditContentByAuditTypeHourRange()">All</button>
                 </li>
             </ul>
         </div>
         <div>
             <ul class="list-inline">
                 <li class="list-inline-item">
-                    <button type="button" class="btn btn-light" (click)="hours = 0; getAuditContentByAuditTypeHourRange()">All</button>
+                    <button type="button" class="btn btn-light" (click)="hours == 0; getAuditContentByAuditTypeHourRange()">All</button>
                 </li>
                     <li class="list-inline-item">
                         <button type="button" class="btn btn-light" (click)="hours = 24; getAuditContentByAuditTypeHourRange()">24 Hrs</button>

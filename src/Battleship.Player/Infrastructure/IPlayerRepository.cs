@@ -24,7 +24,7 @@
 
         Task<Player> DemoLogin(Guid playerId);
 
-        Task<bool> IsAuthenticated(string auth);
+        Task<Authenticated> IsAuthenticated(string auth);
 
         #endregion
     }

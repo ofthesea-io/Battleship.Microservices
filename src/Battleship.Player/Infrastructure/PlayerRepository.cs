@@ -65,11 +65,11 @@
             return await this.ExecuteScalarAsync<Player>(parameters);
         }
 
-        public async Task<bool> IsAuthenticated(string auth)
+        public async Task<Authenticated> IsAuthenticated(string auth)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object> { { "Auth", auth } };
 
-            return await this.ExecuteScalarAsync<bool>(parameters);
+            return await this.ExecuteScalarAsync<Authenticated>(parameters);
         }
 
         #endregion

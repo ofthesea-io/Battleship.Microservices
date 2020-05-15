@@ -162,7 +162,7 @@
 
                 await this.gameRepository.StartGame(sessionToken, numberOfShips);
 
-                this.Log($"Game started on {sessionToken}");
+                this.Log($"Game started on session: {sessionToken}");
 
                 // Publish the message to the ScoreCard Queue
                 ScoreCard scoreCard = new ScoreCard
