@@ -10,7 +10,7 @@ import { AppConfig } from './app.config';
 import { AppComponent } from './app.component';
 import { GamingGridComponent } from './modules/gaming-grid/gaming-grid.component';
 import { ScoreCardComponent } from './modules/child-components/score-card/score-card.component';
-import { Configuration } from './core/Utilities/configuration';
+import { Configuration } from './core/utilities/configuration';
 import { BoardService } from './core/services/board.service';
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { PlayerLoginComponent } from './modules/player-login/player-login.component';

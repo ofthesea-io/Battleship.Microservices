@@ -1,30 +1,31 @@
 <!-- Fixed navbar -->
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-  <a class="navbar-brand" href="#"><img src="../assets/images/battleship.png" height="32px" width="32px" /></a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarCollapse">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <span><a [routerLink]="['/login']" class="nav-link">Login </a></span>
-      </li>
-      <li class="nav-item">
-        <span><a [routerLink]="['/createPlayer']" class="nav-link">Create Account</a></span>
-      </li>
-      <li class="nav-item">
-        <span><a [routerLink]="['/statistics']" class="nav-link">Top Players</a></span>
-      </li>
-      <li class="nav-item">
-        <span><a [routerLink]="['/audit']" class="nav-link">Audit</a></span>
-      </li>
-    </ul>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark" data-toggle="affix">
+  <div class="mx-auto d-sm-flex d-block flex-sm-nowrap">
+      <a class="navbar-brand" href="#"><img src="../assets/images/battleship.png" height="32px" width="32px" /></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample11" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse text-center" id="navbarsExample11">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <span><a [routerLink]="['/login']" class="nav-link">Login </a></span>
+            </li>
+            <li class="nav-item">
+              <span><a [routerLink]="['/createPlayer']" class="nav-link">Create Account</a></span>
+            </li>
+            <li class="nav-item">
+              <span><a [routerLink]="['/statistics']" class="nav-link">Top Players</a></span>
+            </li>
+            <li class="nav-item">
+              <span><a [routerLink]="['/audit']" class="nav-link">Audit</a></span>
+            </li>
+          </ul>
+      </div>
   </div>
 </nav>
 
 <!-- Begin page content -->
-<main role="main" class="container" style="padding-top: 60px;">
+<main role="main" class="container" >
   <router-outlet></router-outlet>
 </main>
 

@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Configuration } from '../../core/Utilities/configuration';
+import { Configuration } from '../../core/utilities/configuration';
 import { Player } from '../../core/models/player';
 import { PlayerService } from '../../core/services/player.service';
 import { Router } from '@angular/router';
+import { Authentication } from 'src/app/core/utilities/authentication';
 
 @Component({
   selector: 'app-layer-form-root',
@@ -20,6 +21,7 @@ export class PlayerFormComponent {
 
   constructor(
     private config: Configuration,
+    private auth: Authentication,
     private playerService: PlayerService,
     private router: Router
   ) {}
@@ -31,14 +33,14 @@ export class PlayerFormComponent {
         console.log(response);
         if (response.status === 200) {
           if (response.body !== '') {
-            this.config.setAuthHeader(response.body.sessionToken);
-            this.config.setGameCompleted('no');
+            this.auth.setAuthHeader(response.body.sessionToken);
+            this.auth.setGameCompleted('no');
             this.router.navigate(['gamePlay'], { state: { player } });
           } else {
             this.errorMessage = this.config.somethingWentWrongError;
           }
         } else {
-          this.config.removeAuthHeader('authToken');
+          this.auth.removeAuthHeader('authToken');
           this.errorMessage = this.config.somethingWentWrongError;
         }
       },

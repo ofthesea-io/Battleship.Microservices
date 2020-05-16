@@ -3,11 +3,12 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import { Player } from '../models/player';
-import { Configuration } from '../Utilities/configuration';
+import { Configuration } from '../utilities/configuration';
 import { catchError } from 'rxjs/operators';
 import { PlayerCommand } from '../models/playerCommand';
 import 'rxjs/add/operator/map';
 import { AppConfig } from 'src/app/app.config';
+import { Authentication } from '../utilities/authentication';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class BoardService {
   public gamingGridNewGameSubject = new Subject<any>();
   public playerSubject = new Subject<Player>();
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private auth: Authentication) {
     this.config = new Configuration();
   }
 
@@ -28,7 +29,7 @@ export class BoardService {
     const startGameUri = this.apiServerUrl() + 'StartGame'.concat('?numberOfShips=' + numberOfShips);
     return this.httpClient
       .get<any>(startGameUri, {
-        headers: this.config.getAuthHeaders(),
+        headers: this.auth.getAuthHeaders(),
         observe: 'response'
       })
       .pipe(catchError(this.config.handleError));
@@ -39,7 +40,7 @@ export class BoardService {
     const getGamingGridUrl = this.apiServerUrl() + 'GenerateBoard';
     return this.httpClient
       .get<any>(getGamingGridUrl, {
-        headers: this.config.getAuthHeaders(),
+        headers: this.auth.getAuthHeaders(),
         observe: 'response'
       })
       .pipe(catchError(this.config.handleError));
@@ -53,7 +54,7 @@ export class BoardService {
       const userInputUrl: string = this.apiServerUrl() + 'UserInput';
       return this.httpClient
         .post<any>(userInputUrl, playerCommand, {
-          headers: this.config.getAuthHeaders(),
+          headers: this.auth.getAuthHeaders(),
           observe: 'response'
         })
         .pipe(catchError(this.config.handleError));

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AuditService } from 'src/app/core/services/audit.service';
-import { Configuration } from 'src/app/core/Utilities/configuration';
+import { Configuration } from 'src/app/core/utilities/configuration';
 import { Audit } from 'src/app/core/models/audit';
 import HttpStatusCode from 'src/app/core/utilities/HttpStatusCodes';
 

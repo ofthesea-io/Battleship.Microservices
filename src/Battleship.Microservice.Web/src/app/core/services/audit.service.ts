@@ -2,21 +2,22 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpResponse, HttpClient } from '@angular/common/http';
-import { Configuration } from '../Utilities/configuration';
+import { Configuration } from '../utilities/configuration';
 import { AppConfig } from 'src/app/app.config';
+import { Authentication } from '../utilities/authentication';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuditService {
 
-  constructor(private httpClient: HttpClient, private config: Configuration ) {
+  constructor(private httpClient: HttpClient, private config: Configuration, private auth : Authentication) {
   }
 
   getAuditContent(): Observable<HttpResponse<any>> {
     const auditLogUrl: string = this.apiServerUrl() + 'GetAuditContent';
     return this.httpClient.get<any>(auditLogUrl, {
-        headers: this.config.getAuthHeaders(),
+        headers: this.auth.getAuthHeaders(),
         observe: 'response'
       })
       .pipe(
@@ -27,7 +28,7 @@ export class AuditService {
     const auditLogUrl = `${ this.apiServerUrl() }GetAuditContentByAuditTypeHourRange?auditType=${ auditLogTypeId }&hours=${ hours }`;
     return this.httpClient
       .get<any>(auditLogUrl, {
-        headers: this.config.getAuthHeaders(),
+        headers: this.auth.getAuthHeaders(),
         observe: 'response'
       })
       .pipe(catchError(this.config.handleError));

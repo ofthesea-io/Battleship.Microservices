@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Configuration } from '../Utilities/configuration';
+import { Configuration } from '../utilities/configuration';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Player } from '../models/player';
 import { AppConfig } from 'src/app/app.config';
+import { Authentication } from '../utilities/authentication';
 
 @Injectable({
   providedIn: 'root'
@@ -12,14 +13,14 @@ import { AppConfig } from 'src/app/app.config';
 export class PlayerService {
   private config: Configuration;
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private auth: Authentication) {
     this.config = new Configuration();
   }
 
   createAccount(player: Player): Observable<HttpResponse<any>> {
     const playerUri: string = this.apiServerUrl() + 'createPlayer';
     return this.httpClient.post<any>(playerUri, player, {
-      headers: this.config.getHeaders(),
+      headers: this.auth.getHeaders(),
       observe: 'response'
     });
   }
@@ -27,7 +28,7 @@ export class PlayerService {
   loginPlayer(player: Player): Observable<HttpResponse<any>> {
     const playerUri: string = this.apiServerUrl() + 'PlayerLogin';
     return this.httpClient.post<any>(playerUri, player, {
-      headers: this.config.getHeaders(),
+      headers: this.auth.getHeaders(),
       observe: 'response'
     });
   }
@@ -45,15 +46,7 @@ export class PlayerService {
   getDemoPlayers(): Observable<HttpResponse<any>> {
     const playerUri: string = this.apiServerUrl() + 'GetDemoPlayers';
     return this.httpClient.get<any>(playerUri, {
-      headers: this.config.getHeaders(),
-      observe: 'response'
-    }).pipe(catchError(this.config.handleError));
-  }
-
-  getAuthorization(session: string): Observable<HttpResponse<any>> {
-    const authenticationUri: string = this.apiServerUrl() + 'GetAuthorization'.concat('?sessionId=' + session);
-    return this.httpClient.get<any>(authenticationUri, {
-      headers: this.config.getHeaders(),
+      headers: this.auth.getHeaders(),
       observe: 'response'
     }).pipe(catchError(this.config.handleError));
   }
