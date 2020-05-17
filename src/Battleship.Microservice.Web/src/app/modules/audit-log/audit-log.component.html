@@ -1,0 +1,54 @@
+<div class="overflow mt-3">
+    <h3>
+        Audit
+    </h3>
+    <div class="d-flex justify-content-between">
+        <div>
+            <ul class="list-inline">
+                <li class="list-inline-item">
+                    <button type="button" class="btn btn-info" (click)="auditType = 3; getAuditContentByAuditTypeHourRange()">Info</button>
+                </li>
+                <li class="list-inline-item">
+                    <button type="button" class="btn btn-warning" (click)="auditType = 2; getAuditContentByAuditTypeHourRange()">Warning</button>
+                </li>
+                <li class="list-inline-item">
+                    <button type="button" class="btn btn-danger" (click)="auditType = 1; getAuditContentByAuditTypeHourRange()">Danger</button>
+                </li>
+                <li class="list-inline-item">
+                    <button type="button" class="btn btn-light" [ngClass]="{'active': auditType == 0}"  (click)="auditType = 0; getAuditContentByAuditTypeHourRange()">All</button>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <ul class="list-inline">
+                <li class="list-inline-item">
+                    <button type="button" class="btn btn-light" (click)="hours == 0; getAuditContentByAuditTypeHourRange()">All</button>
+                </li>
+                    <li class="list-inline-item">
+                        <button type="button" class="btn btn-light" (click)="hours = 24; getAuditContentByAuditTypeHourRange()">24 Hrs</button>
+                    </li>
+                    <li class="list-inline-item">
+                        <button type="button" class="btn btn-light" (click)="hours = 48; getAuditContentByAuditTypeHourRange()">48 Hrs</button>
+                    </li>
+                    <li class="list-inline-item">
+                        <button type="button" class="btn btn-light" (click)="hours = 96; getAuditContentByAuditTypeHourRange()">96 hrs</button>
+                    </li>
+            </ul>
+        </div>
+    </div>
+    <div *ngIf="auditLogs.length > 0; else noResult">
+        <ul class="list-group" *ngFor="let audit of auditLogs">
+            <div class="list-group-item" [ngClass]="audit.auditTypeId === 3 ? 'list-group-item-info': audit.auditTypeId === 2 ? 'list-group-item-warning' : 'list-group-item-danger'">
+                <div class="d-flex justify-content-between">
+                    <div>{{ audit.content }}</div>
+                    <small>{{ audit.timestamp |  date:'short'}}</small>
+                </div>
+            </div>
+        </ul>
+    </div>
+    <ng-template #noResult>
+        <div>
+            No audit logs found
+        </div>
+    </ng-template>
+</div>

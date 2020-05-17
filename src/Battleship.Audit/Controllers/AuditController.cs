@@ -8,6 +8,7 @@
     using Battleship.Microservices.Core.Components;
     using Battleship.Microservices.Core.Messages;
     using Battleship.Microservices.Core.Models;
+    using Battleship.Microservices.Core.Utilities;
 
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@
 
     [Route("api/[controller]")]
     [ApiController]
-    public class AuditController : ContextBase
+    public class AuditController : ContextBase, IAuditController
     {
         #region Fields
 
@@ -38,14 +39,14 @@
 
         [HttpPost]
         [Route("SaveAuditContent")]
-        public async Task<ActionResult> SaveAuditMessage([FromBody] Audit audit)
+        public async Task<ActionResult> SaveAuditContent([FromBody] Audit audit)
         {
             try
             {
                 if (audit == null)
                     return this.StatusCode(StatusCodes.Status500InternalServerError);
 
-                await this.auditRepository.SaveAuditContent(audit.Content, audit.AuditType, DateTime.Now);
+                await this.auditRepository.SaveAuditContent(audit.Content, audit.AuditTypeId, DateTime.Now);
                 return this.Ok();
             }
             catch (Exception e)
@@ -56,8 +57,8 @@
         }
 
         [HttpGet]
-        [Route("GetAuditLogs")]
-        public async Task<ActionResult> GetAuditMessages()
+        [Route("GetAuditContent")]
+        public async Task<ActionResult> GetAuditContent()
         {
             try
             {
@@ -73,6 +74,32 @@
                 return this.StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpGet]
+        [Route("GetAuditContentByAuditTypeHourRange")]
+        public async Task<ActionResult> GetAuditContentByAuditTypeHourRange(int auditType, int hours)
+        {
+            try
+            {
+                IEnumerable<Audit> result = await this.auditRepository.GetAuditContentByAuditTypeHourRange((AuditType)auditType, hours);
+                if (result == null) return this.BadRequest(false);
+
+                string json = JsonConvert.SerializeObject(result);
+                return this.Ok(json);
+            }
+            catch (Exception e)
+            {
+                this.Log(e);
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet]
+        public string Get()
+        {
+            return "Audit Log API started.";
+        }
+
 
         #endregion
     }

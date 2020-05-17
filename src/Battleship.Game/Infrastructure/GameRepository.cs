@@ -82,6 +82,13 @@
             return this.ExecuteScalar<bool>(parameters);
         }
 
+        public async Task<bool> SetGameCompleted(string sessionToken)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object> { { "sessionToken", sessionToken } };
+
+            return await this.ExecuteScalarAsync<bool>(parameters);
+        }
+
         #endregion
     }
 }

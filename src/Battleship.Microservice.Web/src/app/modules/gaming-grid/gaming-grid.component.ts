@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { BoardService } from '../../core/services/board.service';
 import { ScoreCard } from '../../core/models/scoreCard';
-import { Configuration } from '../../core/Utilities/configuration';
+import { Configuration } from '../../core/utilities/configuration';
 import { Coordinate } from '../../core/models/coordinate';
 import { Player } from '../../core/models/player';
 import { Router } from '@angular/router';
@@ -69,7 +69,7 @@ export class GamingGridComponent implements OnInit {
     }
   }
 
-  onCancelGame(data: any) {
+  onExitGame(data: any) {
     this.router.navigate(['login'], { state: { player: this.player } });
   }
 

@@ -67,7 +67,7 @@
                         if (!string.IsNullOrEmpty(content))
                         {
                             Audit auditMessage = JsonConvert.DeserializeObject<Audit>(content);
-                            this.auditRepository.SaveAuditContent(auditMessage.Content, auditMessage.AuditType, auditMessage.Timestamp);
+                            this.auditRepository.SaveAuditContent(auditMessage.Content, auditMessage.AuditTypeId, auditMessage.Timestamp);
                             this.channel.BasicAck(ea.DeliveryTag, true);
                         }
                     }

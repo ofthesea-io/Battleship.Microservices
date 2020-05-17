@@ -21,6 +21,8 @@
 
         bool CheckPlayerStatus(string sessionToken);
 
+        Task<bool> SetGameCompleted(string sessionToken);
+
         #endregion
     }
 }

@@ -1,9 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Player } from '../../core/models/player';
 import { PlayerService } from '../../core/services/player.service';
-import { Configuration } from '../../core/Utilities/configuration';
+import { Configuration } from '../../core/utilities/configuration';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
+import { Auth } from 'src/app/core/utilities/auth';
 
 export enum PlayerDemoStatus {
   isLoading = 0,
@@ -28,6 +29,7 @@ export class PlayerLoginComponent implements OnInit {
   constructor(
     private configuration: Configuration,
     private playerService: PlayerService,
+    private auth: Auth,
     private router: Router,
     private dialog: MatDialog
   ) {}
@@ -53,8 +55,8 @@ export class PlayerLoginComponent implements OnInit {
   }
 
   onChange(playerId: string) {
-    const isCompleted: string = this.configuration.getGameCompeted();
-    const getDate: string = this.configuration.getLastAuthDate();
+    const isCompleted: string = this.auth.getGameCompeted();
+    const getDate: string = this.auth.getLastAuthDate();
 
     if (Date.now() <= Date.parse(getDate) && isCompleted) {
       this.configuration.openDialog(this.dialog, this.configuration.gameNotStarted, this.configuration.close);
@@ -65,7 +67,7 @@ export class PlayerLoginComponent implements OnInit {
         console.log(response);
         if (response.status === 200) {
           const player = response.body as Player;
-          this.configuration.setAuthHeader(player.sessionToken);
+          this.auth.setAuthHeader(player.sessionToken);
           this.router.navigate(['gamePlay'], { state: { player }});
         }
       },
@@ -84,9 +86,9 @@ export class PlayerLoginComponent implements OnInit {
           if (response.body !== '') {
             this.errorMessage = this.configuration.somethingWentWrongError;
           }
-          this.configuration.setAuthHeader(response.body);
+          this.auth.setAuthHeader(response.body);
         } else {
-          this.configuration.removeAuthHeader('authToken');
+          this.auth.removeAuthHeader('authToken');
         }
       },
       error => {

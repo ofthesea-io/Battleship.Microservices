@@ -5,43 +5,36 @@ BEGIN
 	ALTER DATABASE [Battleship.Player] SET ANSI_NULLS OFF 
 END
 GO
+
 IF exists (select * from sys.databases where Name = 'Battleship.Player')
 BEGIN
 USE [Battleship.Player]
 	IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Player]') AND type in (N'U'))
 BEGIN
-	CREATE TABLE [dbo].[Player](
-		[PlayerId] [uniqueidentifier] NOT NULL,
-		[Firstname] [varchar](50) NOT NULL,
-		[Lastname] [varchar](50) NOT NULL,
-		[Email] [varchar](100) NOT NULL,
-		[Password] [varchar](16) NOT NULL,
-		[IsDemo] [bit] NOT NULL,
-		[DateCreated] [datetime2](7) NOT NULL,
-	 CONSTRAINT [PK_Player] PRIMARY KEY CLUSTERED 
-	(
-		[PlayerId] ASC
-	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-	) ON [PRIMARY]
-	END
+			CREATE TABLE [dbo].[Player](
+			[PlayerId] [uniqueidentifier] NOT NULL,
+			[Firstname] [varchar](50) NOT NULL,
+			[Lastname] [varchar](50) NOT NULL,
+			[Email] [varchar](100) NOT NULL,
+			[Password] [varchar](16) NOT NULL,
+			[IsDemo] [bit] NOT NULL,
+			[CurrentLevel] [int] NOT NULL,
+			[DateCreated] [datetime2](7) NOT NULL,
+		 CONSTRAINT [PK_Player] PRIMARY KEY CLUSTERED 
+		(
+			[PlayerId] ASC
+		)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+		) ON [PRIMARY]
 
-	IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_Player_PlayerId]') AND type = 'D')
-	BEGIN
-	ALTER TABLE [dbo].[Player] ADD  CONSTRAINT [DF_Player_PlayerId]  DEFAULT (newid()) FOR [PlayerId]
-	END
+		ALTER TABLE [dbo].[Player] ADD  CONSTRAINT [DF_Player_PlayerId]  DEFAULT (newid()) FOR [PlayerId]
+		
+		ALTER TABLE [dbo].[Player] ADD  CONSTRAINT [DF_Player_IsDemo]  DEFAULT ((0)) FOR [IsDemo]
 
-	IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_Player_IsDemo]') AND type = 'D')
-	BEGIN
-	ALTER TABLE [dbo].[Player] ADD  CONSTRAINT [DF_Player_IsDemo]  DEFAULT ((0)) FOR [IsDemo]
-	END
+		ALTER TABLE [dbo].[Player] ADD  CONSTRAINT [DF_Player_CurrentLevel]  DEFAULT ((1)) FOR [CurrentLevel]
 
-	IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_Player_DateCreated]') AND type = 'D')
-	BEGIN
-	ALTER TABLE [dbo].[Player] ADD  CONSTRAINT [DF_Player_DateCreated]  DEFAULT (getutcdate()) FOR [DateCreated]
-	END
+		ALTER TABLE [dbo].[Player] ADD  CONSTRAINT [DF_Player_DateCreated]  DEFAULT (getutcdate()) FOR [DateCreated]
+ END		
 END
-
-USE [Battleship.Player]
 
 SET ANSI_NULLS ON
 GO

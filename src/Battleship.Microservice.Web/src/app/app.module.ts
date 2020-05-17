@@ -10,7 +10,7 @@ import { AppConfig } from './app.config';
 import { AppComponent } from './app.component';
 import { GamingGridComponent } from './modules/gaming-grid/gaming-grid.component';
 import { ScoreCardComponent } from './modules/child-components/score-card/score-card.component';
-import { Configuration } from './core/Utilities/configuration';
+import { Configuration } from './core/utilities/configuration';
 import { BoardService } from './core/services/board.service';
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { PlayerLoginComponent } from './modules/player-login/player-login.component';
@@ -36,6 +36,9 @@ import { ScoreCardService } from './core/services/score-card.service';
 import { PlayerService } from './core/services/player.service';
 import { PlayerStatisticsComponent } from './modules/player-statistics/player-statistics.component';
 import 'hammerjs';
+import { AuditLogComponent } from './modules/audit-log/audit-log.component';
+import { AuditService } from './core/services/audit.service';
+import { Auth } from './core/utilities/auth';
 
 export function initializeApp(appConfig: AppConfig) {
   return () => appConfig.load();
@@ -51,6 +54,7 @@ export function initializeApp(appConfig: AppConfig) {
     ErrorHandlerComponent,
     ConfirmationDialogComponent,
     PlayerStatisticsComponent,
+    AuditLogComponent,
   ],
   imports: [
     BrowserModule,
@@ -84,10 +88,12 @@ export function initializeApp(appConfig: AppConfig) {
     ReactiveFormsModule,
   ],
   providers: [
+    Auth,
     Configuration,
     BoardService,
     ScoreCardService,
     PlayerService,
+    AuditService,
     AppConfig,
     { provide: APP_INITIALIZER,
       useFactory: initializeApp,

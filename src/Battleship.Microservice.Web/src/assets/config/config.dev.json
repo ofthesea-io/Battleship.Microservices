@@ -25,6 +25,10 @@
     "Leaderboard": {
       "host": "http://localhost:8085",
       "url": "/api/Leaderboard/"
+    },
+    "AuditLog": {
+      "host": "http://localhost:8086",
+      "url": "/api/Audit/"
     }
   }
 }

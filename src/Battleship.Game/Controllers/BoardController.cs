@@ -143,6 +143,22 @@
             return this.Ok(JsonConvert.SerializeObject(playerCommand.ScoreCard));
         }
 
+        [HttpPost]
+        public async Task<ActionResult> SetGameCompleted()
+        {
+            try
+            {
+                string sessionToken = this.IsAuthenticated(this.HttpContext);
+                var result = await this.gameRepository.SetGameCompleted(sessionToken);
+                return this.Ok(result);
+            }
+            catch (Exception e)
+            {
+                this.Log(e);
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpGet]
         public string Get()
         {
@@ -162,7 +178,7 @@
 
                 await this.gameRepository.StartGame(sessionToken, numberOfShips);
 
-                this.Log($"Game started on {sessionToken}");
+                this.Log($"Game started on session: {sessionToken}");
 
                 // Publish the message to the ScoreCard Queue
                 ScoreCard scoreCard = new ScoreCard

@@ -19,5 +19,6 @@ ENV ASPNETCORE_URLS http://*:8081
 HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://localhost:8081/api/Board || exit 1
 
 # Start
-ENTRYPOINT ["dotnet", "Battleship.Game.dll"]
+RUN chmod +x ./entrypoint.sh
+CMD /bin/bash ./entrypoint.sh
 

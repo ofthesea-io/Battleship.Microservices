@@ -13,7 +13,7 @@
 
         Task<IEnumerable<Audit>> GetAuditContent();
 
-        Task<IEnumerable<Audit>> GetAuditContentByAuditType(AuditType auditType);
+        Task<IEnumerable<Audit>> GetAuditContentByAuditTypeHourRange(AuditType auditType, int hours = 0);
 
         Task SaveAuditContent(string content, AuditType auditType, DateTime timestamp);
 
