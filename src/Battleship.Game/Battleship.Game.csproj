@@ -6,7 +6,7 @@
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
     <UserSecretsId>687d91a2-e6b3-48e5-b047-d0ffb69cae10</UserSecretsId>
     <StartupObject>Battleship.Game.Program</StartupObject>
-    <Version>0.0.4</Version>
+    <Version>0.0.5</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
