@@ -4,14 +4,14 @@ import { catchError } from 'rxjs/operators';
 import { HttpResponse, HttpClient } from '@angular/common/http';
 import { Configuration } from '../utilities/configuration';
 import { AppConfig } from 'src/app/app.config';
-import { Authentication } from '../utilities/authentication';
+import { Auth } from '../utilities/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuditService {
 
-  constructor(private httpClient: HttpClient, private config: Configuration, private auth : Authentication) {
+  constructor(private httpClient: HttpClient, private config: Configuration, private auth : Auth) {
   }
 
   getAuditContent(): Observable<HttpResponse<any>> {

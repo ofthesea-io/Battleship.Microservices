@@ -4,13 +4,13 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Configuration } from '../utilities/configuration';
 import { catchError } from 'rxjs/operators';
 import { AppConfig } from 'src/app/app.config';
-import { Authentication } from '../utilities/authentication';
+import { Auth } from '../utilities/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ScoreCardService {
-  constructor(private httpClient: HttpClient, private config: Configuration, private auth: Authentication) { }
+  constructor(private httpClient: HttpClient, private config: Configuration, private auth: Auth) { }
 
   getPlayerScoreCard(): Observable<HttpResponse<any>> {
     const createScoreCardUrl: string = this.apiServerUrl() + 'GetPlayerScoreCard';

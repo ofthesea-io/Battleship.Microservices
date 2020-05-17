@@ -1,6 +1,6 @@
 import { HttpHeaders } from '@angular/common/http';
 
-export class Authentication {
+export class Auth {
 
     getHeaders(): HttpHeaders {
         const headers = new HttpHeaders({

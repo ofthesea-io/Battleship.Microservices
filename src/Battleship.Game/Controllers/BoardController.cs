@@ -143,6 +143,22 @@
             return this.Ok(JsonConvert.SerializeObject(playerCommand.ScoreCard));
         }
 
+        [HttpPost]
+        public async Task<ActionResult> SetGameCompleted()
+        {
+            try
+            {
+                string sessionToken = this.IsAuthenticated(this.HttpContext);
+                var result = await this.gameRepository.SetGameCompleted(sessionToken);
+                return this.Ok(result);
+            }
+            catch (Exception e)
+            {
+                this.Log(e);
+                return this.StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpGet]
         public string Get()
         {

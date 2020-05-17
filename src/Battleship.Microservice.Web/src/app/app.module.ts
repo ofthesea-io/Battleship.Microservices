@@ -38,6 +38,7 @@ import { PlayerStatisticsComponent } from './modules/player-statistics/player-st
 import 'hammerjs';
 import { AuditLogComponent } from './modules/audit-log/audit-log.component';
 import { AuditService } from './core/services/audit.service';
+import { Auth } from './core/utilities/auth';
 
 export function initializeApp(appConfig: AppConfig) {
   return () => appConfig.load();
@@ -87,6 +88,7 @@ export function initializeApp(appConfig: AppConfig) {
     ReactiveFormsModule,
   ],
   providers: [
+    Auth,
     Configuration,
     BoardService,
     ScoreCardService,

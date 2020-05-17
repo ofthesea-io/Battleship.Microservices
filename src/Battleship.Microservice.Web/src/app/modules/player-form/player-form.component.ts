@@ -3,7 +3,7 @@ import { Configuration } from '../../core/utilities/configuration';
 import { Player } from '../../core/models/player';
 import { PlayerService } from '../../core/services/player.service';
 import { Router } from '@angular/router';
-import { Authentication } from 'src/app/core/utilities/authentication';
+import { Auth } from 'src/app/core/utilities/auth';
 
 @Component({
   selector: 'app-layer-form-root',
@@ -21,7 +21,7 @@ export class PlayerFormComponent {
 
   constructor(
     private config: Configuration,
-    private auth: Authentication,
+    private auth: Auth,
     private playerService: PlayerService,
     private router: Router
   ) {}

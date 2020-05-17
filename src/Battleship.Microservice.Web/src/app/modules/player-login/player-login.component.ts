@@ -4,7 +4,7 @@ import { PlayerService } from '../../core/services/player.service';
 import { Configuration } from '../../core/utilities/configuration';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
-import { Authentication } from 'src/app/core/utilities/authentication';
+import { Auth } from 'src/app/core/utilities/auth';
 
 export enum PlayerDemoStatus {
   isLoading = 0,
@@ -29,7 +29,7 @@ export class PlayerLoginComponent implements OnInit {
   constructor(
     private configuration: Configuration,
     private playerService: PlayerService,
-    private auth: Authentication,
+    private auth: Auth,
     private router: Router,
     private dialog: MatDialog
   ) {}

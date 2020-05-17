@@ -6,9 +6,9 @@ import { Player } from '../models/player';
 import { Configuration } from '../utilities/configuration';
 import { catchError } from 'rxjs/operators';
 import { PlayerCommand } from '../models/playerCommand';
-import 'rxjs/add/operator/map';
 import { AppConfig } from 'src/app/app.config';
-import { Authentication } from '../utilities/authentication';
+import { Auth } from '../utilities/auth';
+import 'rxjs/add/operator/map';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class BoardService {
   public gamingGridNewGameSubject = new Subject<any>();
   public playerSubject = new Subject<Player>();
 
-  constructor(private httpClient: HttpClient, private auth: Authentication) {
+  constructor(private httpClient: HttpClient, private auth: Auth) {
     this.config = new Configuration();
   }
 

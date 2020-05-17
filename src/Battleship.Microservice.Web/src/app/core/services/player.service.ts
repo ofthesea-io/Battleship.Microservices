@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Player } from '../models/player';
 import { AppConfig } from 'src/app/app.config';
-import { Authentication } from '../utilities/authentication';
+import { Auth } from '../utilities/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ import { Authentication } from '../utilities/authentication';
 export class PlayerService {
   private config: Configuration;
 
-  constructor(private httpClient: HttpClient, private auth: Authentication) {
+  constructor(private httpClient: HttpClient, private auth: Auth) {
     this.config = new Configuration();
   }
 

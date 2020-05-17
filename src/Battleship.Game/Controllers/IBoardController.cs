@@ -14,6 +14,8 @@
 
         Task<ActionResult> UserInput([FromBody] PlayerCommand playerCommand);
 
+        Task<ActionResult> SetGameCompleted();
+
         #endregion
     }
 }

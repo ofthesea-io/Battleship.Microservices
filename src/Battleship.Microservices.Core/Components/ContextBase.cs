@@ -1,6 +1,7 @@
 ﻿namespace Battleship.Microservices.Core.Components
 {
     using System;
+    using System.Threading.Tasks;
 
     using Battleship.Microservices.Core.Messages;
     using Battleship.Microservices.Core.Models;
@@ -43,6 +44,18 @@
                 string message = this.MarshalMessage(error, auditType);
                 await this.messagePublisher.PublishMessageAsync(message, this.AuditQueue);
             }
+        }
+
+        protected async Task<ActionResult> Log(Exception exp, StatusCodeResult statusCode, AuditType auditType = AuditType.Error)
+        {
+            if (exp != null)
+            {
+                string error = $"{exp.Message}\n{exp.StackTrace}";
+                string message = this.MarshalMessage(error, auditType);
+                await this.messagePublisher.PublishMessageAsync(message, this.AuditQueue);
+            }
+
+            return statusCode;
         }
 
         protected async void Log(string content, AuditType auditType = AuditType.Info)
