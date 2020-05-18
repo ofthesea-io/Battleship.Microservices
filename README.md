@@ -2,9 +2,9 @@
 # Battleship.Microservices
 ![dotnet core build](https://github.com/visualsanity/Battleship.Microservices/workflows/dotnet%20core%20build/badge.svg)
 
-The following application is a port from a console kata aaplication that I develop on periodically to hone my skills. 
+The following application is a port from a console kata aaplication that I develop on periodically to hone my skills. This application is merely for technology exploration and coding practise disipline training. 
 
-**DISCLAIMER:** This application is currently in alpha and is under constant development and tinkering.
+**DISCLAIMER:** This application is currently in pre-alpha and is under constant development and tinkering.
 
 The following technology is used within the application:
 
@@ -25,14 +25,39 @@ However, this is a port of the current Kata application where the X axis runs fr
 
 The user then enters then clicks on a particular box e.g. "A1" or "c7", and this will get mapped to coordinates X and Y accordingly. The flow of the game, is as follows: 
 
-![Flow chart](https://github.com/VisualSanity/Battleship.Microservice/blob/master/support/Game_FlowChart.jpg)
+![Flow chart](https://github.com/visualsanity/Battleship.Microservices/blob/master/support/Game_FlowChart.jpg)
+
+With a domain driven approach (DDD), the applicaition is broken up into microservices i.e. Player, Game, Audit, Warehouse and  Statistics ASPNet Core 3.1 API web services and a Angular 9 front end. It uses RabbitMQ as the comminication bus. This allows for indivdual components to be updated in relative isolation, while leveraging Docker and Kubernetes.
 
 The application follows SOLID practices, such as single source of responsibility, dependency injection, open/closed princliples to name a few. 
 
-I try and write my code in C#, without to much "syntactic sugar" e.g. chained Linq queries, as it makes debugging unnecessarily more difficult during development. I try and write my code for the next developer in mind.   
+I try and write my code in C#, without to much "syntactic sugar" e.g. chained Linq queries, as it makes debugging unnecessarily more difficult during development. I try and write my code for the next developer in mind. 
+
+#Gameplay
+
+The game has two gameplay paths, a demo path and a player account path. The demo account path does not allow for extra features such as warehousing, statistics and audits.
+
+![Login](https://github.com/visualsanity/Battleship.Microservices/blob/master/support/login.png)
+
+ 1. Navigation bar
+ 2. Demo login
+ 3. Registered player login
+ 
+ Once you have logged in, you can start the game at a selected level. The lower the level, the more ship you will be able to target.
+ 
+![gampeplay](https://github.com/visualsanity/Battleship.Microservices/blob/master/support/gameplay.png)
+
+ 1. Game level selection
+ 2. Ship hit during gameplay
+ 3. Ship missed during gameplay
+ 4. Gameplay messages
+ 5. Scoreboard
+ 6. Actions
+
+When development is completed (alpha), your will be able to play the game remotely at http://visualsanity.io/battleship
 
 ## Running the game locally
- The game was written in C# (.Net Core 3.1). Fork or clone this repository with your favourite git client or just use the command line. Whatever your  preferred flavour of platform is, make sure you are updated to .Net Core 3.1 SDK.
+ The game was written in C# (.Net Core 3.1). Fork or clone this repository with your favourite git client or just use the command line. Whatever your preferred flavour of platform is, make sure you are updated to .Net Core 3.1 SDK.
 
 **Visual Studio 2019**
 If you are using Visual Studio 2019 on a Microsoft environment , open the solution file in the source directory, (Battleship.Microservices.sln) and run the build. The nuget packages (NUnit, Newtonsoft... ext) should auto restore.
