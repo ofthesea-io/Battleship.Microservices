@@ -26,6 +26,7 @@ export class Configuration {
     readonly completed: string = 'Game completed!';
     readonly close: string = 'Close';
     readonly start: string = 'Start Game';
+    readonly loginFailed: string = 'Unable to log you in.'
     readonly applicationError: string = 'Application Error. Please contain your administrator!';
     readonly demoLoginError: string = 'No demo users found. Please create an account.';
     readonly gameNotStarted: string = 'To start the game, select your Battleship gaming level';

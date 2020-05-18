@@ -1,24 +1,27 @@
-@import '@angular/material/prebuilt-themes/purple-green.css';
+@import "@angular/material/prebuilt-themes/purple-green.css";
 
-
-  /* unvisited link */
+/* unvisited link */
 a:link {
-    color: #f0ad4e;
-  }
-  
-  /* visited link */
-  a:visited {
-    color: #f0ad4e;
-  }
-  
-  /* mouse over link */
-  a:hover {
-    color: #f0ad4e;
-    text-decoration: underline;
-  }
-  
-  /* selected link */
-  a:active {
-    color: #f0ad4e;
-  }
-  
+  color: #f0ad4e;
+}
+
+/* visited link */
+a:visited {
+  color: #f0ad4e;
+}
+
+/* mouse over link */
+a:hover {
+  color: #f0ad4e;
+  text-decoration: underline;
+}
+
+/* selected link */
+a:active {
+  color: #f0ad4e;
+}
+
+.mat-progress-spinner circle,
+.mat-spinner circle {
+  stroke: #f0ad4e;
+}

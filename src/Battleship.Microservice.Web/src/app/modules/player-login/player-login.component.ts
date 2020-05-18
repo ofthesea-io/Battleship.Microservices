@@ -5,8 +5,9 @@ import { Configuration } from '../../core/utilities/configuration';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { Auth } from 'src/app/core/utilities/auth';
+import HttpStatusCode from 'src/app/core/utilities/HttpStatusCodes';
 
-export enum PlayerDemoStatus {
+export enum PlayerServiceStatus {
   isLoading = 0,
   loaded = 1,
   unavailable = -1
@@ -19,7 +20,7 @@ export enum PlayerDemoStatus {
 })
 export class PlayerLoginComponent implements OnInit {
 
-  public playerDemoStatus: PlayerDemoStatus;
+  public playerServiceStatus: PlayerServiceStatus;
 
   demoPlayers: Array<Player> = [];
   email: string;
@@ -35,21 +36,21 @@ export class PlayerLoginComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.playerDemoStatus = PlayerDemoStatus.isLoading;
+    this.playerServiceStatus = PlayerServiceStatus.isLoading;
     this.getDemoPlayers();
   }
 
   getDemoPlayers() {
     this.playerService.getDemoPlayers().subscribe(response => {
       if (response.status === 200) {
-        this.playerDemoStatus = PlayerDemoStatus.loaded;
+        this.playerServiceStatus = PlayerServiceStatus.loaded;
         this.demoPlayers = response.body;
       } else {
-        this.playerDemoStatus = PlayerDemoStatus.unavailable;
+        this.playerServiceStatus = PlayerServiceStatus.unavailable;
       }
     },
     error => {
-      this.playerDemoStatus = PlayerDemoStatus.unavailable;
+      this.playerServiceStatus = PlayerServiceStatus.unavailable;
       this.configuration.handleError(error);
     });
   }
@@ -65,7 +66,7 @@ export class PlayerLoginComponent implements OnInit {
     this.playerService.demoPlayerLogin(playerId).subscribe(
       response => {
         console.log(response);
-        if (response.status === 200) {
+        if (response.status ===  HttpStatusCode.OK) {
           const player = response.body as Player;
           this.auth.setAuthHeader(player.sessionToken);
           this.router.navigate(['gamePlay'], { state: { player }});
@@ -78,17 +79,15 @@ export class PlayerLoginComponent implements OnInit {
   }
 
   onSubmit(data) {
-    const player = data as Player;
-    this.playerService.loginPlayer(player).subscribe(
-      response => {
+    this.playerService.loginPlayer(data).subscribe(response => {
         console.log(response);
-        if (response.status === 200) {
-          if (response.body !== '') {
-            this.errorMessage = this.configuration.somethingWentWrongError;
-          }
-          this.auth.setAuthHeader(response.body);
+        if (response.status === HttpStatusCode.OK) {
+          const player: Player = response.body as Player;
+          this.auth.setAuthHeader(player.sessionToken);
+          this.router.navigate(['gamePlay'], { state: { player } });
         } else {
           this.auth.removeAuthHeader('authToken');
+          this.errorMessage = this.configuration.loginFailed;
         }
       },
       error => {

@@ -8,13 +8,13 @@
         <!-- Loading demo players -->
         <dl class="row">
           <dt class="col-sm-1">
-            <div *ngIf="playerDemoStatus == 0;"><mat-spinner diameter="20" class="spinner"></mat-spinner></div>
-            <div *ngIf="playerDemoStatus == -1;"><i class="material-icons text-danger">error</i></div>
+            <div *ngIf="playerServiceStatus == 0;"><mat-spinner  diameter="20"></mat-spinner></div>
+            <div *ngIf="playerServiceStatus == -1;"><i class="material-icons text-danger">error</i></div>
           </dt>
           <dd class="col-sm-11">
-            <div *ngIf="playerDemoStatus == 0;">Waiting for the Battleship demo players to load...</div>
-            <div *ngIf="playerDemoStatus == -1;">Player Service currently not available!</div>
-            <div *ngIf="playerDemoStatus == 1;" class="input-group">
+            <div *ngIf="playerServiceStatus == 0;">Waiting for the Battleship demo players to load...</div>
+            <div *ngIf="playerServiceStatus == -1;">Player Service currently not available!</div>
+            <div *ngIf="playerServiceStatus == 1;" class="input-group">
               <div class="input-group-prepend">
                 <div class="input-group-text">
                   <i class="material-icons">account_box</i>
@@ -41,7 +41,7 @@
 
 
       <!-- Personal account login -->
-      <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm.value)" class="border border-light p-5">
+      <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm.value)" class="border border-light p-5" *ngIf="playerServiceStatus == 1; else playerServiceError" >
         <p class="h4 mb-4 text-center">Sign in</p>
         <!-- Username -->
         <div class="input-group mb-4">
@@ -50,7 +50,7 @@
               <i class="material-icons">email</i>
             </div>
           </div>
-          <input type="password" class="form-control" name="email" placeholder="Email" [(ngModel)]="email" required #emailInput="ngModel" />
+          <input type=" text" class="form-control" name="email" placeholder="Email" [(ngModel)]="email" required #emailInput="ngModel" />
           <div *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)" class="col-sm-12">
             <div *ngIf="emailInput.hasError('required')" class="text-danger">Please enter your e-mail address</div>
           </div>
@@ -89,6 +89,15 @@
           </p>
         </div>
       </form>
+
+      <ng-template #playerServiceError>
+        <dl class="row">
+          <dt class="col-sm-1">
+            <i class="material-icons text-danger">error</i>
+          </dt>
+          <dd class="col-sm-11">Player Service currently not available!</dd>
+        </dl>
+      </ng-template>
     </div>
     <div class="col-md-3">
       <!-- Placeholder -->

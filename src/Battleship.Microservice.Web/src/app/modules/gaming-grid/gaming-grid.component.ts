@@ -19,7 +19,7 @@ import HttpStatusCode from 'src/app/core/utilities/HttpStatusCodes';
 export class GamingGridComponent implements OnInit {
   playerScoreCard: ScoreCard;
   player: Player;
-  demoPlayer: boolean;
+  isDemoPlayer: boolean;
   isGameStarted = false;
   selectedShipCounter: number;
   numberOfShipOptions: Array<any>;
@@ -40,26 +40,20 @@ export class GamingGridComponent implements OnInit {
   ) {
     this.numberOfShipOptions = config.shipCounter;
     this.player = this.router.getCurrentNavigation().extras.state.player;
-    this.demoPlayer = this.router.getCurrentNavigation().extras.state.isDemoPlayer;
+    this.isDemoPlayer = this.router.getCurrentNavigation().extras.state.isDemoPlayer;
   }
   numberOfShips: number;
   completed: boolean;
   errorMessage: string;
   gameStatus: string;
 
-  private eventsSubject: Subject<void> = new Subject<void>();
-
-  emitEventToChild() {
-    this.eventsSubject.next();
-  }
-
-  ngOnInit() {
+  public ngOnInit(): void {
     this.buildGamingGrid();
     this.selectedShipCounter = 0;
   }
 
-  onSaveGame(data: any) {
-    if (this.demoPlayer) {
+  public  onSaveGame(data: any) {
+    if (this.isDemoPlayer) {
       this.config.openDialog(
         this.dialog,
         this.config.demoAccountSaveError,
@@ -69,11 +63,11 @@ export class GamingGridComponent implements OnInit {
     }
   }
 
-  onExitGame(data: any) {
+  public onExitGame(data: any) {
     this.router.navigate(['login'], { state: { player: this.player } });
   }
 
-  onChange(data) {
+  public onChange(data) {
     this.selectedShipCounter = parseInt(data, 10);
     this.isGameStarted = true;
     const ref = this.config.openDialog(
@@ -82,7 +76,7 @@ export class GamingGridComponent implements OnInit {
       this.config.start
     );
     ref.afterClosed().subscribe(() => {
-        this.getScoreCard();
+      this.getScoreCard();
     });
 
     this.battleShipService.startGame(this.selectedShipCounter).subscribe(
@@ -99,7 +93,7 @@ export class GamingGridComponent implements OnInit {
     );
   }
 
-  buildGamingGrid() {
+  private buildGamingGrid() {
     this.battleShipService.getGamingGrid().subscribe(
       data => {
         const x = 'x';
@@ -119,7 +113,7 @@ export class GamingGridComponent implements OnInit {
     this.scoreCardService.getPlayerScoreCard().subscribe(
       response => {
         if (response.status === HttpStatusCode.OK) {
-          this.playerScoreCard =  JSON.parse(response.body) as ScoreCard;
+          this.playerScoreCard = JSON.parse(response.body) as ScoreCard;
         }
       },
       error => {
@@ -129,7 +123,7 @@ export class GamingGridComponent implements OnInit {
   }
 
 
-  isCoordinateHandled(X: number, Y: number): boolean {
+  private isCoordinateHandled(X: number, Y: number): boolean {
     let result = false;
     if (
       this.currentCoordinates.filter((q) => q.x === X && q.y === Y).length === 0

@@ -26,13 +26,13 @@ export class PlayerFormComponent {
     private router: Router
   ) {}
 
-  onSubmit(data: Player) {
-    const player = data as Player;
+  onSubmit(player: Player) {
     this.playerService.createAccount(player).subscribe(
       response => {
         console.log(response);
         if (response.status === 200) {
           if (response.body !== '') {
+            player.playerId = response.body.playerId;
             this.auth.setAuthHeader(response.body.sessionToken);
             this.auth.setGameCompleted('no');
             this.router.navigate(['gamePlay'], { state: { player } });

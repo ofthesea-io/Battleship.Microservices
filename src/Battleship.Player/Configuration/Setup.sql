@@ -94,6 +94,12 @@ BEGIN
 		RETURN;
 	END;
 
+	IF EXISTS(SELECT * FROM dbo.Player p WHERE p.Email = @email)
+	BEGIN
+		RAISERROR('Account already exists', 16, 0);
+		RETURN;
+	END;
+
 	DECLARE @playerId uniqueidentifier = NEWID();
 	INSERT INTO dbo.Player(PlayerId, Firstname, Lastname, Email, Password)
 	VALUES(@playerId, @Firstname, @Lastname, @email, @password);
