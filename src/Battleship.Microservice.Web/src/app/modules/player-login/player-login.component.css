@@ -1,3 +1,1 @@
-.spinner ::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
-    stroke: #f0ad4e;
-}
+.spinner ::ng-deep .mat-progress-spinner circle, .mat-spinner circle { stroke: #f0ad4e; }

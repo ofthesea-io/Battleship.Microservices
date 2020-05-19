@@ -10,7 +10,7 @@ export class Auth {
     }
 
     getAuthHeaders(): HttpHeaders {
-        const authorization = localStorage.getItem('authToken');
+        const authorization = sessionStorage.getItem('authToken');
         const authHeaders = new HttpHeaders({
             'Content-Type': 'application/json',
             Authorization: authorization
@@ -18,25 +18,34 @@ export class Auth {
         return authHeaders;
     }
 
-    setAuthHeader(sessionToken: string): void {
-        localStorage.setItem('authDate', Date.now().toString());
-        localStorage.setItem('authToken', sessionToken);
+    isAuthenticated(): boolean {
+        let result = false;
+        const authorization = sessionStorage.getItem('authToken');
+        if (authorization) {
+            result = true;
+        }
+        return result;
     }
 
-    removeAuthHeader(sessionToken: string): void {
-        localStorage.removeItem('authDate');
-        localStorage.removeItem('authToken');
+    setAuthHeader(sessionToken: string): void {
+        sessionStorage.setItem('authDate', Date.now().toString());
+        sessionStorage.setItem('authToken', sessionToken);
+    }
+
+    removeAuthHeader(): void {
+        sessionStorage.removeItem('authDate');
+        sessionStorage.removeItem('authToken');
     }
 
     setGameCompleted(isCompleted: string) {
-        localStorage.setItem('isCompleted', isCompleted);
+        sessionStorage.setItem('isCompleted', isCompleted);
     }
 
     getGameCompeted(): string {
-        return localStorage.getItem('isCompleted');
+        return sessionStorage.getItem('isCompleted');
     }
 
     getLastAuthDate(): string {
-        return localStorage.getItem('authDate');
+        return sessionStorage.getItem('authDate');
     }
 }

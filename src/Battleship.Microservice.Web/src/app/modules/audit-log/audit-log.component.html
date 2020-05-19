@@ -15,7 +15,7 @@
                     <button type="button" class="btn btn-danger" (click)="auditType = 1; getAuditContentByAuditTypeHourRange()">Danger</button>
                 </li>
                 <li class="list-inline-item">
-                    <button type="button" class="btn btn-light" [ngClass]="{'active': auditType == 0}"  (click)="auditType = 0; getAuditContentByAuditTypeHourRange()">All</button>
+                    <button type="button" class="btn btn-light" [ngClass]="{'active': auditType == 0}" (click)="auditType = 0; getAuditContentByAuditTypeHourRange()">All</button>
                 </li>
             </ul>
         </div>
@@ -24,15 +24,15 @@
                 <li class="list-inline-item">
                     <button type="button" class="btn btn-light" (click)="hours == 0; getAuditContentByAuditTypeHourRange()">All</button>
                 </li>
-                    <li class="list-inline-item">
-                        <button type="button" class="btn btn-light" (click)="hours = 24; getAuditContentByAuditTypeHourRange()">24 Hrs</button>
-                    </li>
-                    <li class="list-inline-item">
-                        <button type="button" class="btn btn-light" (click)="hours = 48; getAuditContentByAuditTypeHourRange()">48 Hrs</button>
-                    </li>
-                    <li class="list-inline-item">
-                        <button type="button" class="btn btn-light" (click)="hours = 96; getAuditContentByAuditTypeHourRange()">96 hrs</button>
-                    </li>
+                <li class="list-inline-item">
+                    <button type="button" class="btn btn-light" (click)="hours = 24; getAuditContentByAuditTypeHourRange()">24 Hrs</button>
+                </li>
+                <li class="list-inline-item">
+                    <button type="button" class="btn btn-light" (click)="hours = 48; getAuditContentByAuditTypeHourRange()">48 Hrs</button>
+                </li>
+                <li class="list-inline-item">
+                    <button type="button" class="btn btn-light" (click)="hours = 96; getAuditContentByAuditTypeHourRange()">96 hrs</button>
+                </li>
             </ul>
         </div>
     </div>
@@ -41,7 +41,7 @@
             <div class="list-group-item" [ngClass]="audit.auditTypeId === 3 ? 'list-group-item-info': audit.auditTypeId === 2 ? 'list-group-item-warning' : 'list-group-item-danger'">
                 <div class="d-flex justify-content-between">
                     <div>{{ audit.content }}</div>
-                    <small>{{ audit.timestamp |  date:'short'}}</small>
+                    <small>{{ audit.timestamp | date:'short'}}</small>
                 </div>
             </div>
         </ul>

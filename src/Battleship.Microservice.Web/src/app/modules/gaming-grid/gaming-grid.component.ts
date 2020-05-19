@@ -5,9 +5,8 @@ import { Configuration } from '../../core/utilities/configuration';
 import { Coordinate } from '../../core/models/coordinate';
 import { Player } from '../../core/models/player';
 import { Router } from '@angular/router';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog} from '@angular/material';
 import { PlayerCommand } from '../../core/models/playerCommand';
-import { Subject } from 'rxjs';
 import { ScoreCardService } from '../../core/services/score-card.service';
 import HttpStatusCode from 'src/app/core/utilities/HttpStatusCodes';
 
@@ -52,7 +51,7 @@ export class GamingGridComponent implements OnInit {
     this.selectedShipCounter = 0;
   }
 
-  public  onSaveGame(data: any) {
+  public onSaveGame(data: any) {
     if (this.isDemoPlayer) {
       this.config.openDialog(
         this.dialog,
@@ -61,10 +60,6 @@ export class GamingGridComponent implements OnInit {
       );
       return;
     }
-  }
-
-  public onExitGame(data: any) {
-    this.router.navigate(['login'], { state: { player: this.player } });
   }
 
   public onChange(data) {
@@ -79,14 +74,13 @@ export class GamingGridComponent implements OnInit {
       this.getScoreCard();
     });
 
-    this.battleShipService.startGame(this.selectedShipCounter).subscribe(
-      (gameStartedResponse) => {
-        if (gameStartedResponse.status === 200) {
-          return;
-        } else {
-          this.gameStatus = this.config.somethingWentWrongError;
-        }
-      },
+    this.battleShipService.startGame(this.selectedShipCounter).subscribe((gameStartedResponse) => {
+      if (gameStartedResponse.status === HttpStatusCode.OK) {
+        return;
+      } else {
+        this.gameStatus = this.config.somethingWentWrongError;
+      }
+    },
       (error) => {
         this.config.handleError(error);
       }
