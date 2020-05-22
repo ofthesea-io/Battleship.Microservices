@@ -30,15 +30,16 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatSortModule } from "@angular/material/sort";
 import { MatTableModule } from "@angular/material/table";
 import { MatToolbarModule } from "@angular/material/toolbar";
-import { ConfirmationDialogComponent } from
-    "./modules/child-components/confirmation-dialog/confirmation-dialog.component";
+import { ConfirmationDialogComponent } from "./modules/child-components/confirmation-dialog/confirmation-dialog.component";
 import { ScoreCardService } from "./core/services/score-card.service";
 import { PlayerService } from "./core/services/player.service";
 import { PlayerStatisticsComponent } from "./modules/player-statistics/player-statistics.component";
 import "hammerjs";
 import { AuditLogComponent } from "./modules/audit-log/audit-log.component";
 import { AuditService } from "./core/services/audit.service";
-import { Auth } from "./core/utilities/auth";
+import { AuthenticationService } from "./core/services/authentication.service";
+import { NavigationComponent } from "./modules/child-components/navigation/navigation.component";
+import { FooterComponent } from "./modules/child-components/footer/footer.component";
 
 export function initializeApp(appConfig: AppConfig) {
     return () => appConfig.load();
@@ -55,6 +56,8 @@ export function initializeApp(appConfig: AppConfig) {
         ConfirmationDialogComponent,
         PlayerStatisticsComponent,
         AuditLogComponent,
+        NavigationComponent,
+        FooterComponent,
     ],
     imports: [
         BrowserModule,
@@ -88,7 +91,7 @@ export function initializeApp(appConfig: AppConfig) {
         ReactiveFormsModule,
     ],
     providers: [
-        Auth,
+        AuthenticationService,
         Configuration,
         BoardService,
         ScoreCardService,

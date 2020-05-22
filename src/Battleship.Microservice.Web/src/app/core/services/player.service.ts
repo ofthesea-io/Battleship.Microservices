@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { Player } from "../models/player";
 import { AppConfig } from "src/app/app.config";
-import { Auth } from "../utilities/auth";
+import { AuthenticationService } from "./authentication.service";
 
 @Injectable({
     providedIn: "root"
@@ -13,51 +13,30 @@ import { Auth } from "../utilities/auth";
 export class PlayerService {
     private config: Configuration;
 
-    constructor(private httpClient: HttpClient, private auth: Auth) {
+    constructor(private httpClient: HttpClient, private auth: AuthenticationService) {
         this.config = new Configuration();
     }
 
     createAccount(player: Player): Observable<HttpResponse<any>> {
-        const playerUri = this.apiServerUrl() + "createPlayer";
+        const playerUri = this.playApiServerUrl() + "createPlayer";
         return this.httpClient.post<any>(playerUri,
             player,
             {
-                headers: this.auth.getHeaders(),
-                observe: "response"
-            });
-    }
-
-    loginPlayer(player: Player): Observable<HttpResponse<any>> {
-        const playerUri = this.apiServerUrl() + "PlayerLogin";
-        return this.httpClient.post<any>(playerUri,
-            player,
-            {
-                headers: this.auth.getHeaders(),
-                observe: "response"
-            });
-    }
-
-    demoPlayerLogin(playerId: string): Observable<HttpResponse<any>> {
-        const playerUri = this.apiServerUrl() + "DemoLogin".concat(`?playerId=${playerId}`);
-        return this.httpClient.get<any>(playerUri,
-            {
-                headers: new HttpHeaders({
-                    'Content-Type': "application/x-www-form-urlencoded"
-                }),
+                headers: new HttpHeaders({ "Content-Type": "application/json" }),
                 observe: "response"
             });
     }
 
     getDemoPlayers(): Observable<HttpResponse<any>> {
-        const playerUri = this.apiServerUrl() + "GetDemoPlayers";
+        const playerUri = this.playApiServerUrl() + "GetDemoPlayers";
         return this.httpClient.get<any>(playerUri,
             {
-                headers: this.auth.getHeaders(),
+                headers: new HttpHeaders({ "Content-Type": "application/json" }),
                 observe: "response"
             }).pipe(catchError(this.config.handleError));
     }
 
-    apiServerUrl(): string {
+    private playApiServerUrl(): string {
         const server = AppConfig.settings.apiServer.Player.host + AppConfig.settings.apiServer.Player.url;
         return server;
     }

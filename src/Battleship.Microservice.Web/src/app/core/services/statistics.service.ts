@@ -4,7 +4,7 @@ import { Configuration } from '../utilities/configuration';
 import { catchError } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { AppConfig } from 'src/app/app.config';
-import { Auth } from '../utilities/auth';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +13,7 @@ export class StatisticsService {
 
     private config: Configuration;
 
-    constructor(private httpClient: HttpClient, private auth: Auth) {
+    constructor(private httpClient: HttpClient, private auth: AuthenticationService) {
         this.config = new Configuration();
     }
 
@@ -21,7 +21,7 @@ export class StatisticsService {
         const createStatisticsUri = this.apiServerUrl() + 'GetTopPlayers';
         return this.httpClient.get<any>(createStatisticsUri,
                 {
-                    headers: this.auth.getAuthHeaders(),
+                    headers: this.auth.getAuthenticationHeaders(),
                     observe: 'response'
                 })
             .pipe(

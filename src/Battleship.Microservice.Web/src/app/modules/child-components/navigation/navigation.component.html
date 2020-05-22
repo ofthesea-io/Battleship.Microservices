@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark" data-toggle="affix">
+    <div class="mx-auto d-sm-flex d-block flex-sm-nowrap">
+        <a class="navbar-brand" href="#">
+            <img src="../assets/images/battleship.png" height="32px" width="32px"/>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse text-center" id="navbar">
+             <!-- Logged In -->
+            <ul class="navbar-nav" *ngIf="this.isAuthenticated">
+                <li class="nav-item">
+                    <span>
+                        <a (click)="authenticationService.logout()" [routerLink]="['/login']" class="nav-link">Logout</a>
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <span>
+                        <a [routerLink]="['/register']" class="nav-link">Register</a>
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <span>
+                        <a [routerLink]="['/statistics']"  class="nav-link">Top Players</a>
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <span>
+                        <a [routerLink]="['/audit']"class="nav-link">Audit</a>
+                    </span>
+                </li>
+            </ul>
+            <!--Not Logged In -->
+            <ul class="navbar-nav"  *ngIf="!this.isAuthenticated">
+                <li class="nav-item">
+                    <span>
+                        <a [routerLink]="['/login']" class="nav-link">Login</a>
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <span>
+                        <a [routerLink]="['/register']" class="nav-link">Register</a>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

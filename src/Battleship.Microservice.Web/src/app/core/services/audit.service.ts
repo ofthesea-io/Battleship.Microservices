@@ -4,21 +4,21 @@ import { catchError } from 'rxjs/operators';
 import { HttpResponse, HttpClient } from '@angular/common/http';
 import { Configuration } from '../utilities/configuration';
 import { AppConfig } from 'src/app/app.config';
-import { Auth } from '../utilities/auth';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuditService {
 
-    constructor(private httpClient: HttpClient, private config: Configuration, private auth: Auth) {
+    constructor(private httpClient: HttpClient, private config: Configuration, private auth: AuthenticationService) {
     }
 
     getAuditContent(): Observable<HttpResponse<any>> {
         const auditLogUrl = this.apiServerUrl() + 'GetAuditContent';
         return this.httpClient.get<any>(auditLogUrl,
                 {
-                    headers: this.auth.getAuthHeaders(),
+                    headers: this.auth.getAuthenticationHeaders(),
                     observe: 'response'
                 })
             .pipe(
@@ -31,7 +31,7 @@ export class AuditService {
         return this.httpClient
             .get<any>(auditLogUrl,
                 {
-                    headers: this.auth.getAuthHeaders(),
+                    headers: this.auth.getAuthenticationHeaders(),
                     observe: 'response'
                 })
             .pipe(catchError(this.config.handleError));

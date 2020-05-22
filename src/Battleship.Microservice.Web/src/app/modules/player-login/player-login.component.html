@@ -25,7 +25,7 @@
                                 </div>
                             </div>
                             <select id="demoPlayerInput" class="form-control col-sm-10" ngModel required
-                                    (ngModelChange)="onChange($event)" name="demoPlayers">
+                                    (ngModelChange)="onPlayerDemoLogin($event)" name="demoPlayers">
                                 <option value="" disabled>Select Player</option>
                                 <option *ngFor="let demoPlayer of demoPlayers" [value]="demoPlayer.playerId">
                                     {{ demoPlayer.firstName }} {{ demoPlayer.lastName }}
@@ -45,7 +45,7 @@
 
 
             <!-- Personal account login -->
-            <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm.value)" class="border border-light p-5" *ngIf="playerServiceStatus == 1; else playerServiceError">
+            <form #loginForm="ngForm" (ngSubmit)="onPlayerLogin(loginForm.value)" class="border border-light p-5" *ngIf="playerServiceStatus == 1; else playerServiceError">
                 <p class="h4 mb-4 text-center">Sign in</p>
                 <!-- Username -->
                 <div class="input-group mb-4">
@@ -75,10 +75,6 @@
                 <!-- submit-->
                 <div class="d-flex justify-content-between">
                     <div>
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" id="defaultLoginFormRemember">
-                            <label class="custom-control-label" for="defaultLoginFormRemember">Remember me</label>
-                        </div>
                     </div>
                     <div>
                         <a href="">Forgot password?</a>
@@ -90,7 +86,7 @@
                 <div class="text-center">
                     <p>
                         Not a member?
-                        <a href="">Register</a>
+                        <a [routerLink]="['/register']">Register</a>
                     </p>
                 </div>
             </form>

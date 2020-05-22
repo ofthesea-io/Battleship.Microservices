@@ -1,19 +1,19 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { BoardService } from '../../core/services/board.service';
-import { ScoreCard } from '../../core/models/scoreCard';
-import { Configuration } from '../../core/utilities/configuration';
-import { Coordinate } from '../../core/models/coordinate';
-import { Player } from '../../core/models/player';
-import { Router } from '@angular/router';
-import { MatDialog} from '@angular/material';
-import { PlayerCommand } from '../../core/models/playerCommand';
-import { ScoreCardService } from '../../core/services/score-card.service';
-import HttpStatusCode from 'src/app/core/utilities/HttpStatusCodes';
+import { Component, OnInit, Input } from "@angular/core";
+import { BoardService } from "../../core/services/board.service";
+import { ScoreCard } from "../../core/models/scoreCard";
+import { Configuration } from "../../core/utilities/configuration";
+import { Coordinate } from "../../core/models/coordinate";
+import { Player } from "../../core/models/player";
+import { Router } from "@angular/router";
+import { MatDialog} from "@angular/material";
+import { PlayerCommand } from "../../core/models/playerCommand";
+import { ScoreCardService } from "../../core/services/score-card.service";
+import HttpStatusCode from "src/app/core/utilities/HttpStatusCodes";
 
 @Component({
-  selector: 'app-battleship-gaming-root',
-  templateUrl: './gaming-grid.component.html',
-  styleUrls: ['./gaming-grid.component.css'],
+  selector: "app-battleship-gaming-root",
+  templateUrl: "./gaming-grid.component.html",
+  styleUrls: ["./gaming-grid.component.css"],
 })
 export class GamingGridComponent implements OnInit {
   playerScoreCard: ScoreCard;
@@ -90,11 +90,11 @@ export class GamingGridComponent implements OnInit {
   private buildGamingGrid() {
     this.battleShipService.getGamingGrid().subscribe(
       data => {
-        const x = 'x';
-        const y = 'y';
+        const x = "x";
+        const y = "y";
         this.xAxis = data.body[x];
         this.yAxis = data.body[y];
-        this.errorMessage = '';
+        this.errorMessage = "";
       },
       error => {
         this.errorMessage = this.config.applicationError;
@@ -144,8 +144,8 @@ export class GamingGridComponent implements OnInit {
 
     const target = event.target || event.srcElement || event.currentTarget;
     if (target != null) {
-      this.x = target.getAttribute('data-x').charCodeAt(0);
-      this.y = parseInt(target.getAttribute('data-y'), 10);
+      this.x = target.getAttribute("data-x").charCodeAt(0);
+      this.y = parseInt(target.getAttribute("data-y"), 10);
 
       const coordinate: Coordinate = { x: this.x, y: this.y };
       const playerCommand: PlayerCommand = new PlayerCommand();
@@ -157,7 +157,7 @@ export class GamingGridComponent implements OnInit {
         if (result.status === HttpStatusCode.OK) {
           if (result.body.isHit) {
             target.className = this.config.hitClass;
-            target.innerHTML = '<i class="material-icons">directions_boat</i>';
+            target.innerHTML = "<i class=\"material-icons\">directions_boat</i>";
           } else {
             target.className = this.config.missClass;
           }

@@ -3,10 +3,8 @@ import { Player } from "../../core/models/player";
 import { PlayerService } from "../../core/services/player.service";
 import { Configuration } from "../../core/utilities/configuration";
 import { Router } from "@angular/router";
-import { MatDialog } from "@angular/material";
-import { Auth } from "src/app/core/utilities/auth";
+import { AuthenticationService } from "src/app/core/services/authentication.service";
 import HttpStatusCode from "src/app/core/utilities/HttpStatusCodes";
-
 
 
 export enum PlayerServiceStatus {
@@ -32,10 +30,11 @@ export class PlayerLoginComponent implements OnInit {
     constructor(
         private configuration: Configuration,
         private playerService: PlayerService,
-        private auth: Auth,
-        private router: Router,
-        private dialog: MatDialog
+        private authenticationService: AuthenticationService,
+        private auth: AuthenticationService,
+        private router: Router
     ) {
+        this.playerServiceStatus = PlayerServiceStatus.isLoading;
     }
 
     ngOnInit() {
@@ -45,57 +44,47 @@ export class PlayerLoginComponent implements OnInit {
 
     getDemoPlayers() {
         this.playerService.getDemoPlayers().subscribe(response => {
-                if (response.status === HttpStatusCode.OK) {
-                    this.playerServiceStatus = PlayerServiceStatus.loaded;
-                    this.demoPlayers = response.body;
-                } else {
-                    this.playerServiceStatus = PlayerServiceStatus.unavailable;
-                }
-            },
+            if (response.status === HttpStatusCode.OK) {
+                this.playerServiceStatus = PlayerServiceStatus.loaded;
+                this.demoPlayers = response.body;
+            }
+        },
             error => {
                 this.playerServiceStatus = PlayerServiceStatus.unavailable;
                 this.configuration.handleError(error);
             });
     }
 
-    onChange(playerId: string) {
-        const isCompleted = this.auth.getGameCompeted();
-        const getDate = this.auth.getLastAuthDate();
-
-        if (Date.now() <= Date.parse(getDate) && isCompleted) {
-            this.configuration.openDialog(this.dialog, this.configuration.gameNotStarted, this.configuration.close);
-        }
-
-        this.playerService.demoPlayerLogin(playerId).subscribe(
-            response => {
-                console.log(response);
-                if (response.status === HttpStatusCode.OK) {
-                    const player = response.body as Player;
-                    this.auth.setAuthHeader(player.sessionToken);
-                    this.router.navigate(["gamePlay"], { state: { player } });
-                }
-            },
+    onPlayerDemoLogin(playerId: string) {
+        this.authenticationService.demoPlayerLogin(playerId).subscribe(response => {
+            if (response.status === HttpStatusCode.OK) {
+                const player = response.body as Player;
+                this.authenticateAndThenRoutePlayer(player);
+            }
+        },
             error => {
+                this.playerServiceStatus = PlayerServiceStatus.unavailable;
                 this.configuration.handleError(error);
             }
         );
     }
 
-    onSubmit(data) {
-        this.playerService.loginPlayer(data).subscribe(response => {
-                console.log(response);
-                if (response.status === HttpStatusCode.OK) {
-                    const player = response.body as Player;
-                    this.auth.setAuthHeader(player.sessionToken);
-                    this.router.navigate(["gamePlay"], { state: { player } });
-                } else {
-                    this.auth.removeAuthHeader();
-                    this.errorMessage = this.configuration.loginFailed;
-                }
-            },
+    onPlayerLogin(data: any) {
+        this.authenticationService.playerLogin(data).subscribe(response => {
+            if (response.status === HttpStatusCode.OK) {
+                const player = response.body as Player;
+                this.authenticateAndThenRoutePlayer(player);
+            }
+        },
             error => {
-                this.errorMessage = this.configuration.serviceError;
+                this.playerServiceStatus = PlayerServiceStatus.unavailable;
+                this.configuration.handleError(error);
             }
         );
+    }
+
+    private authenticateAndThenRoutePlayer(player: Player): void {
+        this.auth.setAuthHeader(player.sessionToken);
+        this.router.navigate(["gamePlay"], { state: { player } });
     }
 }

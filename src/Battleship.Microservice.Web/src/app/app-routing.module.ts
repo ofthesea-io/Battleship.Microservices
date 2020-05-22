@@ -7,7 +7,7 @@ import { PlayerStatisticsComponent } from "./modules/player-statistics/player-st
 import { AuditLogComponent } from "./modules/audit-log/audit-log.component";
 
 const routes: Routes = [
-    { path: "createPlayer", component: PlayerFormComponent },
+    { path: "register", component: PlayerFormComponent },
     { path: "gamePlay", component: GamingGridComponent },
     { path: "login", component: PlayerLoginComponent },
     { path: "statistics", component: PlayerStatisticsComponent },
