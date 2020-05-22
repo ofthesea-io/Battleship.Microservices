@@ -1,30 +1,32 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Auth } from './core/utilities/auth';
+import { Component, OnInit, ViewEncapsulation } from "@angular/core";
+import { Router } from "@angular/router";
+import { Observable } from "rxjs";
+import { AuthenticationService } from "./core/services/authentication.service";
+import { Player } from "./core/models/player";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: "app-root",
+    templateUrl: "./app.component.html",
+    styleUrls: ["./app.component.css"],
+    encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit {
 
-  private auth: Auth;
-  isAuthenticated: boolean;
+    isAuthenticated: Observable<Player>;
+    router: Router;
 
-  constructor(private router: Router) {
-    this.auth = new Auth();
-  }
-
-  ngOnInit() {
-    this.router.navigateByUrl('/login');
-  }
-
-  private getPlayerStatus() {
-    this.isAuthenticated = false;
-    const token = this.auth.getAuthHeaders();
-    if (token) {
-      this.isAuthenticated = true;
+    /// Don't pass in router as private
+    constructor(router: Router, private auth: AuthenticationService) {
+        this.router = router;
     }
-  }
+
+    ngOnInit() {
+        this.router.navigateByUrl("/login");
+        this.isAuthenticated = this.auth.isPlayerAuthenticated();
+    }
+
+    onExitGame(): void {
+        this.auth.removeAuthentication();
+        this.router.navigateByUrl("/login");
+    }
 }

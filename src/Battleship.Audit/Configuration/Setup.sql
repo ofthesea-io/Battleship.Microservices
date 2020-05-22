@@ -112,6 +112,7 @@ AS
 BEGIN
 	SELECT a.Timestamp, a.Content, a.AuditTypeId
 	FROM [dbo].[Audit] a (nolock)
+	 ORDER BY Timestamp DESC
 END
 GO
 
@@ -142,6 +143,7 @@ BEGIN
 	WHERE 
 		a.[AuditTypeId]  =  IIF(@AuditTypeId = 0, a.AuditTypeId, @AuditTypeId ) 
 	 OR @Timestamp IS NOT NULL AND a.[Timestamp] >= @Timestamp
+	 ORDER BY Timestamp DESC
 END
 GO
 

@@ -75,6 +75,8 @@
             }
         }
 
+        [HttpPost]
+        [Route("IsAuthenticated")]
         public async Task<ActionResult> IsAuthenticated(string sessionId)
         {
 
@@ -101,7 +103,8 @@
                 Guid result = await this.playerRepository.CreatePlayer(player);
                 if (result == Guid.Empty) return this.StatusCode(StatusCodes.Status400BadRequest);
 
-                string token = this.GenerateToken(result);
+                string token = this.GenerateToken(player.PlayerId);
+                player.PlayerId = result;
                 player.SessionToken = token;
 
                 string data = JsonConvert.SerializeObject(player);

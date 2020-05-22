@@ -1,25 +1,24 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { BoardService } from '../../core/services/board.service';
-import { ScoreCard } from '../../core/models/scoreCard';
-import { Configuration } from '../../core/utilities/configuration';
-import { Coordinate } from '../../core/models/coordinate';
-import { Player } from '../../core/models/player';
-import { Router } from '@angular/router';
-import { MatDialog, MatDialogRef } from '@angular/material';
-import { PlayerCommand } from '../../core/models/playerCommand';
-import { Subject } from 'rxjs';
-import { ScoreCardService } from '../../core/services/score-card.service';
-import HttpStatusCode from 'src/app/core/utilities/HttpStatusCodes';
+import { Component, OnInit, Input } from "@angular/core";
+import { BoardService } from "../../core/services/board.service";
+import { ScoreCard } from "../../core/models/scoreCard";
+import { Configuration } from "../../core/utilities/configuration";
+import { Coordinate } from "../../core/models/coordinate";
+import { Player } from "../../core/models/player";
+import { Router } from "@angular/router";
+import { MatDialog } from "@angular/material/dialog";
+import { PlayerCommand } from "../../core/models/playerCommand";
+import { ScoreCardService } from "../../core/services/score-card.service";
+import HttpStatusCode from "src/app/core/utilities/HttpStatusCodes";
 
 @Component({
-  selector: 'app-battleship-gaming-root',
-  templateUrl: './gaming-grid.component.html',
-  styleUrls: ['./gaming-grid.component.css'],
+  selector: "app-battleship-gaming-root",
+  templateUrl: "./gaming-grid.component.html",
+  styleUrls: ["./gaming-grid.component.css"],
 })
 export class GamingGridComponent implements OnInit {
   playerScoreCard: ScoreCard;
   player: Player;
-  demoPlayer: boolean;
+  isDemoPlayer: boolean;
   isGameStarted = false;
   selectedShipCounter: number;
   numberOfShipOptions: Array<any>;
@@ -40,26 +39,20 @@ export class GamingGridComponent implements OnInit {
   ) {
     this.numberOfShipOptions = config.shipCounter;
     this.player = this.router.getCurrentNavigation().extras.state.player;
-    this.demoPlayer = this.router.getCurrentNavigation().extras.state.isDemoPlayer;
+    this.isDemoPlayer = this.router.getCurrentNavigation().extras.state.isDemoPlayer;
   }
   numberOfShips: number;
   completed: boolean;
   errorMessage: string;
   gameStatus: string;
 
-  private eventsSubject: Subject<void> = new Subject<void>();
-
-  emitEventToChild() {
-    this.eventsSubject.next();
-  }
-
-  ngOnInit() {
+  public ngOnInit(): void {
     this.buildGamingGrid();
     this.selectedShipCounter = 0;
   }
 
-  onSaveGame(data: any) {
-    if (this.demoPlayer) {
+  public onSaveGame(data: any) {
+    if (this.isDemoPlayer) {
       this.config.openDialog(
         this.dialog,
         this.config.demoAccountSaveError,
@@ -69,11 +62,7 @@ export class GamingGridComponent implements OnInit {
     }
   }
 
-  onExitGame(data: any) {
-    this.router.navigate(['login'], { state: { player: this.player } });
-  }
-
-  onChange(data) {
+  public onChange(data) {
     this.selectedShipCounter = parseInt(data, 10);
     this.isGameStarted = true;
     const ref = this.config.openDialog(
@@ -82,31 +71,30 @@ export class GamingGridComponent implements OnInit {
       this.config.start
     );
     ref.afterClosed().subscribe(() => {
-        this.getScoreCard();
+      this.getScoreCard();
     });
 
-    this.battleShipService.startGame(this.selectedShipCounter).subscribe(
-      (gameStartedResponse) => {
-        if (gameStartedResponse.status === 200) {
-          return;
-        } else {
-          this.gameStatus = this.config.somethingWentWrongError;
-        }
-      },
+    this.battleShipService.startGame(this.selectedShipCounter).subscribe((gameStartedResponse) => {
+      if (gameStartedResponse.status === HttpStatusCode.OK) {
+        return;
+      } else {
+        this.gameStatus = this.config.somethingWentWrongError;
+      }
+    },
       (error) => {
         this.config.handleError(error);
       }
     );
   }
 
-  buildGamingGrid() {
+  private buildGamingGrid() {
     this.battleShipService.getGamingGrid().subscribe(
       data => {
-        const x = 'x';
-        const y = 'y';
+        const x = "x";
+        const y = "y";
         this.xAxis = data.body[x];
         this.yAxis = data.body[y];
-        this.errorMessage = '';
+        this.errorMessage = "";
       },
       error => {
         this.errorMessage = this.config.applicationError;
@@ -119,7 +107,7 @@ export class GamingGridComponent implements OnInit {
     this.scoreCardService.getPlayerScoreCard().subscribe(
       response => {
         if (response.status === HttpStatusCode.OK) {
-          this.playerScoreCard =  JSON.parse(response.body) as ScoreCard;
+          this.playerScoreCard = JSON.parse(response.body) as ScoreCard;
         }
       },
       error => {
@@ -129,7 +117,7 @@ export class GamingGridComponent implements OnInit {
   }
 
 
-  isCoordinateHandled(X: number, Y: number): boolean {
+  private isCoordinateHandled(X: number, Y: number): boolean {
     let result = false;
     if (
       this.currentCoordinates.filter((q) => q.x === X && q.y === Y).length === 0
@@ -156,8 +144,8 @@ export class GamingGridComponent implements OnInit {
 
     const target = event.target || event.srcElement || event.currentTarget;
     if (target != null) {
-      this.x = target.getAttribute('data-x').charCodeAt(0);
-      this.y = parseInt(target.getAttribute('data-y'), 10);
+      this.x = target.getAttribute("data-x").charCodeAt(0);
+      this.y = parseInt(target.getAttribute("data-y"), 10);
 
       const coordinate: Coordinate = { x: this.x, y: this.y };
       const playerCommand: PlayerCommand = new PlayerCommand();
@@ -169,7 +157,7 @@ export class GamingGridComponent implements OnInit {
         if (result.status === HttpStatusCode.OK) {
           if (result.body.isHit) {
             target.className = this.config.hitClass;
-            target.innerHTML = '<i class="material-icons">directions_boat</i>';
+            target.innerHTML = "<i class=\"material-icons\">directions_boat</i>";
           } else {
             target.className = this.config.missClass;
           }

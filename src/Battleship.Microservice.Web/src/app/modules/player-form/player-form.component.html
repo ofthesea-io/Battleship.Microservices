@@ -1,108 +1,103 @@
 <div class="container mt-3 mb-2">
-  <div class="row">
+<div class="row">
     <div class="col-md-3">
-      <!-- Placeholder -->
+        <!-- Placeholder -->
     </div>
     <div class="col-md-6">
-      <h4>Create Personal Account</h4>
-    <form #startGameForm="ngForm" (ngSubmit)="onSubmit(startGameForm.value)">
-        <div class="form-group row">
-          <label for="inputName" class="col-2 ml-2 col-form-label">Name</label>
-          <div class="col-9">
-        <input
-          type="text"
-          class="form-control col-10"
-          name="firstname"
-          placeholder="First Name"
-          [(ngModel)]="firstName"
-          required
-          #playerFirstName="ngModel"
-        />
-        <div *ngIf="playerFirstName.invalid && (playerFirstName.dirty || playerFirstName.touched)">
-          <p *ngIf="playerFirstName.hasError('required')" class="text-danger">Please enter your name</p>
-        </div>
-      </div>
-       </div>
-       <div class="form-group row">
-        <label for="inputName" class="col-2 ml-2 col-form-label">Surname</label>
-        <div class="col-9">
-        <input
-          type="text"
-          class="form-control col-10"
-          name="lastname"
-          placeholder="Last Name"
-          [(ngModel)]="lastName"
-          required
-          #playerLastName="ngModel"
-        />
-        <div *ngIf="playerLastName.invalid && (playerLastName.dirty || playerLastName.touched)">
-          <p *ngIf="playerLastName.hasError('required')" class="text-danger">Please enter your last name</p>
-        </div>
-      </div>
-      </div>
-      <!-- Email -->
-      <div class="form-group row">
-        <label for="email" class="col-2 ml-2 col-form-label">Email</label>
-        <div class="col-9">
-        <input
-          type="text"
-          class="form-control col-10"
-          name="email"
-          placeholder="Email"
-          [(ngModel)]="email"
-          required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
-          #emailAddress="ngModel"
-        />
-        <div *ngIf="emailAddress.invalid && (emailAddress.dirty || emailAddress.touched)">
-          <p *ngIf="emailAddress.hasError('required')" class="text-danger">Please enter your email address</p>
-        </div>
-      </div>
-      </div>
-      <!-- Password -->
-      <div class="form-group row">
-        <label for="password" class="col-2 ml-2 col-form-label">Password</label>
-        <div class="col-9">
-        <input
-          type="password"
-          class="form-control col-10"
-          name="password"
-          placeholder="Password"
-          [(ngModel)]="password"
-          required
-          #playerPassword="ngModel"
-        />
-        <div *ngIf="playerPassword.invalid && (playerPassword.dirty || playerPassword.touched)">
-          <p *ngIf="playerPassword.hasError('required')" class="text-danger">Please enter a password</p>
-        </div>
-      </div>
-      </div>
+        <h4>Create Personal Account</h4>
+        <form #startGameForm="ngForm" (ngSubmit)="onSubmit(startGameForm.value)">
+            <div class="form-group row">
+                <label for="inputName" class="col-2 ml-2 col-form-label">Name</label>
+                <div class="col-9">
+                    <input
+                        type="text"
+                        class="form-control col-10"
+                        name="firstname"
+                        placeholder="First Name"
+                        [(ngModel)]="firstName"
+                        required
+                        #playerFirstName="ngModel"/>
+                    <div *ngIf="playerFirstName.invalid && (playerFirstName.dirty || playerFirstName.touched)">
+                        <p *ngIf="playerFirstName.hasError('required')" class="text-danger">Please enter your name</p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="inputName" class="col-2 ml-2 col-form-label">Surname</label>
+                <div class="col-9">
+                    <input
+                        type="text"
+                        class="form-control col-10"
+                        name="lastname"
+                        placeholder="Last Name"
+                        [(ngModel)]="lastName"
+                        required
+                        #playerLastName="ngModel"/>
+                    <div *ngIf="playerLastName.invalid && (playerLastName.dirty || playerLastName.touched)">
+                        <p *ngIf="playerLastName.hasError('required')" class="text-danger">Please enter your last name</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Email -->
+            <div class="form-group row">
+                <label for="email" class="col-2 ml-2 col-form-label">Email</label>
+                <div class="col-9">
+                    <input
+                        type="text"
+                        class="form-control col-10"
+                        name="email"
+                        placeholder="Email"
+                        [(ngModel)]="email"
+                        required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                        #emailAddress="ngModel"/>
+                    <div *ngIf="emailAddress.invalid && (emailAddress.dirty || emailAddress.touched)">
+                        <p *ngIf="emailAddress.hasError('required')" class="text-danger">Please enter your email address</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Password -->
+            <div class="form-group row">
+                <label for="password" class="col-2 ml-2 col-form-label">Password</label>
+                <div class="col-9">
+                    <input
+                        type="password"
+                        class="form-control col-10"
+                        name="password"
+                        placeholder="Password"
+                        [(ngModel)]="password"
+                        required
+                        #playerPassword="ngModel"/>
+                    <div *ngIf="playerPassword.invalid && (playerPassword.dirty || playerPassword.touched)">
+                        <p *ngIf="playerPassword.hasError('required')" class="text-danger">Please enter a password</p>
+                    </div>
+                </div>
+            </div>
 
-      <!--Validate Password-->
-      <div class="form-group row">
-        <label for="confirmPassword" class="col-2 ml-2 col-form-label">Validate</label>
-        <div class="col-9">
-        <input
-          type="password"
-          class="form-control col-10"
-          name="confirmPassword"
-          placeholder="Confirm password"
-          [(ngModel)]="confirmPassword"
-          #playerPassword="ngModel"
-        />
-        <div *ngIf="playerPassword.invalid && (playerPassword.dirty || playerPassword.touched)">
-          <p *ngIf="playerPassword.hasError('required')" class="text-danger">Please validate your password</p>
-        </div>
-      </div>
-      </div> 
+            <!--Validate Password-->
+            <div class="form-group row">
+                <label for="confirmPassword" class="col-2 ml-2 col-form-label">Validate</label>
+                <div class="col-9">
+                    <input
+                        type="password"
+                        class="form-control col-10"
+                        name="confirmPassword"
+                        placeholder="Confirm password"
+                        [(ngModel)]="confirmPassword"
+                        #playerPassword="ngModel"/>
+                    <div *ngIf="playerPassword.invalid && (playerPassword.dirty || playerPassword.touched)">
+                        <p *ngIf="playerPassword.hasError('required')" class="text-danger">Please validate your password</p>
+                    </div>
+                </div>
+            </div>
 
-      <div class="form-group">
-        <button type="submit" id="inputSubmit" class="btn btn-success" [disabled]="startGameForm.invalid">
-          Create Account
-        </button>
-      </div>
-    </form>
-  </div>
-  <div class="col"></div>
+            <div class="form-group">
+                <button type="submit" id="inputSubmit" class="btn btn-success" [disabled]="startGameForm.invalid">
+                    Create Account
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="col"></div>
 </div>
 
 <app-error-handler [errorMessageHandler]="errorMessage"></app-error-handler>

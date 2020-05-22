@@ -1,99 +1,109 @@
 <div class="container mt-3 mb-5">
-  <div class="row">
-    <div class="col-md-3">
-      <!-- Placeholder -->
-    </div>
-    <div class="col-md-6">
-      <form>
-        <!-- Loading demo players -->
-        <dl class="row">
-          <dt class="col-sm-1">
-            <div *ngIf="playerDemoStatus == 0;"><mat-spinner diameter="20" class="spinner"></mat-spinner></div>
-            <div *ngIf="playerDemoStatus == -1;"><i class="material-icons text-danger">error</i></div>
-          </dt>
-          <dd class="col-sm-11">
-            <div *ngIf="playerDemoStatus == 0;">Waiting for the Battleship demo players to load...</div>
-            <div *ngIf="playerDemoStatus == -1;">Player Service currently not available!</div>
-            <div *ngIf="playerDemoStatus == 1;" class="input-group">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <i class="material-icons">account_box</i>
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Placeholder -->
+        </div>
+        <div class="col-md-6">
+            <form>
+                <!-- Loading demo players -->
+                <dl class="row">
+                    <dt class="col-sm-1">
+                        <div *ngIf="playerServiceStatus == 0;">
+                            <mat-spinner diameter="20"></mat-spinner>
+                        </div>
+                        <div *ngIf="playerServiceStatus == -1;">
+                            <i class="material-icons text-danger">error</i>
+                        </div>
+                    </dt>
+                    <dd class="col-sm-11">
+                        <div *ngIf="playerServiceStatus == 0;">Waiting for the Battleship demo players to load...</div>
+                        <div *ngIf="playerServiceStatus == -1;">Player Service currently not available!</div>
+                        <div *ngIf="playerServiceStatus == 1;" class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <i class="material-icons">account_box</i>
+                                </div>
+                            </div>
+                            <select id="demoPlayerInput" class="form-control col-sm-10" ngModel required
+                                    (ngModelChange)="onPlayerDemoLogin($event)" name="demoPlayers">
+                                <option value="" disabled>Select Player</option>
+                                <option *ngFor="let demoPlayer of demoPlayers" [value]="demoPlayer.playerId">
+                                    {{ demoPlayer.firstName }} {{ demoPlayer.lastName }}
+                                </option>
+                            </select>
+                        </div>
+                    </dd>
+                    <dt class="col-sm-1">
+                        <i class="material-icons text-info">info</i>
+                    </dt>
+                    <dd class="col-sm-11">
+                        Demo accounts do not contain admin functionality such as top players and audits.
+                        Note: You can make up a email address as Battleships does not ask for email confirmation.
+                    </dd>
+                </dl>
+            </form>
+
+
+            <!-- Personal account login -->
+            <form #loginForm="ngForm" (ngSubmit)="onPlayerLogin(loginForm.value)" class="border border-light p-5" *ngIf="playerServiceStatus == 1; else playerServiceError">
+                <p class="h4 mb-4 text-center">Sign in</p>
+                <!-- Username -->
+                <div class="input-group mb-4">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <i class="material-icons">email</i>
+                        </div>
+                    </div>
+                    <input type=" text" class="form-control" name="email" placeholder="Email" [(ngModel)]="email" required #emailInput="ngModel"/>
+                    <div *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)" class="col-sm-12">
+                        <div *ngIf="emailInput.hasError('required')" class="text-danger">Please enter your e-mail address</div>
+                    </div>
                 </div>
-              </div>
-              <select id="demoPlayerInput" class="form-control col-sm-10" ngModel required
-                (ngModelChange)="onChange($event)" name="demoPlayers">
-                <option value="" disabled>Select Player</option>
-                <option *ngFor="let demoPlayer of demoPlayers" [value]="demoPlayer.playerId">
-                  {{ demoPlayer.firstName }} {{ demoPlayer.lastName }}
-                </option>
-              </select>
-            </div>
-          </dd>
-          <dt class="col-sm-1">
-            <i class="material-icons text-info">info</i>
-          </dt>
-          <dd class="col-sm-11">
-            Demo accounts do not contain admin functionality such as top players and audits.
-            Note: You can make up a email address as Battleships does not ask for email confirmation.
-          </dd>
-        </dl>
-      </form>
+                <!-- Password -->
+                <div class="input-group mb-4">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <i class="material-icons">lock</i>
+                        </div>
+                    </div>
+                    <input type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="password"
+                           required #passwordInput="ngModel"/>
+                    <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)" class="col-sm-12">
+                        <div *ngIf="passwordInput.hasError('required')" class="text-danger">Please enter your password</div>
+                    </div>
+                </div>
+                <!-- submit-->
+                <div class="d-flex justify-content-between">
+                    <div>
+                    </div>
+                    <div>
+                        <a href="">Forgot password?</a>
+                    </div>
+                </div>
 
+                <button class="btn btn-info btn-block my-4" type="submit" [disabled]="loginForm.invalid">Sign in</button>
 
-      <!-- Personal account login -->
-      <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm.value)" class="border border-light p-5">
-        <p class="h4 mb-4 text-center">Sign in</p>
-        <!-- Username -->
-        <div class="input-group mb-4">
-          <div class="input-group-prepend">
-            <div class="input-group-text">
-              <i class="material-icons">email</i>
-            </div>
-          </div>
-          <input type="password" class="form-control" name="email" placeholder="Email" [(ngModel)]="email" required #emailInput="ngModel" />
-          <div *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)" class="col-sm-12">
-            <div *ngIf="emailInput.hasError('required')" class="text-danger">Please enter your e-mail address</div>
-          </div>
-        </div>
-        <!-- Password -->
-        <div class="input-group mb-4">
-          <div class="input-group-prepend">
-            <div class="input-group-text">
-              <i class="material-icons">lock</i>
-            </div>
-          </div>
-          <input type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="password"
-            required #passwordInput="ngModel" />
-          <div *ngIf="passwordInput.invalid && (passwordInput.dirty || passwordInput.touched)" class="col-sm-12">
-            <div *ngIf="passwordInput.hasError('required')" class="text-danger">Please enter your password</div>
-          </div>
-        </div>
-        <!-- submit-->
-        <div class="d-flex justify-content-between">
-          <div>
-            <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="defaultLoginFormRemember">
-              <label class="custom-control-label" for="defaultLoginFormRemember">Remember me</label>
-            </div>
-          </div>
-          <div>
-            <a href="">Forgot password?</a>
-          </div>
-        </div>
+                <div class="text-center">
+                    <p>
+                        Not a member?
+                        <a [routerLink]="['/register']">Register</a>
+                    </p>
+                </div>
+            </form>
 
-        <button class="btn btn-info btn-block my-4" type="submit" [disabled]="loginForm.invalid">Sign in</button>
-
-        <div class="text-center">
-          <p>Not a member?
-            <a href="">Register</a>
-          </p>
+            <ng-template #playerServiceError>
+                <dl class="row">
+                    <dt class="col-sm-1">
+                        <i class="material-icons text-danger">error</i>
+                    </dt>
+                    <dd class="col-sm-11">Player Service currently not available!</dd>
+                </dl>
+            </ng-template>
         </div>
-      </form>
+        <div class="col-md-3">
+            <!-- Placeholder -->
+        </div>
     </div>
-    <div class="col-md-3">
-      <!-- Placeholder -->
-    </div>
-  </div>
 </div>
 
 <app-error-handler [errorMessageHandler]="errorMessage"></app-error-handler>

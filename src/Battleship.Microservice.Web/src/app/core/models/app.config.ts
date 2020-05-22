@@ -1,29 +1,29 @@
 export interface APIServer {
-  Environment: Env;
-  Logging: Logging;
-  Player: Uri;
-  Board: Uri;
-  ScoreCard: Uri;
-  Statistics: Uri;
-  Leaderboard: Uri;
-  AuditLog: Uri;
+    Environment: Env;
+    Logging: Logging;
+    Player: Uri;
+    Board: Uri;
+    ScoreCard: Uri;
+    Statistics: Uri;
+    Leaderboard: Uri;
+    AuditLog: Uri;
 }
 
 export interface Settings {
-  apiServer: APIServer;
-  environment: Env;
-  logging: Logging;
+    apiServer: APIServer;
+    environment: Env;
+    logging: Logging;
 }
 
 export interface Uri {
-  host: string;
-  url: string;
+    host: string;
+    url: string;
 }
 
 export interface Env {
-  name: string;
+    name: string;
 }
 
 export interface Logging {
-  console: boolean;
+    console: boolean;
 }
