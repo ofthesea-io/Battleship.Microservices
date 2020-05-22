@@ -6,7 +6,7 @@
 
     using Battleship.Microservices.Core.Components;
     using Battleship.Microservices.Core.Messages;
-    using Battleship.Statistics.Communication;
+    using Battleship.Statistics.Infrastructure;
 
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -17,16 +17,16 @@
     {
         #region Fields
 
-        private readonly IRpcClient rpcClient;
+        private readonly IStatisticsRepository statisticsRepository;
 
         #endregion
 
         #region Constructors
 
-        public StatisticController(IMessagePublisher messagePublisher, IRpcClient rpcClient)
+        public StatisticController(IMessagePublisher messagePublisher, IStatisticsRepository statisticsRepository)
             : base(messagePublisher)
         {
-            this.rpcClient = rpcClient;
+            this.statisticsRepository = statisticsRepository;
         }
 
         #endregion
@@ -40,14 +40,13 @@
         }
 
         [HttpGet]
-        [Route("GetTopPlayers")]
-        public async Task<ActionResult> GetTopPlayers()
+        [Route("GetTopTenPlayers")]
+        public async Task<ActionResult> GetTopTenPlayers()
         {
             try
-            {
-                CancellationToken token = new CancellationToken(false);
-                string result = await this.rpcClient.CallAsync(token);
-                return this.Ok();
+            { 
+                var result = this.statisticsRepository.GetTopTenPlayers();
+                return this.Ok(result);
             }
             catch (Exception e)
             {

@@ -22,8 +22,6 @@
     {
         #region Fields
 
-        private readonly IMessagePublisher messagePublisher;
-
         private readonly IScoreCardRepository scoreCardRepository;
 
         #endregion
@@ -34,7 +32,6 @@
             : base(messagePublisher)
         {
             this.scoreCardRepository = scoreCardRepository;
-            this.messagePublisher = messagePublisher;
         }
 
         #endregion

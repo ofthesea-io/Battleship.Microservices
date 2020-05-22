@@ -1,4 +1,4 @@
-﻿namespace Battleship.Score.Handlers
+﻿namespace Battleship.Statistics.Handlers
 {
     using System;
     using System.Text;
@@ -7,7 +7,7 @@
 
     using Battleship.Microservices.Core.Messages;
     using Battleship.Microservices.Core.Models;
-    using Battleship.Score.Infrastructure;
+    using Battleship.Statistics.Infrastructure;
 
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
@@ -17,7 +17,7 @@
     using RabbitMQ.Client;
     using RabbitMQ.Client.Events;
 
-    public class ScoreCardHandler : BackgroundService
+    public class StatisticsHandler : BackgroundService
     {
         #region Fields
 
@@ -25,7 +25,7 @@
 
         private readonly IMessagePublisher messagePublisher;
 
-        private readonly IScoreCardRepository scoreCardRepository;
+        private readonly IStatisticsRepository statisticsRepository;
 
         private IModel channel;
 
@@ -35,10 +35,10 @@
 
         #region Constructors
 
-        public ScoreCardHandler(IConfiguration configuration, IScoreCardRepository scoreCardRepository, IMessagePublisher messagePublisher)
+        public StatisticsHandler(IConfiguration configuration, IStatisticsRepository statisticsRepository, IMessagePublisher messagePublisher)
         {
             this.configuration = configuration;
-            this.scoreCardRepository = scoreCardRepository;
+            this.statisticsRepository = statisticsRepository;
             this.messagePublisher = messagePublisher;
             this.Initialise();
         }
@@ -69,11 +69,19 @@
                     {
                         if (!string.IsNullOrEmpty(content))
                         {
-                            ScoreCard scoreCard = JsonConvert.DeserializeObject<ScoreCard>(content);
-                            if (scoreCard != null && !string.IsNullOrEmpty(scoreCard.Message))
+                            Statistics statistics = JsonConvert.DeserializeObject<Statistics>(content);
+                            if (statistics != null)
                             {
-                                string data = JsonConvert.SerializeObject(scoreCard);
-                                this.scoreCardRepository.ManagePlayerScoreCard(scoreCard.SessionToken, data);
+                                string data = JsonConvert.SerializeObject(statistics);
+                                /* Calculate user Hit ratio */                                
+                                
+                                // 1. Get player static by email address
+
+                                // 2. Calculate the Hit ratio:  hit / (hit + miss) * 100
+
+                                // 3. if result found in step one, add step 1 and 2 together and divide by 2
+                                
+                                // Save step 3 (or 2) to database by email address
                                 this.channel.BasicAck(args.DeliveryTag, true);
                             }
                         }
