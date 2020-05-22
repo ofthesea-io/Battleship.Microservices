@@ -21,12 +21,12 @@
                 </li>
                 <li class="nav-item">
                     <span>
-                        <a [routerLink]="['/statistics']"  class="nav-link">Top Players</a>
+                        <a [routerLink]="['/statistics']"  *ngIf="!this.isDemoAccount" class="nav-link">Top Players</a>
                     </span>
                 </li>
                 <li class="nav-item">
                     <span>
-                        <a [routerLink]="['/audit']"class="nav-link">Audit</a>
+                        <a [routerLink]="['/audit']"  *ngIf="!this.isDemoAccount" class="nav-link">Audit</a>
                     </span>
                 </li>
             </ul>

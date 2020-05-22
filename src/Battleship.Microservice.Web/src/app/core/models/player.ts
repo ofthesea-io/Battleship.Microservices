@@ -1,4 +1,4 @@
-export interface Player {
+export class Player {
     playerId: string;
     firstName: string;
     lastName: string;
@@ -7,4 +7,5 @@ export interface Player {
     confirmPassword: string;
     sessionToken: string;
     percentage: number;
+    isDemoAccount: boolean;
 }

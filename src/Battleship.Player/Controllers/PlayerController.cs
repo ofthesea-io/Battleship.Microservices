@@ -75,6 +75,8 @@
             }
         }
 
+        [HttpPost]
+        [Route("IsAuthenticated")]
         public async Task<ActionResult> IsAuthenticated(string sessionId)
         {
 

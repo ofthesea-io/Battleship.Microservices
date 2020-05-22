@@ -59,6 +59,7 @@ export class PlayerLoginComponent implements OnInit {
         this.authenticationService.demoPlayerLogin(playerId).subscribe(response => {
             if (response.status === HttpStatusCode.OK) {
                 const player = response.body as Player;
+                player.isDemoAccount = true;
                 this.authenticateAndThenRoutePlayer(player);
             }
         },
@@ -73,6 +74,7 @@ export class PlayerLoginComponent implements OnInit {
         this.authenticationService.playerLogin(data).subscribe(response => {
             if (response.status === HttpStatusCode.OK) {
                 const player = response.body as Player;
+                player.isDemoAccount = false;
                 this.authenticateAndThenRoutePlayer(player);
             }
         },
@@ -84,7 +86,7 @@ export class PlayerLoginComponent implements OnInit {
     }
 
     private authenticateAndThenRoutePlayer(player: Player): void {
-        this.auth.setAuthHeader(player.sessionToken);
+        this.auth.setAuthentication(player);
         this.router.navigate(["gamePlay"], { state: { player } });
     }
 }

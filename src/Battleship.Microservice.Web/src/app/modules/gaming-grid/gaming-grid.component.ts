@@ -5,7 +5,7 @@ import { Configuration } from "../../core/utilities/configuration";
 import { Coordinate } from "../../core/models/coordinate";
 import { Player } from "../../core/models/player";
 import { Router } from "@angular/router";
-import { MatDialog} from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { PlayerCommand } from "../../core/models/playerCommand";
 import { ScoreCardService } from "../../core/services/score-card.service";
 import HttpStatusCode from "src/app/core/utilities/HttpStatusCodes";

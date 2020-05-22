@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { AuthenticationService } from "./core/services/authentication.service";
+import { Player } from "./core/models/player";
 
 @Component({
     selector: "app-root",
@@ -11,7 +12,7 @@ import { AuthenticationService } from "./core/services/authentication.service";
 })
 export class AppComponent implements OnInit {
 
-    isAuthenticated: Observable<boolean>;
+    isAuthenticated: Observable<Player>;
     router: Router;
 
     /// Don't pass in router as private
@@ -25,7 +26,7 @@ export class AppComponent implements OnInit {
     }
 
     onExitGame(): void {
-        this.auth.removeAuthHeader();
+        this.auth.removeAuthentication();
         this.router.navigateByUrl("/login");
     }
 }

@@ -3,25 +3,31 @@ import { HttpHeaders, HttpResponse, HttpClient } from "@angular/common/http";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Player } from "../models/player";
 import { AppConfig } from "src/app/app.config";
+import { PlayerCommand } from '../models/playerCommand';
 
 
 /* Simple authentication service */
 @Injectable()
 export class AuthenticationService {
 
-    isAuthenticatedSubject = new BehaviorSubject<boolean>(this.isAuthenticated());
+    isAuthenticatedSubject = new BehaviorSubject<Player>(this.isAuthenticated());
 
     constructor(private httpClient: HttpClient) { }
 
-    isPlayerAuthenticated(): Observable<boolean> {
+    isPlayerAuthenticated(): Observable<Player> {
         return this.isAuthenticatedSubject.asObservable();
     }
 
     getAuthenticationHeaders(): HttpHeaders {
-        const authorization = sessionStorage.getItem("authToken");
+        const authorization = sessionStorage.getItem("authentication");
+        let token: string;
+        if (authorization != null) {
+            const player: Player =  JSON.parse(authorization);
+            token = player.sessionToken;
+        }
         const authHeaders = new HttpHeaders({
             "Content-Type": "application/json",
-            Authorization: authorization
+            Authorization: token
         });
         return authHeaders;
     }
@@ -29,43 +35,46 @@ export class AuthenticationService {
     playerLogin(player: Player): Observable<HttpResponse<any>> {
         const playerUri = this.apiServerUrl() + "PlayerLogin";
         return this.httpClient.post<any>(playerUri, player,
-        {
-            headers: new HttpHeaders({ "Content-Type": "application/json" }),
-            observe: "response"
-        });
+            {
+                headers: new HttpHeaders({ "Content-Type": "application/json" }),
+                observe: "response"
+            });
     }
 
     demoPlayerLogin(playerId: string): Observable<HttpResponse<any>> {
         const playerUri = this.apiServerUrl() + "DemoLogin".concat(`?playerId=${playerId}`);
         return this.httpClient.get<any>(playerUri,
-        {
-            headers: new HttpHeaders({
-                "Content-Type": "application/x-www-form-urlencoded"
-            }),
-            observe: "response"
-        });
+            {
+                headers: new HttpHeaders({
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }),
+                observe: "response"
+            });
     }
 
     logout(): void {
-        this.removeAuthHeader();
-        this.isAuthenticatedSubject.next(false);
+        this.removeAuthentication();
+        this.isAuthenticatedSubject.next(null);
     }
 
-    setAuthHeader(sessionToken: string): void {
-        sessionStorage.setItem("authToken", sessionToken);
-        this.isAuthenticatedSubject.next(true);
+    setAuthentication(session: Player): void {
+        if (session !== null) {
+            const result = JSON.stringify(session);
+            sessionStorage.setItem("authentication", result);
+            this.isAuthenticatedSubject.next(session);
+        }
     }
 
-    removeAuthHeader(): void {
-        sessionStorage.removeItem("authToken");
-        this.isAuthenticatedSubject.next(false);
+    removeAuthentication(): void {
+        sessionStorage.removeItem("authentication");
+        this.isAuthenticatedSubject.next(null);
     }
 
-    private isAuthenticated(): boolean {
-        let result = false;
-        const authorization = sessionStorage.getItem("authToken");
-        if (authorization) {
-            result = true;
+    private isAuthenticated(): Player {
+        let result: Player = null;
+        const authorization = sessionStorage.getItem("authentication");
+        if (authorization !== null) {
+            result =  JSON.parse(authorization);
         }
         return result;
     }

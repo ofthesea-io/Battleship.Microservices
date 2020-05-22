@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { throwError } from "rxjs";
-import { MatDialogConfig, MatDialog, MatDialogRef } from "@angular/material";
+import { MatDialogConfig, MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { Injectable } from "@angular/core";
 import { ConfirmationDialogComponent } from "src/app/modules/child-components/confirmation-dialog/confirmation-dialog.component";
 
