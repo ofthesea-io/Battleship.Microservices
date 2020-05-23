@@ -10,5 +10,7 @@
         Task<IEnumerable<Statistics>> GetTopTenPlayers();
 
         Task<Statistics> GetPlayerByEmail(string email);
+
+        Task SaveStatistics(Statistics statistics);
     }
 }

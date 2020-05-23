@@ -1,5 +1,7 @@
 ﻿namespace Battleship.Microservices.Core.Models
 {
+    using System;
+
     using Newtonsoft.Json;
 
     public class Statistics
@@ -15,5 +17,11 @@
 
         [JsonProperty("winningPercentage")]
         public double WinningPercentage { get; set; }
+
+        [JsonProperty("completedOn")]
+        public DateTime CompletedOn { get; set; }
+
+        [JsonProperty("CompletedGames")]
+        public int Games { get; set; }
     }
 }

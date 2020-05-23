@@ -45,7 +45,7 @@
         {
             try
             { 
-                var result = this.statisticsRepository.GetTopTenPlayers();
+                var result = await this.statisticsRepository.GetTopTenPlayers();
                 return this.Ok(result);
             }
             catch (Exception e)

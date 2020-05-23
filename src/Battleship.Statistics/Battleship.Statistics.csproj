@@ -43,4 +43,10 @@
     <ProjectReference Include="..\Battleship.Microservices.Core\Battleship.Microservices.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Configuration\Setup.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

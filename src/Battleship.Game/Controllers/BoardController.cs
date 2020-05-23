@@ -11,7 +11,6 @@
     using Battleship.Microservices.Core.Components;
     using Battleship.Microservices.Core.Messages;
     using Battleship.Microservices.Core.Models;
-    using Battleship.Microservices.Core.Utilities;
 
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -65,7 +64,6 @@
                 GamingGrid result = await Task.Run(() =>
                 {
                     GamingGrid gamingGrid = new GamingGrid { X = this.GetXAxis(), Y = this.GetYAxis() };
-
                     return gamingGrid;
                 });
 
@@ -149,7 +147,7 @@
             try
             {
                 string sessionToken = this.IsAuthenticated(this.HttpContext);
-                var result = await this.gameRepository.SetGameCompleted(sessionToken);
+                bool result = await this.gameRepository.SetGameCompleted(sessionToken);
                 return this.Ok(result);
             }
             catch (Exception e)
@@ -182,16 +180,16 @@
 
                 // Publish the message to the ScoreCard Queue
                 ScoreCard scoreCard = new ScoreCard
-                                          {
-                                              SessionToken = sessionToken,
-                                              Message = this.localizer["Let the games begin!"].Value,
-                                              Hit = 0,
-                                              Miss = 0,
-                                              Sunk = 0,
-                                              IsCompleted = false,
-                                              IsHit = false,
-                                              Total = 0
-                                          };
+                  {
+                      SessionToken = sessionToken,
+                      Message = this.localizer["Let the games begin!"].Value,
+                      Hit = 0,
+                      Miss = 0,
+                      Sunk = 0,
+                      IsCompleted = false,
+                      IsHit = false,
+                      Total = 0
+                  };
                 string serializedScoreCard = JsonConvert.SerializeObject(scoreCard);
                 await this.messagePublisher.PublishMessageAsync(serializedScoreCard, "ScoreCard");
 

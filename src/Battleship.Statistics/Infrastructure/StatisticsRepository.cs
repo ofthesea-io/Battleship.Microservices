@@ -31,6 +31,19 @@
             return await this.ExecuteScalarAsync<Statistics>(parameters);
         }
 
+        public async Task SaveStatistics(Statistics statistics)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>
+            {
+                { "firstname", statistics.Firstname }, 
+                { "lastname", statistics.Lastname }, 
+                { "email", statistics.Email },
+                { "winningPercentage", statistics.WinningPercentage },
+            };
+
+            await this.ExecuteAsync(parameters);
+        }
+
         #endregion
     }
 }
