@@ -10,7 +10,7 @@
     {
         #region Fields
 
-        private static TaskScheduler _instance;
+        private static TaskScheduler instance;
 
         private readonly List<Timer> timers = new List<Timer>();
 
@@ -30,7 +30,10 @@
         {
             get
             {
-                lock (ComponentBase.SyncObject) return TaskScheduler._instance ??= new TaskScheduler();
+                lock (ComponentBase.SyncObject)
+                {
+                    return TaskScheduler.instance ??= new TaskScheduler();
+                }
             }
         }
 

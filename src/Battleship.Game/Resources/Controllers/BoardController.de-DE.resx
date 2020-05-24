@@ -120,6 +120,9 @@
   <data name="Boom! You hit a ship!" xml:space="preserve">
     <value>Let the games begin!</value>
   </data>
+  <data name="Game completed!" xml:space="preserve">
+    <value>Game voltooid!</value>
+  </data>
   <data name="Let the games begin!" xml:space="preserve">
     <value>Lasst die Spiele beginnen!</value>
   </data>

@@ -126,15 +126,7 @@ CREATE PROCEDURE [dbo].[spCheckPlayerStatus]
 	@sessionToken varchar(100)
 AS
 BEGIN
-    DECLARE @status bit = 0;
-	DECLARE @endDateDay DATETIME= ( SELECT CAST(CONVERT(VARCHAR(10) , GETDATE() , 110) + ' 23:59:59' AS DATETIME));
-
-	IF exists(SELECT * FROM dbo.GamePlay gp WHERE gp.SessionToken = @sessionToken AND gp.SessionExpiry <= @endDateDay)
-	BEGIN
-	   SET @status = 1;
-	END
-
-	SELECT @status AS [Status]
+    SELECT gp.PlayerId FROM dbo.GamePlay gp WHERE gp.SessionToken = @sessionToken
 END
 GO
 

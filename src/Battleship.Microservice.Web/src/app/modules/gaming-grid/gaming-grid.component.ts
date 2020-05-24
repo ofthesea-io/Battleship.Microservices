@@ -18,7 +18,6 @@ import HttpStatusCode from "src/app/core/utilities/HttpStatusCodes";
 export class GamingGridComponent implements OnInit {
   playerScoreCard: ScoreCard;
   player: Player;
-  isDemoPlayer: boolean;
   isGameStarted = false;
   selectedShipCounter: number;
   numberOfShipOptions: Array<any>;
@@ -39,7 +38,6 @@ export class GamingGridComponent implements OnInit {
   ) {
     this.numberOfShipOptions = config.shipCounter;
     this.player = this.router.getCurrentNavigation().extras.state.player;
-    this.isDemoPlayer = this.router.getCurrentNavigation().extras.state.isDemoPlayer;
   }
   numberOfShips: number;
   completed: boolean;
@@ -52,7 +50,7 @@ export class GamingGridComponent implements OnInit {
   }
 
   public onSaveGame(data: any) {
-    if (this.isDemoPlayer) {
+    if (this.player.isDemoAccount) {
       this.config.openDialog(
         this.dialog,
         this.config.demoAccountSaveError,

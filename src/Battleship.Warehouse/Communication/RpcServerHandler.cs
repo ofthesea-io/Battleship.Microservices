@@ -17,7 +17,7 @@
     using RabbitMQ.Client;
     using RabbitMQ.Client.Events;
 
-    public class RpcServer : BackgroundService, IRpcServer
+    public class RpcServerHandler : BackgroundService, IRpcServer
     {
         #region Fields
 
@@ -37,7 +37,7 @@
 
         #region Constructors
 
-        public RpcServer(string host, string username, string password, string exchange, string rpcQueue, IWareHouseRepository iWareHouseRepository)
+        public RpcServerHandler(string host, string username, string password, string exchange, string rpcQueue, IWareHouseRepository iWareHouseRepository)
         {
             this.host = host;
             this.username = username;

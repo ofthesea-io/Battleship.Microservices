@@ -78,7 +78,7 @@
 
             services.AddSingleton<IGameRepository>(new GameRepository(databaseConnection));
             services.AddTransient<IMessagePublisher>(sp => new MessagePublisher(host, username, password, exchange, queue));
-            services.AddHostedService<GameMessageHandler>();
+            services.AddHostedService<GameHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

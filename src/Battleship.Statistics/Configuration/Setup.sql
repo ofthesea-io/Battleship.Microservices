@@ -13,8 +13,7 @@ USE [Battleship.Statistics]
 	BEGIN
 		CREATE TABLE [dbo].[Leaderboard](
 			[StatisticsId] [uniqueidentifier] NOT NULL,
-			[Firstname] [varchar](50) NOT NULL,
-			[Lastname] [varchar](50) NOT NULL,
+			[FullName] [varchar](200) NOT NULL,
 			[Email] [varchar](100) NOT NULL,
 			[Percentage] [numeric](2, 2) NOT NULL,
 			[CompletedGames] [int] NOT NULL,
@@ -68,8 +67,7 @@ BEGIN
 	END;
 
 	SELECT 
-	TOP 10 l.Firstname
-		, l.Lastname
+	TOP 10 l.FullName
 		, l.Percentage
 		, l.CompletedOn
 		, l.CompletedGames
@@ -86,8 +84,7 @@ CREATE PROCEDURE [dbo].[spGetTopTenPlayers]
 AS
 BEGIN
 	SELECT 
-	TOP 10 l.Firstname
-		, l.Lastname
+	TOP 10 l.FullName
 		, l.Percentage
 		, l.CompletedOn
 		, l.CompletedGames
@@ -102,7 +99,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE PROCEDURE [dbo].[spSaveStatistics] 
-				 @firstname varchar(50), @lastname varchar(50), @email varchar(100), @Percentage numeric, @CompletedGames int
+				 @fullName varchar(200), @email varchar(100), @Percentage numeric, @CompletedGames int
 AS
 BEGIN
 	IF ISNULL(@email, '') = ''
@@ -115,8 +112,7 @@ BEGIN
 	IF EXISTS(SELECT * FROM dbo.Leaderboard l WHERE l.Email = @Email)
 	BEGIN
 		UPDATE [dbo].[Leaderboard]
-		   SET [Firstname] = @firstname
-			  ,[Lastname] = @lastname
+		   SET [FullName] = @FullName
 			  ,[Percentage] = @Percentage
 			  ,[CompletedGames] = @CompletedGames
 			  ,[CompletedOn] = GetDate()
@@ -124,8 +120,8 @@ BEGIN
 	END
 	ELSE
 		BEGIN
-			INSERT INTO [dbo].[Leaderboard]([Firstname], [Lastname], [Email], [Percentage], [CompletedGames], [CompletedOn] )
-			VALUES( @firstname, @lastname, @email, @Percentage, @CompletedGames, GETDATE());
+			INSERT INTO [dbo].[Leaderboard]([FullName], [Email], [Percentage], [CompletedGames], [CompletedOn] )
+			VALUES( @fullName, @email, @Percentage, @CompletedGames, GETDATE());
 		END
 END;
 GO

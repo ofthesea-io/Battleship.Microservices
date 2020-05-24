@@ -16,6 +16,8 @@
 
         Task<ActionResult> SetGameCompleted();
 
+        Task<ActionResult> StartGame(int numberOfShips);
+
         #endregion
     }
 }

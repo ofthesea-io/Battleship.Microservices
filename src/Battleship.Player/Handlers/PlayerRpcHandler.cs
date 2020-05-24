@@ -1,13 +1,13 @@
-﻿namespace Battleship.Game.Handlers
+﻿namespace Battleship.Player.Handlers
 {
     using System;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Battleship.Game.Infrastructure;
-    using Battleship.Game.Models;
     using Battleship.Microservices.Core.Messages;
+    using Battleship.Player.Infrastructure;
+    using Battleship.Player.Models;
 
     using Microsoft.Extensions.Hosting;
 
@@ -18,13 +18,13 @@
 
     using Serilog;
 
-    public class GameMessageHandler : BackgroundService
+    public class RpcServerHandler : BackgroundService
     {
         #region Fields
 
-        private readonly IGameRepository gameRepository;
-
         private readonly IMessagePublisher messagePublisher;
+
+        private readonly IPlayerRepository playerRepository;
 
         private IModel channel;
 
@@ -34,10 +34,10 @@
 
         #region Constructors
 
-        public GameMessageHandler(IGameRepository gameRepository, IMessagePublisher messagePublisher)
+        public RpcServerHandler(IMessagePublisher messagePublisher, IPlayerRepository playerRepository)
         {
+            this.playerRepository = playerRepository;
             this.messagePublisher = messagePublisher;
-            this.gameRepository = gameRepository;
 
             this.Initialise();
         }
@@ -46,29 +46,34 @@
 
         #region Methods
 
-        public override void Dispose()
-        {
-            this.channel.Close();
-            this.connection.Close();
-            base.Dispose();
-        }
-
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
 
-            EventingBasicConsumer consumer = new EventingBasicConsumer(this.channel);
-            consumer.Received += (ch, ea) =>
-                {
-                    string content = Encoding.UTF8.GetString(ea.Body.ToArray());
+            this.channel = this.connection.CreateModel();
 
+            EventingBasicConsumer consumer = new EventingBasicConsumer(this.channel);
+            this.channel.BasicConsume(this.messagePublisher.Queue, false, consumer);
+
+            consumer.Received += (model, ea) =>
+                {
+                    string json = string.Empty;
+                    byte[] body = ea.Body.ToArray();
+                    IBasicProperties props = ea.BasicProperties;
+                    IBasicProperties replyProps = this.channel.CreateBasicProperties();
+                    replyProps.CorrelationId = props.CorrelationId;
                     try
                     {
-                        if (!string.IsNullOrEmpty(content))
+                        string message = Encoding.UTF8.GetString(body);
+                        bool result = Guid.TryParse(message, out Guid playerId);
+                        if (result)
                         {
-                            Player player = JsonConvert.DeserializeObject<Player>(content);
-                            this.gameRepository.CreatePlayer(player.SessionToken, player.PlayerId);
-                            this.channel.BasicAck(ea.DeliveryTag, true);
+                            Task<Player> player = this.playerRepository.GetPlayer(playerId);
+                            json = JsonConvert.SerializeObject(player);
+
+                            byte[] responseBytes = Encoding.UTF8.GetBytes(json);
+                            this.channel.BasicPublish(string.Empty, props.ReplyTo, replyProps, responseBytes);
+                            this.channel.BasicAck(ea.DeliveryTag, false);
                         }
                     }
                     catch (Exception exp)
@@ -76,9 +81,14 @@
                         Log.Error(exp, exp.Message);
                         this.channel.BasicAck(ea.DeliveryTag, false);
                     }
+                    finally
+                    {
+                        byte[] responseBytes = Encoding.UTF8.GetBytes(json);
+                        this.channel.BasicPublish(string.Empty, props.ReplyTo, replyProps, responseBytes);
+                        this.channel.BasicAck(ea.DeliveryTag, false);
+                    }
                 };
 
-            this.channel.BasicConsume(this.messagePublisher.Queue, false, consumer);
             return Task.CompletedTask;
         }
 
@@ -91,7 +101,6 @@
 
             // create channel
             this.channel = this.connection.CreateModel();
-
             this.channel.ExchangeDeclare(this.messagePublisher.Exchange, ExchangeType.Direct, true);
             this.channel.QueueBind(this.messagePublisher.Queue, this.messagePublisher.Exchange, this.messagePublisher.Queue);
         }

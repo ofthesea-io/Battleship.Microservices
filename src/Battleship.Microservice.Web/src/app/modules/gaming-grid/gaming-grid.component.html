@@ -47,7 +47,7 @@
                 <app-score-card [scoreCard]="playerScoreCard"></app-score-card>
             </div>
             <div>
-                <button type="submit" id="inputSubmit" class="btn btn-success" [hidden]="!isGameStarted" (click)="onSaveGame();">Save Game</button>
+                <button type="submit" id="inputSubmit" class="btn btn-success" [hidden]="(!isGameStarted || player.isDemoAccount)" (click)="onSaveGame();">Save Game</button>
             </div>
         </div>
     </div>

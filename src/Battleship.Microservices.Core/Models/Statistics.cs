@@ -6,11 +6,8 @@
 
     public class Statistics
     {
-        [JsonProperty("firstName")]
-        public string Firstname { get; set; }
-
-        [JsonProperty("lastName")]
-        public string Lastname { get; set; }
+        [JsonProperty("fullName")]
+        public string FullName { get; set; }
 
         [JsonIgnore]
         public string Email { get; set; }
@@ -23,5 +20,8 @@
 
         [JsonProperty("CompletedGames")]
         public int Games { get; set; }
+
+        [JsonProperty("scoreCard")]
+        public ScoreCard ScoreCard { get; set; }
     }
 }

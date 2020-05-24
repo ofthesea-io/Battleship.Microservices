@@ -30,7 +30,7 @@
 
         #region Properties
 
-        protected string AuditQueue => "AuditLog";
+        protected string AuditLogQueue => "AuditLog";
 
         #endregion
 
@@ -42,7 +42,7 @@
             {
                 string error = $"{exp.Message}\n{exp.StackTrace}";
                 string message = this.MarshalMessage(error, auditType);
-                await this.messagePublisher.PublishMessageAsync(message, this.AuditQueue);
+                await this.messagePublisher.PublishMessageAsync(message, this.AuditLogQueue);
             }
         }
 
@@ -52,7 +52,7 @@
             {
                 string error = $"{exp.Message}\n{exp.StackTrace}";
                 string message = this.MarshalMessage(error, auditType);
-                await this.messagePublisher.PublishMessageAsync(message, this.AuditQueue);
+                await this.messagePublisher.PublishMessageAsync(message, this.AuditLogQueue);
             }
 
             return statusCode;
@@ -63,7 +63,7 @@
             if (!string.IsNullOrEmpty(content))
             {
                 string message = this.MarshalMessage(content, auditType);
-                await this.messagePublisher.PublishMessageAsync(message, this.AuditQueue);
+                await this.messagePublisher.PublishMessageAsync(message, this.AuditLogQueue);
             }
         }
 

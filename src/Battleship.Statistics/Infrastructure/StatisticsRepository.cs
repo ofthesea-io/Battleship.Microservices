@@ -35,8 +35,7 @@
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>
             {
-                { "firstname", statistics.Firstname }, 
-                { "lastname", statistics.Lastname }, 
+                { "fullNAme", statistics.FullName },
                 { "email", statistics.Email },
                 { "winningPercentage", statistics.WinningPercentage },
             };

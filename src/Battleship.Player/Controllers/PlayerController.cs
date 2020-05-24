@@ -53,7 +53,7 @@
                 Player result = await this.playerRepository.PlayerLogin(player);
                 if (result == null)
                 {
-                    this.Log($"401 Unauthorized {player.Email}", this.AuditQueue, AuditType.Warning);
+                    this.Log($"401 Unauthorized {player.Email}", this.AuditLogQueue, AuditType.Warning);
                     return this.StatusCode(StatusCodes.Status401Unauthorized);
                 }
 

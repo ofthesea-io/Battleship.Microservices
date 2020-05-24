@@ -36,7 +36,7 @@
         [HttpGet]
         public string Get()
         {
-            return "ScoreCard API started.";
+            return "Statistics API started.";
         }
 
         [HttpGet]

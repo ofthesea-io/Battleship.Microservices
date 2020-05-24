@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
 
     using Battleship.Game.Board;
+    using Battleship.Game.Handlers;
     using Battleship.Game.Infrastructure;
     using Battleship.Game.Models;
     using Battleship.Microservices.Core.Components;
@@ -37,6 +38,8 @@
         private readonly IStringLocalizer<BoardController> localizer;
 
         private readonly IMessagePublisher messagePublisher;
+
+        private sbyte marker = 0x01;
 
         #endregion
 
@@ -81,50 +84,60 @@
         {
             try
             {
-                string sessionToken = this.IsAuthenticated(this.HttpContext);
-                if (string.IsNullOrEmpty(sessionToken))
-                    return this.StatusCode(StatusCodes.Status401Unauthorized);
+                string sessionToken = this.GetAuthorizationToken(this.HttpContext);
+                string coordinates = string.Empty;
+                StatusCodeResult playerStatus = this.ValidatePlayerContext(sessionToken, playerCommand, ref coordinates);
 
-                if (playerCommand.Coordinate.X == 0 || playerCommand.Coordinate.Y == 0 || string.IsNullOrEmpty(sessionToken))
-                    throw new ArgumentException();
-
-                string coordinates = await this.gameRepository.GetShipCoordinates(sessionToken);
-                if (coordinates == null)
+                if (playerStatus == null)
                 {
-                    this.Log(new NullReferenceException("Coordinates not found"));
-                    return this.StatusCode(StatusCodes.Status204NoContent);
-                }
+                    // get into a object
+                    var shipCoordinates = JsonConvert.DeserializeObject<KeyValuePair<Coordinate, Segment>[]>(coordinates, this.jsonSerializerSettings).ToDictionary(kv => kv.Key, kv => kv.Value);
 
-                // get into a object
-                Dictionary<Coordinate, Segment> shipCoordinates = JsonConvert.DeserializeObject<KeyValuePair<Coordinate, Segment>[]>(coordinates, this.jsonSerializerSettings).ToDictionary(kv => kv.Key, kv => kv.Value);
+                    // Count of ship lengths coordinates along any length - tp check game completed
+                    int sum = shipCoordinates.Count(q => q.Key.X != this.marker);
 
-                KeyValuePair<Coordinate, Segment> shipCoordinate = shipCoordinates.FirstOrDefault(q => q.Key.X == playerCommand.Coordinate.X && q.Key.Y == playerCommand.Coordinate.Y);
+                    KeyValuePair<Coordinate, Segment> shipCoordinate = shipCoordinates.FirstOrDefault(q => q.Key.X == playerCommand.Coordinate.X && q.Key.Y == playerCommand.Coordinate.Y);
 
-                playerCommand.ScoreCard.IsHit = false;
-                if (shipCoordinate.Value != null)
-                {
-                    // Meta
-                    shipCoordinate.Value.Ship.ShipSegmentHit = 0x01;
-                    int numberOfSegmentsHit = shipCoordinates.Count(q => q.Value.Ship.ShipIndex == shipCoordinate.Value.Ship.ShipIndex && q.Value.Ship.ShipSegmentHit == 0x01);
+                    PlayerHandler playerHandler = new PlayerHandler(this.messagePublisher);
+                    playerHandler.GetPlayer(sessionToken);
 
-                    // Save
-                    string updateShipCoordinates = JsonConvert.SerializeObject(shipCoordinates.ToArray(), Formatting.Indented, this.jsonSerializerSettings);
-                    await this.gameRepository.UpdateShipCoordinates(updateShipCoordinates, sessionToken);
-
-                    // Display
-                    playerCommand.ScoreCard.Hit++;
-                    playerCommand.ScoreCard.IsHit = true;
-                    playerCommand.ScoreCard.Message = this.localizer["Boom! You hit a ship!"];
-                    if (numberOfSegmentsHit == shipCoordinate.Value.Ship.ShipLength)
+                    playerCommand.ScoreCard.IsHit = false;
+                    if (shipCoordinate.Value != null)
                     {
-                        playerCommand.ScoreCard.Sunk++;
-                        playerCommand.ScoreCard.Message = this.localizer["Ship sunk!"];
+                        // Meta
+                        shipCoordinate.Value.Ship.ShipSegmentHit = this.marker;
+                        int numberOfSegmentsHit = shipCoordinates.Count(q => q.Value.Ship.ShipIndex == shipCoordinate.Value.Ship.ShipIndex && q.Value.Ship.ShipSegmentHit == this.marker);
+                        int totalNumberOfShipsHit = shipCoordinates.Count(q => q.Value.Ship.ShipSegmentHit == this.marker);
+
+                        // Save
+                        string updateShipCoordinates = JsonConvert.SerializeObject(shipCoordinates.ToArray(), Formatting.Indented, this.jsonSerializerSettings);
+                        await this.gameRepository.UpdateShipCoordinates(updateShipCoordinates, sessionToken);
+
+                        // Display
+                        playerCommand.ScoreCard.Hit++;
+                        playerCommand.ScoreCard.IsHit = true;
+                        playerCommand.ScoreCard.Message = this.localizer["Boom! You hit a ship!"];
+                        if (numberOfSegmentsHit == shipCoordinate.Value.Ship.ShipLength)
+                        {
+                            playerCommand.ScoreCard.Sunk++;
+                            playerCommand.ScoreCard.Message = this.localizer["Ship sunk!"];
+                        }
+
+                        if (sum == totalNumberOfShipsHit)
+                        {
+                            Guid playerId = this.gameRepository.CheckPlayerStatus(sessionToken);
+                            if (playerId != Guid.Empty)
+                            {
+                                playerCommand.ScoreCard.IsCompleted = true;
+                                playerCommand.ScoreCard.Message = this.localizer["Game completed!"];
+                            }
+                        }
                     }
-                }
-                else
-                {
-                    playerCommand.ScoreCard.Miss++;
-                    playerCommand.ScoreCard.Message = this.localizer["Sorry you missed, try again!"];
+                    else
+                    {
+                        playerCommand.ScoreCard.Miss++;
+                        playerCommand.ScoreCard.Message = this.localizer["Sorry you missed, try again!"];
+                    }
                 }
 
                 playerCommand.ScoreCard.Total++;
@@ -146,7 +159,7 @@
         {
             try
             {
-                string sessionToken = this.IsAuthenticated(this.HttpContext);
+                string sessionToken = this.GetAuthorizationToken(this.HttpContext);
                 bool result = await this.gameRepository.SetGameCompleted(sessionToken);
                 return this.Ok(result);
             }
@@ -158,12 +171,6 @@
         }
 
         [HttpGet]
-        public string Get()
-        {
-            return "Board API started.";
-        }
-
-        [HttpGet]
         [Route("StartGame")]
         public async Task<ActionResult> StartGame(int numberOfShips)
         {
@@ -171,7 +178,7 @@
             {
                 if (numberOfShips == 0) return this.BadRequest();
 
-                string sessionToken = this.IsAuthenticated(this.HttpContext);
+                string sessionToken = this.GetAuthorizationToken(this.HttpContext);
                 if (string.IsNullOrEmpty(sessionToken)) return this.StatusCode(StatusCodes.Status401Unauthorized);
 
                 await this.gameRepository.StartGame(sessionToken, numberOfShips);
@@ -202,6 +209,12 @@
             }
         }
 
+        [HttpGet]
+        public string Get()
+        {
+            return "Board API started.";
+        }
+
         private IEnumerable<string> GetXAxis()
         {
             try
@@ -226,12 +239,31 @@
             }
         }
 
-        private string IsAuthenticated(HttpContext httpContext)
+        private string GetAuthorizationToken(HttpContext httpContext)
         {
             string result = string.Empty;
             if (httpContext.Request.Headers.TryGetValue("Authorization", out StringValues values)) result = values.FirstOrDefault();
 
             return result;
+        }
+
+        private StatusCodeResult? ValidatePlayerContext(string sessionToken, PlayerCommand playerCommand, ref string coordinates)
+        {
+            StatusCodeResult status = null;
+            if (string.IsNullOrEmpty(sessionToken))
+                status = this.StatusCode(StatusCodes.Status401Unauthorized);
+
+            if (playerCommand.Coordinate.X == 0 || playerCommand.Coordinate.Y == 0)
+                status = this.StatusCode(StatusCodes.Status500InternalServerError);
+
+            coordinates = this.gameRepository.GetShipCoordinates(sessionToken);
+            if (coordinates == null)
+            {
+                this.Log(new NullReferenceException("Coordinates not found"));
+                status = this.StatusCode(StatusCodes.Status204NoContent);
+            }
+
+            return status;
         }
 
         #endregion

@@ -3,6 +3,7 @@
     using Battleship.Microservices.Core.Messages;
     using Battleship.Microservices.Core.Repository;
     using Battleship.Microservices.Infrastructure.Messages;
+    using Battleship.Player.Handlers;
     using Battleship.Player.Infrastructure;
 
     using Microsoft.AspNetCore.Builder;
@@ -57,6 +58,7 @@
 
             services.AddTransient<IMessagePublisher>(sp => new MessagePublisher(host, userName, password, exchange, queue));
             services.AddSingleton<IPlayerRepository>(new PlayerRepository(databaseConnection));
+            services.AddHostedService<RpcServerHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
