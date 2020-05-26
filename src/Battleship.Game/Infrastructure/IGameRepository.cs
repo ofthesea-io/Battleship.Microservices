@@ -23,6 +23,7 @@
 
         Task<bool> SetGameCompleted(string sessionToken);
 
+
         #endregion
     }
 }

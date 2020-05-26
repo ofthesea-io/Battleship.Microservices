@@ -47,7 +47,7 @@ GO
 DROP PROCEDURE IF EXISTS [dbo].[spGetDemoPlayers]
 GO
 
-DROP PROCEDURE IF EXISTS [dbo].[spGetPlayerByPlayerId]
+DROP PROCEDURE IF EXISTS [dbo].[spGetPlayer]
 GO
 
 DROP PROCEDURE IF EXISTS [dbo].[spCreatePlayer]
@@ -135,8 +135,8 @@ END
 END
 GO
 
-CREATE PROCEDURE [dbo].[spGetPlayerByPlayerId]
-	@playerId varchar(50)
+CREATE PROCEDURE [dbo].[spGetPlayer]
+	@playerId uniqueidentifier
 AS
 BEGIN
 	 IF ((SELECT dbo.ufnIsIdentifierValid(@playerId)) = 0)
@@ -146,7 +146,7 @@ BEGIN
         END
 
 
-	SELECT  p.PlayerId, p.Firstname, p.Lastname, P.Email, p.IsDemo, p.DateCReated  
+	SELECT  p.PlayerId, p.Firstname, p.Lastname, P.Email, p.IsDemo, p.DateCReated, p.IsDemo as IsDemoPlayer  
 	FROM [Battleship.Player].dbo.Player p where PlayerId = @playerId
 END
 GO

@@ -8,6 +8,7 @@
     using Battleship.Game.Infrastructure;
     using Battleship.Game.Models;
     using Battleship.Microservices.Core.Messages;
+    using Battleship.Microservices.Core.Models;
 
     using Microsoft.Extensions.Hosting;
 
@@ -61,7 +62,6 @@
             consumer.Received += (ch, ea) =>
                 {
                     string content = Encoding.UTF8.GetString(ea.Body.ToArray());
-
                     try
                     {
                         if (!string.IsNullOrEmpty(content))

@@ -86,7 +86,8 @@
             {
                 string sessionToken = this.GetAuthorizationToken(this.HttpContext);
                 string coordinates = string.Empty;
-                StatusCodeResult playerStatus = this.ValidatePlayerContext(sessionToken, playerCommand, ref coordinates);
+                Guid playerId = Guid.Empty;
+                StatusCodeResult playerStatus = this.ValidatePlayerContext(sessionToken, playerCommand, ref coordinates, ref playerId);
 
                 if (playerStatus == null)
                 {
@@ -97,9 +98,6 @@
                     int sum = shipCoordinates.Count(q => q.Key.X != this.marker);
 
                     KeyValuePair<Coordinate, Segment> shipCoordinate = shipCoordinates.FirstOrDefault(q => q.Key.X == playerCommand.Coordinate.X && q.Key.Y == playerCommand.Coordinate.Y);
-
-                    PlayerHandler playerHandler = new PlayerHandler(this.messagePublisher);
-                    playerHandler.GetPlayer(sessionToken);
 
                     playerCommand.ScoreCard.IsHit = false;
                     if (shipCoordinate.Value != null)
@@ -125,12 +123,24 @@
 
                         if (sum == totalNumberOfShipsHit)
                         {
-                            Guid playerId = this.gameRepository.CheckPlayerStatus(sessionToken);
-                            if (playerId != Guid.Empty)
+                            // Get the player via the RPC service
+                            PlayerHandler playerHandler = new PlayerHandler(this.messagePublisher);
+                            var payload = playerHandler.GetPlayer(playerId);
+                            if (!string.IsNullOrEmpty(payload))
                             {
+                                var player = JsonConvert.DeserializeObject<Player>(payload);
+                                if (player != null && !player.IsDemoPlayer)
+                                {
+                                    Statistics statistics = new Statistics { FullName = $"{player.Firstname} {player.Lastname}", Email = player.Email, ScoreCard = player.ScoreCard };
+
+                                    string playerStatisticsPayload = JsonConvert.SerializeObject(statistics);
+                                    await this.messagePublisher.PublishMessageAsync(playerStatisticsPayload, "Statistics");
+                                }
+
                                 playerCommand.ScoreCard.IsCompleted = true;
                                 playerCommand.ScoreCard.Message = this.localizer["Game completed!"];
                             }
+                            playerHandler.Close();
                         }
                     }
                     else
@@ -247,11 +257,13 @@
             return result;
         }
 
-        private StatusCodeResult? ValidatePlayerContext(string sessionToken, PlayerCommand playerCommand, ref string coordinates)
+        private StatusCodeResult? ValidatePlayerContext(string sessionToken, PlayerCommand playerCommand, ref string coordinates, ref Guid playerId)
         {
             StatusCodeResult status = null;
             if (string.IsNullOrEmpty(sessionToken))
                 status = this.StatusCode(StatusCodes.Status401Unauthorized);
+            else
+                playerId = this.gameRepository.CheckPlayerStatus(sessionToken);
 
             if (playerCommand.Coordinate.X == 0 || playerCommand.Coordinate.Y == 0)
                 status = this.StatusCode(StatusCodes.Status500InternalServerError);

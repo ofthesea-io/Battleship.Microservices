@@ -17,8 +17,6 @@
     {
         #region Fields
 
-        private const string Origins = "http://localhost:4200";
-
         private readonly IConfiguration configuration;
 
         private readonly string database = "Database=Battleship.Player;";
@@ -58,7 +56,7 @@
 
             services.AddTransient<IMessagePublisher>(sp => new MessagePublisher(host, userName, password, exchange, queue));
             services.AddSingleton<IPlayerRepository>(new PlayerRepository(databaseConnection));
-            services.AddHostedService<RpcServerHandler>();
+            services.AddHostedService<PlayerRpcHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

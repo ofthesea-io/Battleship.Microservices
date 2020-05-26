@@ -59,7 +59,7 @@
             stoppingToken.ThrowIfCancellationRequested();
 
             EventingBasicConsumer consumer = new EventingBasicConsumer(this.channel);
-            consumer.Received += (sender, args) =>
+            consumer.Received += async (sender, args) =>
                 {
                     // received message
                     string content = Encoding.UTF8.GetString(args.Body.ToArray());
@@ -72,16 +72,25 @@
                             Statistics statistics = JsonConvert.DeserializeObject<Statistics>(content);
                             if (statistics != null)
                             {
-                                string data = JsonConvert.SerializeObject(statistics);
-                                /* Calculate user Hit ratio */                                
-                                
-                                // 1. Get player static by email address
+                                /* Calculate user Hit ratio */
+                                double winningPercentage;
+
+                                // 1. Get player statistics by email address
+                                Statistics statistic = await this.statisticsRepository.GetPlayerByEmail(statistics.Email);
 
                                 // 2. Calculate the Hit ratio:  hit / (hit + miss) * 100
+                                double winningRatio = statistics.ScoreCard.Hit / (statistics.ScoreCard.Hit + statistics.ScoreCard.Miss) * 100;
 
                                 // 3. if result found in step one, add step 1 and 2 together and divide by 2
+                                if (statistic != null)
+                                    winningPercentage = Math.Round((winningRatio + statistics.WinningPercentage / 2), 2);
+                                else
+                                    winningPercentage = Math.Round(winningRatio, 2);
                                 
                                 // Save step 3 (or 2) to database by email address
+                                if (statistic != null) statistic.WinningPercentage = winningPercentage;
+                                await this.statisticsRepository.SaveStatistics(statistic);
+
                                 this.channel.BasicAck(args.DeliveryTag, true);
                             }
                         }
