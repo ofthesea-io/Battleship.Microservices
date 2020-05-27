@@ -15,7 +15,7 @@ USE [Battleship.Statistics]
 			[StatisticsId] [uniqueidentifier] NOT NULL,
 			[FullName] [varchar](200) NOT NULL,
 			[Email] [varchar](100) NOT NULL,
-			[Percentage] [numeric](2, 2) NOT NULL,
+			[Percentage] [numeric](5, 2) NOT NULL,
 			[CompletedGames] [int] NOT NULL,
 			[CompletedOn] [datetime2](7) NOT NULL,
 		 CONSTRAINT [PK_Leaderboard] PRIMARY KEY CLUSTERED 

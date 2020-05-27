@@ -33,13 +33,17 @@
 
         private readonly IGridGenerator gridGenerator;
 
-        private readonly JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All, DefaultValueHandling = DefaultValueHandling.Ignore };
+        private readonly JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings
+                                                                             {
+                                                                                 TypeNameHandling = TypeNameHandling.All,
+                                                                                 DefaultValueHandling = DefaultValueHandling.Ignore
+                                                                             };
 
         private readonly IStringLocalizer<BoardController> localizer;
 
-        private readonly IMessagePublisher messagePublisher;
+        private readonly sbyte marker = 0x01;
 
-        private sbyte marker = 0x01;
+        private readonly IMessagePublisher messagePublisher;
 
         #endregion
 
@@ -64,11 +68,16 @@
         {
             try
             {
-                GamingGrid result = await Task.Run(() =>
-                {
-                    GamingGrid gamingGrid = new GamingGrid { X = this.GetXAxis(), Y = this.GetYAxis() };
-                    return gamingGrid;
-                });
+                GamingGrid result = await Task.Run(
+                                        () =>
+                                            {
+                                                GamingGrid gamingGrid = new GamingGrid
+                                                                            {
+                                                                                X = this.GetXAxis(),
+                                                                                Y = this.GetYAxis()
+                                                                            };
+                                                return gamingGrid;
+                                            });
 
                 return result;
             }
@@ -92,19 +101,22 @@
                 if (playerStatus == null)
                 {
                     // get into a object
-                    var shipCoordinates = JsonConvert.DeserializeObject<KeyValuePair<Coordinate, Segment>[]>(coordinates, this.jsonSerializerSettings).ToDictionary(kv => kv.Key, kv => kv.Value);
+                    Dictionary<Coordinate, Segment> shipCoordinates = JsonConvert.DeserializeObject<KeyValuePair<Coordinate, Segment>[]>(coordinates, this.jsonSerializerSettings)
+                       .ToDictionary(kv => kv.Key, kv => kv.Value);
 
                     // Count of ship lengths coordinates along any length - tp check game completed
                     int sum = shipCoordinates.Count(q => q.Key.X != this.marker);
 
-                    KeyValuePair<Coordinate, Segment> shipCoordinate = shipCoordinates.FirstOrDefault(q => q.Key.X == playerCommand.Coordinate.X && q.Key.Y == playerCommand.Coordinate.Y);
+                    KeyValuePair<Coordinate, Segment> shipCoordinate =
+                        shipCoordinates.FirstOrDefault(q => q.Key.X == playerCommand.Coordinate.X && q.Key.Y == playerCommand.Coordinate.Y);
 
                     playerCommand.ScoreCard.IsHit = false;
                     if (shipCoordinate.Value != null)
                     {
                         // Meta
                         shipCoordinate.Value.Ship.ShipSegmentHit = this.marker;
-                        int numberOfSegmentsHit = shipCoordinates.Count(q => q.Value.Ship.ShipIndex == shipCoordinate.Value.Ship.ShipIndex && q.Value.Ship.ShipSegmentHit == this.marker);
+                        int numberOfSegmentsHit = shipCoordinates.Count(
+                            q => q.Value.Ship.ShipIndex == shipCoordinate.Value.Ship.ShipIndex && q.Value.Ship.ShipSegmentHit == this.marker);
                         int totalNumberOfShipsHit = shipCoordinates.Count(q => q.Value.Ship.ShipSegmentHit == this.marker);
 
                         // Save
@@ -125,13 +137,18 @@
                         {
                             // Get the player via the RPC service
                             PlayerHandler playerHandler = new PlayerHandler(this.messagePublisher);
-                            var payload = playerHandler.GetPlayer(playerId);
+                            string payload = playerHandler.GetPlayer(playerId);
                             if (!string.IsNullOrEmpty(payload))
                             {
-                                var player = JsonConvert.DeserializeObject<Player>(payload);
+                                Player player = JsonConvert.DeserializeObject<Player>(payload);
                                 if (player != null && !player.IsDemoPlayer)
                                 {
-                                    Statistics statistics = new Statistics { FullName = $"{player.Firstname} {player.Lastname}", Email = player.Email, ScoreCard = player.ScoreCard };
+                                    Statistics statistics = new Statistics
+                                                                {
+                                                                    FullName = $"{player.Firstname} {player.Lastname}",
+                                                                    Email = player.Email,
+                                                                    ScoreCard = playerCommand.ScoreCard
+                                                                };
 
                                     string playerStatisticsPayload = JsonConvert.SerializeObject(statistics);
                                     await this.messagePublisher.PublishMessageAsync(playerStatisticsPayload, "Statistics");
@@ -140,6 +157,7 @@
                                 playerCommand.ScoreCard.IsCompleted = true;
                                 playerCommand.ScoreCard.Message = this.localizer["Game completed!"];
                             }
+
                             playerHandler.Close();
                         }
                     }
@@ -197,16 +215,16 @@
 
                 // Publish the message to the ScoreCard Queue
                 ScoreCard scoreCard = new ScoreCard
-                  {
-                      SessionToken = sessionToken,
-                      Message = this.localizer["Let the games begin!"].Value,
-                      Hit = 0,
-                      Miss = 0,
-                      Sunk = 0,
-                      IsCompleted = false,
-                      IsHit = false,
-                      Total = 0
-                  };
+                                          {
+                                              SessionToken = sessionToken,
+                                              Message = this.localizer["Let the games begin!"].Value,
+                                              Hit = 0,
+                                              Miss = 0,
+                                              Sunk = 0,
+                                              IsCompleted = false,
+                                              IsHit = false,
+                                              Total = 0
+                                          };
                 string serializedScoreCard = JsonConvert.SerializeObject(scoreCard);
                 await this.messagePublisher.PublishMessageAsync(serializedScoreCard, "ScoreCard");
 

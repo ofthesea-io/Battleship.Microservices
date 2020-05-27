@@ -1,4 +1,4 @@
-﻿namespace Battleship.Score.Handlers
+﻿namespace Battleship.Scoreboard.Handlers
 {
     using System;
     using System.Text;
@@ -16,6 +16,8 @@
 
     using RabbitMQ.Client;
     using RabbitMQ.Client.Events;
+
+    using Serilog;
 
     public class ScoreCardHandler : BackgroundService
     {
@@ -59,10 +61,10 @@
             stoppingToken.ThrowIfCancellationRequested();
 
             EventingBasicConsumer consumer = new EventingBasicConsumer(this.channel);
-            consumer.Received += (sender, args) =>
+            consumer.Received += (sender, eventArgs) =>
                 {
                     // received message
-                    string content = Encoding.UTF8.GetString(args.Body.ToArray());
+                    string content = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
 
                     // handle the received message
                     try
@@ -74,13 +76,14 @@
                             {
                                 string data = JsonConvert.SerializeObject(scoreCard);
                                 this.scoreCardRepository.ManagePlayerScoreCard(scoreCard.SessionToken, data);
-                                this.channel.BasicAck(args.DeliveryTag, true);
+                                this.channel.BasicAck(eventArgs.DeliveryTag, true);
                             }
                         }
                     }
-                    catch (Exception e)
+                    catch (Exception exp)
                     {
-                        string message = $"Battleship.Board: {e.Message}{Environment.NewLine}{e.StackTrace}";
+                        Log.Error(exp, exp.Message);
+                        this.channel.BasicAck(eventArgs.DeliveryTag, false);
                     }
                 };
 

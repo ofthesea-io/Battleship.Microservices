@@ -1,4 +1,4 @@
-﻿namespace Battleship.Score.Controllers
+﻿namespace Battleship.Scoreboard.Controllers
 {
     using System.Threading.Tasks;
 

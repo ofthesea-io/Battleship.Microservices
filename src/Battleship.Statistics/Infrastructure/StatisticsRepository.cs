@@ -37,7 +37,8 @@
             {
                 { "fullNAme", statistics.FullName },
                 { "email", statistics.Email },
-                { "winningPercentage", statistics.WinningPercentage },
+                { "Percentage", statistics.WinningPercentage },
+                { "completedGames", statistics.Games },
             };
 
             await this.ExecuteAsync(parameters);

@@ -6,7 +6,6 @@
     using System.Threading.Tasks;
 
     using Battleship.Game.Infrastructure;
-    using Battleship.Game.Models;
     using Battleship.Microservices.Core.Messages;
     using Battleship.Microservices.Core.Models;
 
@@ -59,22 +58,22 @@
             stoppingToken.ThrowIfCancellationRequested();
 
             EventingBasicConsumer consumer = new EventingBasicConsumer(this.channel);
-            consumer.Received += (ch, ea) =>
+            consumer.Received += (sender, eventArgs) =>
                 {
-                    string content = Encoding.UTF8.GetString(ea.Body.ToArray());
+                    string content = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
                     try
                     {
                         if (!string.IsNullOrEmpty(content))
                         {
                             Player player = JsonConvert.DeserializeObject<Player>(content);
                             this.gameRepository.CreatePlayer(player.SessionToken, player.PlayerId);
-                            this.channel.BasicAck(ea.DeliveryTag, true);
+                            this.channel.BasicAck(eventArgs.DeliveryTag, true);
                         }
                     }
                     catch (Exception exp)
                     {
                         Log.Error(exp, exp.Message);
-                        this.channel.BasicAck(ea.DeliveryTag, false);
+                        this.channel.BasicAck(eventArgs.DeliveryTag, false);
                     }
                 };
 

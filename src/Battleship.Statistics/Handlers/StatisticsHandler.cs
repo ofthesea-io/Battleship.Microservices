@@ -1,6 +1,7 @@
 ﻿namespace Battleship.Statistics.Handlers
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -16,6 +17,8 @@
 
     using RabbitMQ.Client;
     using RabbitMQ.Client.Events;
+
+    using Serilog;
 
     public class StatisticsHandler : BackgroundService
     {
@@ -54,15 +57,16 @@
             base.Dispose();
         }
 
+        [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1407:ArithmeticExpressionsMustDeclarePrecedence", Justification = "Reviewed. Suppression is OK here.")]
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
 
             EventingBasicConsumer consumer = new EventingBasicConsumer(this.channel);
-            consumer.Received += async (sender, args) =>
+            consumer.Received += async (sender, eventArgs) =>
                 {
                     // received message
-                    string content = Encoding.UTF8.GetString(args.Body.ToArray());
+                    string content = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
 
                     // handle the received message
                     try
@@ -79,25 +83,35 @@
                                 Statistics statistic = await this.statisticsRepository.GetPlayerByEmail(statistics.Email);
 
                                 // 2. Calculate the Hit ratio:  hit / (hit + miss) * 100
-                                double winningRatio = statistics.ScoreCard.Hit / (statistics.ScoreCard.Hit + statistics.ScoreCard.Miss) * 100;
+                                double hit = (double)statistics.ScoreCard.Hit;
+                                double miss = (double)statistics.ScoreCard.Miss;
+                                double winningRatio = hit / (hit + miss) * 100;
 
                                 // 3. if result found in step one, add step 1 and 2 together and divide by 2
                                 if (statistic != null)
-                                    winningPercentage = Math.Round((winningRatio + statistics.WinningPercentage / 2), 2);
+                                {
+                                    winningPercentage = Math.Round(winningRatio + statistics.WinningPercentage / 2, 2);
+                                    statistics.Games++;
+                                }
                                 else
+                                {
                                     winningPercentage = Math.Round(winningRatio, 2);
-                                
-                                // Save step 3 (or 2) to database by email address
-                                if (statistic != null) statistic.WinningPercentage = winningPercentage;
-                                await this.statisticsRepository.SaveStatistics(statistic);
+                                    statistics.Games = 1;
+                                }
 
-                                this.channel.BasicAck(args.DeliveryTag, true);
+                                statistics.WinningPercentage = winningPercentage;
+
+                                // Save step 3 (or 2) to database by email address
+                                await this.statisticsRepository.SaveStatistics(statistics);
+
+                                this.channel.BasicAck(eventArgs.DeliveryTag, true);
                             }
                         }
                     }
-                    catch (Exception e)
+                    catch (Exception exp)
                     {
-                        string message = $"Battleship.Board: {e.Message}{Environment.NewLine}{e.StackTrace}";
+                        Log.Error(exp, exp.Message);
+                        this.channel.BasicAck(eventArgs.DeliveryTag, false);
                     }
                 };
 

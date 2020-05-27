@@ -1,10 +1,10 @@
-﻿namespace Battleship.Score
+﻿namespace Battleship.Scoreboard
 {
     using Battleship.Microservices.Core.Messages;
     using Battleship.Microservices.Core.Repository;
     using Battleship.Microservices.Infrastructure.Messages;
-    using Battleship.Score.Handlers;
     using Battleship.Score.Infrastructure;
+    using Battleship.Scoreboard.Handlers;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -19,7 +19,7 @@
 
         private readonly string database = "Database=Battleship.ScoreCard;";
 
-        public IConfiguration configuration;
+        private readonly IConfiguration configuration;
 
         private string sqlConnectionString = string.Empty;
 

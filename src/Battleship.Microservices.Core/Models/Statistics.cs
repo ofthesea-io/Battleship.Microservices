@@ -9,7 +9,7 @@
         [JsonProperty("fullName")]
         public string FullName { get; set; }
 
-        [JsonIgnore]
+        [JsonProperty("email")]
         public string Email { get; set; }
 
         [JsonProperty("winningPercentage")]
