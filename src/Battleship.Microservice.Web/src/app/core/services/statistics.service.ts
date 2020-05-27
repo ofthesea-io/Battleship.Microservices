@@ -18,7 +18,7 @@ export class StatisticsService {
     }
 
     getTopPlayers(): Observable<HttpResponse<any>> {
-        const createStatisticsUri = this.apiServerUrl() + 'GetTopPlayers';
+        const createStatisticsUri = this.apiServerUrl() + 'GetTopTenPlayers';
         return this.httpClient.get<any>(createStatisticsUri,
                 {
                     headers: this.auth.getAuthenticationHeaders(),
@@ -30,7 +30,7 @@ export class StatisticsService {
 
     /* Properties */
     apiServerUrl(): string {
-        const server = AppConfig.settings.apiServer.Player.host + AppConfig.settings.apiServer.Player.url;
+        const server = AppConfig.settings.apiServer.Statistics.host + AppConfig.settings.apiServer.Statistics.url;
         return server;
     }
 }

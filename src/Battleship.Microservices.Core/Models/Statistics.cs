@@ -18,8 +18,8 @@
         [JsonProperty("completedOn")]
         public DateTime CompletedOn { get; set; }
 
-        [JsonProperty("CompletedGames")]
-        public int Games { get; set; }
+        [JsonProperty("completedGames")]
+        public int CompletedGames { get; set; }
 
         [JsonProperty("scoreCard")]
         public ScoreCard ScoreCard { get; set; }

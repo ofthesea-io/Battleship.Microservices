@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
-import { Configuration } from "../utilities/configuration";
-import { Observable } from "rxjs";
-import { catchError } from "rxjs/operators";
-import { Player } from "../models/player";
-import { AppConfig } from "src/app/app.config";
-import { AuthenticationService } from "./authentication.service";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { Configuration } from '../utilities/configuration';
+import { Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Player } from '../models/player';
+import { AppConfig } from 'src/app/app.config';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable({
-    providedIn: "root"
+    providedIn: 'root'
 })
 export class PlayerService {
     private config: Configuration;
@@ -18,21 +18,21 @@ export class PlayerService {
     }
 
     createAccount(player: Player): Observable<HttpResponse<any>> {
-        const playerUri = this.playApiServerUrl() + "createPlayer";
+        const playerUri = this.playApiServerUrl() + 'createPlayer';
         return this.httpClient.post<any>(playerUri,
             player,
             {
-                headers: new HttpHeaders({ "Content-Type": "application/json" }),
-                observe: "response"
+                headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+                observe: 'response'
             });
     }
 
     getDemoPlayers(): Observable<HttpResponse<any>> {
-        const playerUri = this.playApiServerUrl() + "GetDemoPlayers";
+        const playerUri = this.playApiServerUrl() + 'GetDemoPlayers';
         return this.httpClient.get<any>(playerUri,
             {
-                headers: new HttpHeaders({ "Content-Type": "application/json" }),
-                observe: "response"
+                headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+                observe: 'response'
             }).pipe(catchError(this.config.handleError));
     }
 

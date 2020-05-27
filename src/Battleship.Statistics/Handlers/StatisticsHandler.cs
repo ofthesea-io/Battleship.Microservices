@@ -91,12 +91,12 @@
                                 if (statistic != null)
                                 {
                                     winningPercentage = Math.Round(winningRatio + statistics.WinningPercentage / 2, 2);
-                                    statistics.Games++;
+                                    statistics.CompletedGames++;
                                 }
                                 else
                                 {
                                     winningPercentage = Math.Round(winningRatio, 2);
-                                    statistics.Games = 1;
+                                    statistics.CompletedGames = 1;
                                 }
 
                                 statistics.WinningPercentage = winningPercentage;

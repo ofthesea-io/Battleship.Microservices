@@ -68,7 +68,7 @@ BEGIN
 
 	SELECT 
 	TOP 10 l.FullName
-		, l.Percentage
+		, l.Percentage AS WinningPercentage
 		, l.CompletedOn
 		, l.CompletedGames
 	FROM dbo.Leaderboard l
@@ -85,7 +85,7 @@ AS
 BEGIN
 	SELECT 
 	TOP 10 l.FullName
-		, l.Percentage
+		, l.Percentage  AS WinningPercentage
 		, l.CompletedOn
 		, l.CompletedGames
 	FROM dbo.Leaderboard l

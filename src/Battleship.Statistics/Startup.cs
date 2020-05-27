@@ -39,12 +39,10 @@
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMemoryCache();
+
             this.sqlConnectionString = this.configuration.GetConnectionString("BattleshipStatisticsCN");
             string databaseConnection = $"{this.sqlConnectionString}{this.database}";
-
-            services.AddMemoryCache();
-            services.AddCors();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             // add message publisher classes
             IConfigurationSection configSection = this.configuration.GetSection("RabbitMQ");
@@ -57,6 +55,9 @@
             services.AddSingleton<IStatisticsRepository>(new StatisticsRepository(databaseConnection));
             services.AddTransient<IMessagePublisher>(sp => new MessagePublisher(host, username, password, exchange, queue));
             services.AddHostedService<StatisticsHandler>();
+
+            services.AddCors();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,8 +69,8 @@
                 app.UseDeveloperExceptionPage();
             else
                 app.UseHsts();
-
             app.UseCors(options => options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

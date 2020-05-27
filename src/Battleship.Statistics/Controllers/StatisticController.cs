@@ -1,11 +1,12 @@
 ﻿namespace Battleship.Statistics.Controllers
 {
     using System;
-    using System.Threading;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Battleship.Microservices.Core.Components;
     using Battleship.Microservices.Core.Messages;
+    using Battleship.Microservices.Core.Models;
     using Battleship.Statistics.Infrastructure;
 
     using Microsoft.AspNetCore.Http;
@@ -13,7 +14,7 @@
 
     [Route("api/[controller]")]
     [ApiController]
-    public class StatisticController : ContextBase
+    public class StatisticController : ContextBase, IStatisticController
     {
         #region Fields
 
@@ -44,8 +45,8 @@
         public async Task<ActionResult> GetTopTenPlayers()
         {
             try
-            { 
-                var result = await this.statisticsRepository.GetTopTenPlayers();
+            {
+                IEnumerable<Statistics> result = await this.statisticsRepository.GetTopTenPlayers();
                 return this.Ok(result);
             }
             catch (Exception e)

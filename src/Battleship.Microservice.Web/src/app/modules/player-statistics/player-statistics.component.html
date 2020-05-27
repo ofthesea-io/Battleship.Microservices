@@ -1,18 +1,26 @@
-<div class="container">
-    <div class="row">
-        <mat-list *ngIf="players; else noTopPlayers">
-            <h3 mat-subheader>Top Players</h3>
-            <mat-list-item *ngFor="let player of players">
-                <mat-card>
-                    {{player.firstName}} {{player.lastName}} {{player.percentage}}%
-                </mat-card>
-                <mat-divider></mat-divider>
-            </mat-list-item>
-        </mat-list>
-        <ng-template #noTopPlayers>
-            <div class="row">
-                <h4>No top players at present!</h4>
-            </div>
-        </ng-template>
+<div class="overflow mt-3">
+    <h3>
+        Top Ten Players
+    </h3>
+    <div *ngIf="players; else noTopPlayers">
+        <table class="table">
+            <thead>
+                <th scope="col" class="col-sm-8">Name</th>
+                <th scope="col" class="col-sm-2">#</th>
+                <td scope="col" class="col-sm-2">%</td>
+             </thead> 
+             <tbody> 
+                <tr *ngFor="let player of players">
+                    <td>{{player.fullName}}</td>
+                    <td>{{player.completedGames}}</td>
+                    <td>{{player.winningPercentage}}%</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+    <ng-template #noTopPlayers>
+        <div class="row">
+            <h4>No top players at present!</h4>
+        </div>
+    </ng-template>
 </div>
