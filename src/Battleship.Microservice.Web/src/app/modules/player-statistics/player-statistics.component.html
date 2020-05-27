@@ -7,7 +7,7 @@
             <thead>
                 <th scope="col" class="col-sm-8">Name</th>
                 <th scope="col" class="col-sm-2">#</th>
-                <td scope="col" class="col-sm-2">%</td>
+                <th scope="col" class="col-sm-2">%</th>
              </thead> 
              <tbody> 
                 <tr *ngFor="let player of players">
@@ -17,6 +17,10 @@
                 </tr>
             </tbody>
         </table>
+        <ul class="list-inline">
+            <li class="list-inline-item"># = Number of Games</li>
+            <li class="list-inline-item">% = Hit Percentage</li>
+        </ul>
     </div>
     <ng-template #noTopPlayers>
         <div class="row">
