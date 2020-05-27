@@ -1,12 +1,12 @@
-import { Component, OnInit } from "@angular/core";
-import { Player } from "../../core/models/player";
-import { Configuration } from "../../core/utilities/configuration";
-import { StatisticsService } from "../../core/services/statistics.service";
+import { Component, OnInit } from '@angular/core';
+import { Player } from '../../core/models/player';
+import { Configuration } from '../../core/utilities/configuration';
+import { StatisticsService } from '../../core/services/statistics.service';
 
 @Component({
-    selector: "app-player-statistics",
-    templateUrl: "./player-statistics.component.html",
-    styleUrls: ["./player-statistics.component.css"]
+    selector: 'app-player-statistics',
+    templateUrl: './player-statistics.component.html',
+    styleUrls: ['./player-statistics.component.css']
 })
 export class PlayerStatisticsComponent implements OnInit {
     errorMessage: string;

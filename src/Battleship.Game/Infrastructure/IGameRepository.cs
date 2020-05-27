@@ -13,15 +13,16 @@
 
         Task UpdateShipCoordinates(string updateShipCoordinates, string sessionToken);
 
-        Task<string> GetShipCoordinates(string sessionToken);
+        string GetShipCoordinates(string sessionToken);
 
-        Task<string> StartGame(string sessionToken, int numberOfShips);
+        Task<int> StartGame(string sessionToken, int numberOfShips);
 
         Task<bool> CreatePlayer(string sessionToken, Guid player);
 
-        bool CheckPlayerStatus(string sessionToken);
+        Guid CheckPlayerStatus(string sessionToken);
 
         Task<bool> SetGameCompleted(string sessionToken);
+
 
         #endregion
     }

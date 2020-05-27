@@ -1,8 +1,10 @@
 ﻿namespace Battleship.Statistics
 {
     using Battleship.Microservices.Core.Messages;
+    using Battleship.Microservices.Core.Repository;
     using Battleship.Microservices.Infrastructure.Messages;
-    using Battleship.Statistics.Communication;
+    using Battleship.Statistics.Handlers;
+    using Battleship.Statistics.Infrastructure;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -17,7 +19,7 @@
 
         private readonly IConfiguration configuration;
 
-        private readonly string database = "Database=Battleship.Player;";
+        private readonly string database = "Database=Battleship.Statistics;";
 
         private string sqlConnectionString = string.Empty;
 
@@ -39,7 +41,7 @@
         {
             services.AddMemoryCache();
 
-            this.sqlConnectionString = this.configuration.GetConnectionString("BattleshipGameCN");
+            this.sqlConnectionString = this.configuration.GetConnectionString("BattleshipStatisticsCN");
             string databaseConnection = $"{this.sqlConnectionString}{this.database}";
 
             // add message publisher classes
@@ -49,14 +51,10 @@
             string password = configSection["Password"];
             string exchange = configSection["Exchange"];
             string queue = configSection["Queue"];
-            string rpcQueue = configSection["RPCQueue"];
 
-            IConfigurationSection logPathConfigSection = this.configuration.GetSection("AuditLog");
-            string auditPath = logPathConfigSection["AuditPath"];
-            string auditQueue = configSection["AuditQueue"];
-
+            services.AddSingleton<IStatisticsRepository>(new StatisticsRepository(databaseConnection));
             services.AddTransient<IMessagePublisher>(sp => new MessagePublisher(host, username, password, exchange, queue));
-            services.AddTransient<IRpcClient>(sp => new RpcClient(host, username, password, exchange, rpcQueue, databaseConnection));
+            services.AddHostedService<StatisticsHandler>();
 
             services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
@@ -65,16 +63,19 @@
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            Initialisation.Setup(this.sqlConnectionString);
+
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
             else
                 app.UseHsts();
-            app.UseCors(options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
+            app.UseCors(options => options.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 
             app.UseRouting();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
+
 
         #endregion
     }

@@ -20,11 +20,7 @@
     },
     "Statistics": {
       "host": "http://localhost:8084",
-      "url": "/api/Statistics/"
-    },
-    "Leaderboard": {
-      "host": "http://localhost:8085",
-      "url": "/api/Leaderboard/"
+      "url": "/api/Statistic/"
     },
     "AuditLog": {
       "host": "http://localhost:8086",

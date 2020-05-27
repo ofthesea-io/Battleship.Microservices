@@ -1,5 +1,4 @@
-import { Component, ComponentFactoryResolver } from "@angular/core";
-import { Observable } from "rxjs";
+import { Component } from "@angular/core";
 import { AuthenticationService } from "src/app/core/services/authentication.service";
 
 @Component({

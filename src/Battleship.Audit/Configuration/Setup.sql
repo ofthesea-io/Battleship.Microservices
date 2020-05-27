@@ -138,7 +138,7 @@ BEGIN
 		SET @Timestamp = (SELECT DATEADD(Hour, -@Hours, getdate()))
 	END
 
-	SELECT Content, Timestamp, AuditTypeId 
+	SELECT Top 100 Content, Timestamp, AuditTypeId 
 	FROM dbo.Audit a (nolock)
 	WHERE 
 		a.[AuditTypeId]  =  IIF(@AuditTypeId = 0, a.AuditTypeId, @AuditTypeId ) 

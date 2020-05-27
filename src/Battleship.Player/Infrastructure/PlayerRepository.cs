@@ -44,6 +44,13 @@
             return await this.ExecuteScalarAsync<Player>(parameters);
         }
 
+        public async Task<Player> GetPlayerBySessionToken(string sessionToken)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object> { { "sessionToken", sessionToken } };
+
+            return await this.ExecuteScalarAsync<Player>(parameters);
+        }
+
         public async Task<bool> PlayerLogout(Guid playerId)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object> { { "PlayerId", playerId } };

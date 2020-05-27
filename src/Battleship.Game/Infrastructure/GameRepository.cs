@@ -47,25 +47,25 @@
             await this.ExecuteAsync(parameters);
         }
 
-        public async Task<string> GetShipCoordinates(string sessionToken)
+        public string GetShipCoordinates(string sessionToken)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object> { { "sessionToken", sessionToken } };
 
-            return await this.ExecuteScalarAsync<string>(parameters);
+            return this.ExecuteScalar<string>(parameters);
         }
 
-        public async Task<string> StartGame(string sessionToken, int numberOfShips)
+        public async Task<int> StartGame(string sessionToken, int numberOfShips)
         {
             if (string.IsNullOrEmpty(sessionToken) || numberOfShips == 0) throw new ArgumentException();
 
-            List<IShip> getRandomShips = BattleshipExtensions.GetRandomShips(numberOfShips);
-            SortedDictionary<Coordinate, Segment> ships = this.shipRandomiser.GetRandomisedShipCoordinates(getRandomShips);
+            List<IShip> randomizeShips = BattleshipExtensions.GetRandomShips(numberOfShips);
+            SortedDictionary<Coordinate, Segment> ships = this.shipRandomiser.GetRandomisedShipCoordinates(randomizeShips);
 
             string shipCoordinates = JsonConvert.SerializeObject(ships.ToArray(), Formatting.Indented, this.jsonSerializerSettings);
 
             Dictionary<string, object> parameters = new Dictionary<string, object> { { "sessionToken", sessionToken }, { "shipCoordinates", shipCoordinates } };
 
-            return await this.ExecuteScalarAsync<string>(parameters);
+            return await this.ExecuteScalarAsync<int>(parameters);
         }
 
         public async Task<bool> CreatePlayer(string sessionToken, Guid playerId)
@@ -75,11 +75,11 @@
             return await this.ExecuteScalarAsync<bool>(parameters);
         }
 
-        public bool CheckPlayerStatus(string sessionToken)
+        public Guid CheckPlayerStatus(string sessionToken)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object> { { "sessionToken", sessionToken } };
 
-            return this.ExecuteScalar<bool>(parameters);
+            return this.ExecuteScalar<Guid>(parameters);
         }
 
         public async Task<bool> SetGameCompleted(string sessionToken)

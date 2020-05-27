@@ -45,7 +45,7 @@
                                     string exchange = configSection["Exchange"];
                                     string rpcQueue = configSection["RpcQueue"];
 
-                                    return new RpcServer(host, username, password, exchange, rpcQueue, warehouseRepository);
+                                    return new RpcServerHandler(host, username, password, exchange, rpcQueue, warehouseRepository);
                                 });
                     }).UseConsoleLifetime();
 
