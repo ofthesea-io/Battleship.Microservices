@@ -1,18 +1,16 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-    selector: "app-error-handler",
-    templateUrl: "./error-handler.component.html",
+    selector: 'app-error-handler',
+    templateUrl: './error-handler.component.html',
 })
-export class ErrorHandlerComponent implements OnInit {
+export class ErrorHandlerComponent {
     @Input()
     errorMessageHandler: string;
 
     error: string;
 
-    constructor() {}
-
-    ngOnInit() {
+    constructor() {
         this.error = this.errorMessageHandler;
     }
 }
