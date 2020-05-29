@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { HttpResponse, HttpClient } from '@angular/common/http';
-import { Configuration } from '../utilities/configuration';
+import { Configuration } from '../helper/configuration';
 import { AppConfig } from 'src/app/app.config';
 import { AuthenticationService } from './authentication.service';
 

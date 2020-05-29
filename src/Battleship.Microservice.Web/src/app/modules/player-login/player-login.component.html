@@ -48,6 +48,7 @@
             <form #loginForm="ngForm" (ngSubmit)="onPlayerLogin(loginForm.value)" class="border border-light p-5" *ngIf="playerServiceStatus == 1; else playerServiceError">
                 <p class="h4 mb-4 text-center">Sign in</p>
                 <!-- Username -->
+                <div *ngIf="errorMessage" class="text-danger" >{{ errorMessage }} </div>
                 <div class="input-group mb-4">
                     <div class="input-group-prepend">
                         <div class="input-group-text">

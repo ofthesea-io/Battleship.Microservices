@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuditService } from 'src/app/core/services/audit.service';
-import { Configuration } from 'src/app/core/utilities/configuration';
+import { Configuration } from 'src/app/core/helper/configuration';
 import { Audit } from 'src/app/core/models/audit';
-import HttpStatusCode from 'src/app/core/utilities/HttpStatusCodes';
+import HttpStatusCode from 'src/app/core/helper/http.codes';
 
 @Component({
     selector: 'app-audit-log',

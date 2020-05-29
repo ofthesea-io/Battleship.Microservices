@@ -1,4 +1,4 @@
-import { ScoreCard } from "./scoreCard";
+import { ScoreCard } from './scoreCard';
 import { Coordinate } from "./coordinate";
 
 export class PlayerCommand {

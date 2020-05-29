@@ -3,7 +3,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import { Player } from '../models/player';
-import { Configuration } from '../utilities/configuration';
+import { Configuration } from '../helper/configuration';
 import { PlayerCommand } from '../models/playerCommand';
 import { AuthenticationService } from './authentication.service';
 import { AppConfig } from '../../app.config';

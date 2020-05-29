@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Hypertext Transfer Protocol (HTTP) response status codes.
@@ -11,7 +11,8 @@ enum HttpStatusCode {
      * (in the case of a request for which a body needs to be sent; for example, a POST request).
      * Sending a large request body to a server after a request has been rejected for inappropriate headers would be inefficient.
      * To have a server check the request's headers, a client must send Expect: 100-continue as a header in its initial request
-     * and receive a 100 Continue status code in response before sending the body. The response 417 Expectation Failed indicates the request should not be continued.
+     * and receive a 100 Continue status code in response before sending the body. The response 417 Expectation Failed indicates 
+     * the request should not be continued.
      */
     CONTINUE = 100,
 
@@ -120,15 +121,17 @@ enum HttpStatusCode {
     SEE_OTHER = 303,
 
     /**
-     * Indicates that the resource has not been modified since the version specified by the request headers If-Modified-Since or If-None-Match.
-     * In such case, there is no need to retransmit the resource since the client still has a previously-downloaded copy.
+     * Indicates that the resource has not been modified since the version specified by the request headers. 
+     * If-Modified-Since or If-None-Match. In such case, there is no need to retransmit the resource since 
+     * the client still has a previously-downloaded copy.
      */
     NOT_MODIFIED = 304,
 
     /**
      * SINCE HTTP/1.1
      * The requested resource is available only through a proxy, the address for which is provided in the response.
-     * Many HTTP clients (such as Mozilla and Internet Explorer) do not correctly handle responses with this status code, primarily for security reasons.
+     * Many HTTP clients (such as Mozilla and Internet Explorer) do not correctly handle responses with this status 
+     * code, primarily for security reasons.
      */
     USE_PROXY = 305,
 
@@ -140,8 +143,8 @@ enum HttpStatusCode {
     /**
      * SINCE HTTP/1.1
      * In this case, the request should be repeated with another URI; however, future requests should still use the original URI.
-     * In contrast to how 302 was historically implemented, the request method is not allowed to be changed when reissuing the original request.
-     * For example, a POST request should be repeated using another POST request.
+     * In contrast to how 302 was historically implemented, the request method is not allowed to be changed when reissuing the 
+     * original request. For example, a POST request should be repeated using another POST request.
      */
     TEMPORARY_REDIRECT = 307,
 
@@ -204,7 +207,8 @@ enum HttpStatusCode {
     /**
      * The server timed out waiting for the request.
      * According to HTTP specifications:
-     * "The client did not produce a request within the time that the server was prepared to wait. The client MAY repeat the request without modifications at any later time."
+     * "The client did not produce a request within the time that the server was prepared to wait. The client MAY repeat the 
+     * request without modifications at any later time."
      */
     REQUEST_TIMEOUT = 408,
 
@@ -239,8 +243,8 @@ enum HttpStatusCode {
     PAYLOAD_TOO_LARGE = 413,
 
     /**
-     * The URI provided was too long for the server to process. Often the result of too much data being encoded as a query-string of a GET request,
-     * in which case it should be converted to a POST request.
+     * The URI provided was too long for the server to process. Often the result of too much data being encoded as a 
+     * query-string of a GET request, in which case it should be converted to a POST request.
      * Called "Request-URI Too Long" previously.
      */
     URI_TOO_LONG = 414,
@@ -375,7 +379,7 @@ enum HttpStatusCode {
     /**
      * The client needs to authenticate to gain network access.
      * Intended for use by intercepting proxies used to control access to the network (e.g., "captive portals" used
-     * to require agreement to Terms of Service before granting full Internet access via a Wi-Fi hotspot).
+     * to require agreement to Terms of Service before granting full Internet access via a Wi-Fi hot spot).
      */
     NETWORK_AUTHENTICATION_REQUIRED = 511
 }

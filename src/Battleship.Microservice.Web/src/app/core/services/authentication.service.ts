@@ -4,8 +4,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Player } from '../models/player';
 import { AppConfig } from 'src/app/app.config';
 
-
-/* Simple authentication service */
 @Injectable()
 export class AuthenticationService {
 

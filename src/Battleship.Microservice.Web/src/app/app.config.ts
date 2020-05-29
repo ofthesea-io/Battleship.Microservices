@@ -1,7 +1,7 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { environment } from "../environments/environment";
-import { Settings } from "../app/core/models/app.config";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment';
+import { Settings } from './core/models/app.config';
 
 @Injectable()
 export class AppConfig {

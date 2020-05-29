@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Configuration } from '../utilities/configuration';
+import { Configuration } from '../helper/configuration';
 import { catchError } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { AppConfig } from 'src/app/app.config';
