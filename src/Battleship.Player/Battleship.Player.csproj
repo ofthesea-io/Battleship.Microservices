@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <UserSecretsId>687d91a2-e6b3-48e5-b047-d0ffb69cae10</UserSecretsId>
     <StartupObject>Battleship.Player.Program</StartupObject>
-    <Version>0.0.5</Version>
+    <Version>0.0.7</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'Battleship.Web.Api' ">
@@ -14,6 +14,14 @@
     <LaunchUrl>api/Start</LaunchUrl>
     <ApplicationURL>http://localhost:5000</ApplicationURL>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="docker-compose.yml" />
+    <None Remove="docker-compose.yml_old" />
+    <None Remove="Dockerfile_old" />
+    <None Remove="entrypoint.sh" />
+    <None Remove="entrypoint.sh_old" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.35" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.4" />
