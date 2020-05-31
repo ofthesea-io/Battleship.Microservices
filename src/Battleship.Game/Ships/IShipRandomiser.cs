@@ -3,7 +3,7 @@
     using System.Collections.Generic;
 
     using Battleship.Game.Models;
-    using Battleship.Microservices.Core.Models;
+    using Battleship.Infrastructure.Core.Models;
 
     /// <summary>
     ///     The ShipRandomiser randomises ships on the Grid

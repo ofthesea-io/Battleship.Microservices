@@ -4,9 +4,9 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using Battleship.Microservices.Core.Models;
-    using Battleship.Microservices.Core.Repository;
-    using Battleship.Microservices.Core.Utilities;
+    using Battleship.Infrastructure.Core.Models;
+    using Battleship.Infrastructure.Core.Repository;
+    using Battleship.Infrastructure.Core.Utilities;
 
     public class AuditRepository : RepositoryCore, IAuditRepository
     {

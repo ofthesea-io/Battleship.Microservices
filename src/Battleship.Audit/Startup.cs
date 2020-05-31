@@ -2,9 +2,9 @@ namespace Battleship.Audit
 {
     using Battleship.Audit.Handlers;
     using Battleship.Audit.Infrastructure;
-    using Battleship.Microservices.Core.Messages;
-    using Battleship.Microservices.Core.Repository;
-    using Battleship.Microservices.Infrastructure.Messages;
+    using Battleship.Core.Messages;
+    using Battleship.Infrastructure.Core.Messages;
+    using Battleship.Infrastructure.Core.Repository;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;

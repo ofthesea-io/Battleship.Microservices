@@ -1,4 +1,4 @@
-namespace Battleship.Microservices.Core.Tests
+namespace Battleship.Infrastructure.Core.Tests
 {
     using NUnit.Framework;
 

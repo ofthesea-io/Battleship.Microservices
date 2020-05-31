@@ -1,6 +1,6 @@
 ﻿namespace Battleship.Game.Ships
 {
-    using Battleship.Microservices.Core.Components;
+    using Battleship.Infrastructure.Core.Components;
 
     public sealed class Destroyer : ComponentBase, IShip
     {

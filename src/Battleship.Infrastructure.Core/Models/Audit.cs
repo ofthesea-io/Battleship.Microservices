@@ -1,8 +1,8 @@
-﻿namespace Battleship.Microservices.Core.Models
+﻿namespace Battleship.Infrastructure.Core.Models
 {
     using System;
 
-    using Battleship.Microservices.Core.Utilities;
+    using Battleship.Infrastructure.Core.Utilities;
 
     using Newtonsoft.Json;
 

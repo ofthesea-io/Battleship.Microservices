@@ -5,8 +5,8 @@
 
     using Battleship.Game.Models;
     using Battleship.Game.Ships;
-    using Battleship.Microservices.Core.Components;
-    using Battleship.Microservices.Core.Models;
+    using Battleship.Infrastructure.Core.Components;
+    using Battleship.Infrastructure.Core.Models;
 
     using NUnit.Framework;
 

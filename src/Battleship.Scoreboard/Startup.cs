@@ -1,10 +1,11 @@
 ﻿namespace Battleship.Scoreboard
 {
-    using Battleship.Microservices.Core.Messages;
-    using Battleship.Microservices.Core.Repository;
-    using Battleship.Microservices.Infrastructure.Messages;
+    using Battleship.Core.Messages;
+    using Battleship.Infrastructure.Core.Messages;
+    using Battleship.Infrastructure.Core.Repository;
     using Battleship.Score.Infrastructure;
     using Battleship.Scoreboard.Handlers;
+    using Battleship.Scoreboard.Infrastructure;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;

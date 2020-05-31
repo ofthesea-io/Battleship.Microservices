@@ -1,4 +1,4 @@
-﻿namespace Battleship.Microservices.Core.Messages
+﻿namespace Battleship.Infrastructure.Core.Messages
 {
     using System.Threading.Tasks;
 

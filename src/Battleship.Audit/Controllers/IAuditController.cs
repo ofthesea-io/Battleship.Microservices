@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    using Battleship.Microservices.Core.Models;
+    using Battleship.Infrastructure.Core.Models;
 
     using Microsoft.AspNetCore.Mvc;
 

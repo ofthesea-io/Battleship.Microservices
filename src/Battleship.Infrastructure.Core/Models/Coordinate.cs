@@ -1,4 +1,4 @@
-﻿namespace Battleship.Microservices.Core.Models
+﻿namespace Battleship.Infrastructure.Core.Models
 {
     public class Coordinate
     {

@@ -8,8 +8,8 @@
     using Battleship.Game.Models;
     using Battleship.Game.Ships;
     using Battleship.Game.Utilities;
-    using Battleship.Microservices.Core.Models;
-    using Battleship.Microservices.Core.Repository;
+    using Battleship.Infrastructure.Core.Models;
+    using Battleship.Infrastructure.Core.Repository;
 
     using Newtonsoft.Json;
 

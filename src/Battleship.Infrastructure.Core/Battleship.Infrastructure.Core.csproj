@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>0.0.8</Version>
+    <Version>0.0.7</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Infrastructure elements to the microservice battleship game</Description>
     <Copyright>MIT</Copyright>
@@ -12,9 +12,9 @@
     <FileVersion>0.0.7</FileVersion>
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>Battleship Microservice</PackageTags>
-    <RootNamespace>Battleship.Microservices.Core</RootNamespace>
+    <RootNamespace>Battleship.Infrastructure.Core</RootNamespace>
     <PackageReleaseNotes>Core infrastructure elements for the microservice battleship game</PackageReleaseNotes>
-    <PackageId>Battleship.Microservices.Core</PackageId>
+    <PackageId>Battleship.Infrastructure.Core</PackageId>
     <Authors>Jakes Potgieter</Authors>
     <Company>VisualSanity</Company>
     <Product>Battleship.Infrastructure.Core</Product>

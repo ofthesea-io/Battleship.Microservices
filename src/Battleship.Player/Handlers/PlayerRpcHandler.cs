@@ -5,7 +5,8 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Battleship.Microservices.Core.Messages;
+    using Battleship.Core.Messages;
+    using Battleship.Infrastructure.Core.Messages;
     using Battleship.Player.Infrastructure;
     using Battleship.Player.Models;
 

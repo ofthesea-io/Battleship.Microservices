@@ -1,4 +1,4 @@
-﻿namespace Battleship.Microservices.Core.Utilities
+﻿namespace Battleship.Infrastructure.Core.Utilities
 {
     public enum AuditType
     {

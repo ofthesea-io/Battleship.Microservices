@@ -1,11 +1,12 @@
-﻿namespace Battleship.Microservices.Core.Components
+﻿namespace Battleship.Infrastructure.Core.Components
 {
     using System;
     using System.Threading.Tasks;
 
-    using Battleship.Microservices.Core.Messages;
-    using Battleship.Microservices.Core.Models;
-    using Battleship.Microservices.Core.Utilities;
+    using Battleship.Core.Messages;
+    using Battleship.Infrastructure.Core.Messages;
+    using Battleship.Infrastructure.Core.Models;
+    using Battleship.Infrastructure.Core.Utilities;
 
     using Microsoft.AspNetCore.Mvc;
 

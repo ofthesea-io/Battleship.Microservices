@@ -3,8 +3,9 @@
     using System;
     using System.Threading.Tasks;
 
-    using Battleship.Microservices.Core.Components;
-    using Battleship.Microservices.Core.Messages;
+    using Battleship.Core.Messages;
+    using Battleship.Infrastructure.Core.Components;
+    using Battleship.Infrastructure.Core.Messages;
     using Battleship.Score.Infrastructure;
 
     using Microsoft.AspNetCore.Http;

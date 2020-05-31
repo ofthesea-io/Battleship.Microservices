@@ -1,6 +1,6 @@
 ﻿namespace Battleship.Game.Board
 {
-    using Battleship.Microservices.Core.Components;
+    using Battleship.Infrastructure.Core.Components;
 
     public class GridGenerator : ComponentBase, IGridGenerator
     {

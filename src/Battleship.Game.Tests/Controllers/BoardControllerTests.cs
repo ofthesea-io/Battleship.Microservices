@@ -2,10 +2,11 @@
 {
     using System.Linq;
 
+    using Battleship.Core.Messages;
     using Battleship.Game.Controllers;
     using Battleship.Game.Infrastructure;
     using Battleship.Game.Models;
-    using Battleship.Microservices.Core.Messages;
+    using Battleship.Infrastructure.Core.Messages;
 
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;

@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    using Battleship.Microservices.Core.Models;
+    using Battleship.Infrastructure.Core.Models;
 
     public class CoordinateComparer : IComparer<Coordinate>
     {

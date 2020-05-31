@@ -1,4 +1,4 @@
-﻿namespace Battleship.Microservices.Core.Repository
+﻿namespace Battleship.Infrastructure.Core.Repository
 {
     using System;
     using System.Collections.Generic;

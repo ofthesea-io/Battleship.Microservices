@@ -5,9 +5,10 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Battleship.Core.Messages;
     using Battleship.Game.Infrastructure;
-    using Battleship.Microservices.Core.Messages;
-    using Battleship.Microservices.Core.Models;
+    using Battleship.Infrastructure.Core.Messages;
+    using Battleship.Infrastructure.Core.Models;
 
     using Microsoft.Extensions.Hosting;
 

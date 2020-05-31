@@ -6,8 +6,9 @@
     using System.Threading.Tasks;
 
     using Battleship.Audit.Infrastructure;
-    using Battleship.Microservices.Core.Messages;
-    using Battleship.Microservices.Core.Models;
+    using Battleship.Core.Messages;
+    using Battleship.Infrastructure.Core.Messages;
+    using Battleship.Infrastructure.Core.Models;
 
     using Microsoft.Extensions.Hosting;
 

@@ -6,8 +6,8 @@
 
     using Battleship.Game.Models;
     using Battleship.Game.Utilities;
-    using Battleship.Microservices.Core.Components;
-    using Battleship.Microservices.Core.Models;
+    using Battleship.Infrastructure.Core.Components;
+    using Battleship.Infrastructure.Core.Models;
 
     public class Segmentation : ComponentBase, ISegmentation
     {

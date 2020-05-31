@@ -1,4 +1,4 @@
-﻿namespace Battleship.Microservices.Core.Components
+﻿namespace Battleship.Infrastructure.Core.Components
 {
     public abstract class ComponentBase
     {

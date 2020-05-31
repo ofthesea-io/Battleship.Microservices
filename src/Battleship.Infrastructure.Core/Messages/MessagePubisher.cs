@@ -1,12 +1,11 @@
-﻿namespace Battleship.Microservices.Infrastructure.Messages
+﻿namespace Battleship.Core.Messages
 {
     using System;
     using System.Text;
     using System.Threading.Tasks;
 
-    using Battleship.Microservices.Core.Components;
-    using Battleship.Microservices.Core.Messages;
-    using Battleship.Microservices.Core.Utilities;
+    using Battleship.Infrastructure.Core.Components;
+    using Battleship.Infrastructure.Core.Messages;
 
     using Polly;
 
