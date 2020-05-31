@@ -9,7 +9,10 @@
   },
   "profiles": {
     "Start": {
-      "commandName": "IIS",
+      "commandName": "Docker",
+      "environmentVariables": {
+        "ASPNETCORE_URLS": "http://*:8086"
+      },
       "ErrorString": "Unexpected end of content while loading JObject. Path 'profiles', line 25, position 0."
     }
   }

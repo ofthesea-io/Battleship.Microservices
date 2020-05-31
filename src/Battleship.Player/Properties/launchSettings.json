@@ -28,12 +28,11 @@
       },
       "applicationUrl": "http://localhost:5000"
     },
- "Docker": {
+    "Docker": {
       "commandName": "Docker",
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "environmentVariables": {
-        "ASPNETCORE_URLS": "https://+:443;http://+:80",
-        "ASPNETCORE_HTTPS_PORT": "44326"
+        "ASPNETCORE_URLS": "http://*:8082"
       },
       "publishAllPorts": true
     },

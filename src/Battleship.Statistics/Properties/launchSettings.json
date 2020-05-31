@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "http://*:8084"
       },
       "ancmHostingModel": "InProcess",
       "applicationUrl": "http://localhost:8084"
@@ -27,11 +27,9 @@
     },
     "Docker": {
       "commandName": "Docker",
-      "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/values",
       "environmentVariables": {
-        "ASPNETCORE_URLS": "https://+:443;http://+:80",
-        "ASPNETCORE_HTTPS_PORT": "44326"
+        "ASPNETCORE_URLS": "http://*:8084"
       },
       "httpPort": 54683,
       "useSSL": true,

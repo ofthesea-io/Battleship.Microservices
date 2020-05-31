@@ -1,23 +1,22 @@
-FROM microsoft/dotnet:3.1-sdk AS build-env
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
+EXPOSE 8086/tcp
+ENV ASPNETCORE_URLS http://*:8086
+HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://0.0.0.0:8086/api/Board || exit 1
 
-# Copy necessary files and restore as distinct layer
-COPY *.csproj ./
-RUN dotnet restore
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
+WORKDIR /src
+COPY ["Battleship.Scoreboard/Battleship.Scoreboard.csproj", "Battleship.Scoreboard/"]
+RUN dotnet restore "Battleship.Scoreboard/Battleship.Scoreboard.csproj"
+COPY . .
+WORKDIR "/src/Battleship.Scoreboard"
+RUN dotnet build "Battleship.Scoreboard.csproj" -c Release -o /app/build
 
-# Copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o out
+FROM build AS publish
+RUN dotnet publish "Battleship.Scoreboard.csproj" -c Release -o /app/publish
 
-# Build runtime image
-FROM microsoft/dotnet:3.1-aspnetcore-runtime
-COPY --from=build-env /app/out .
-
-# Expose ports
-EXPOSE 8083/tcp
-ENV ASPNETCORE_URLS http://*:8083
-HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://localhost:8083/api/ScoreCard || exit 1
-
-# Start
-ENTRYPOINT ["dotnet", "Battleship.Score.dll"]
-
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Battleship.Scoreboard.dll"]
