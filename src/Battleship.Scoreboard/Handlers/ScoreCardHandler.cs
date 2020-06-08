@@ -103,6 +103,7 @@
             this.channel = this.connection.CreateModel();
 
             this.channel.ExchangeDeclare(this.messagePublisher.Exchange, ExchangeType.Direct, true);
+            this.channel.QueueDeclare(queue: this.messagePublisher.Queue, durable: false, exclusive: false, autoDelete: false, arguments: null);
             this.channel.QueueBind(this.messagePublisher.Queue, this.messagePublisher.Exchange, this.messagePublisher.Queue);
         }
 

@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "http://*:8084"
+        "ASPNETCORE_URLS": "http://*:8084"
       },
       "ancmHostingModel": "InProcess",
       "applicationUrl": "http://localhost:8084"

@@ -9,7 +9,7 @@
   },
   "profiles": {
     "Start": {
-      "commandName": "Docker",
+      "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_URLS": "http://*:8086"
       },
