@@ -10,6 +10,7 @@
     <Company />
     <Authors />
     <StartupObject>Battleship.Audit.Program</StartupObject>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,19 +1,13 @@
 {
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iis": {
-      "applicationUrl": "http://localhost/Battleship.Scoreboard",
-      "sslPort": 0
-    }
-  },
   "profiles": {
-    "Start": {
+    "Battleship.Scoreboard": {
       "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_URLS": "http://*:8086"
-      },
-      "ErrorString": "Unexpected end of content while loading JObject. Path 'profiles', line 25, position 0."
+      "applicationUrl": "http://localhost:8086"
+    },
+    "Docker (1)": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "publishAllPorts": true
     }
   }
 }

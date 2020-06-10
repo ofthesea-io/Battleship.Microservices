@@ -1,113 +1,124 @@
-version: '3'
+version: "3.8"
+
 services:
+    battleship.statistics:
+        image: ${DOCKER_REGISTRY-}battleshipstatistics
+        build:
+          context: .
+          dockerfile: Battleship.Statistics/Dockerfile
+        container_name: battleship.Statistics
+        ports:
+            - "8084:8084"
+        depends_on:
+            - db
+            - rabbitmq
+        networks:
+            default:
+                ipv4_address: 172.19.0.8
+                aliases:
+                    - statistics.internal.visualsanity.io
 
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    volumes:
-      - rabbitmqdata:/var/lib/rabbitmq
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
-      
-  sqlserver:
-    image: microsoft/mssql-server-linux:latest
-    container_name: sqlserver
-    volumes:
-      - sqlserverdata:/var/opt/mssql 
-    ports:
-      - "1434:1433"
-    environment:
-      - ACCEPT_EULA=Y 
-      - MSSQL_PID=sa
-      - SA_PASSWORD=testing
+    battleship.scoreboard:
+        image: ${DOCKER_REGISTRY-}battleshipscoreboard
+        build:
+          context: .
+          dockerfile: Battleship.Scoreboard/Dockerfile
+        container_name: battleship.Scoreboard
+        ports:
+            - "8083:8083"
+        depends_on:
+            - db
+            - rabbitmq
+        networks:
+            default:
+                ipv4_address: 172.19.0.7
+                aliases:
+                    - scoreboard.internal.visualsanity.io
 
-  game:
-    image: battleship/game:latest
-    build: game
-    depends_on:
-      - rabbitmq
-      - sqlserver
-    ports:
-      - "8081"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+    battleship.game:
+        image: ${DOCKER_REGISTRY-}battleshipgame
+        build:
+          context: .
+          dockerfile: Battleship.Game/Dockerfile
+        container_name: battleship.Game
+        ports:
+            - "8082:8082"
+        depends_on:
+            - db
+            - rabbitmq
+        networks:
+            default:
+                ipv4_address: 172.19.0.6
+                aliases:
+                    - game.internal.visualsanity.io
 
-  player:
-    image: battleship/player:latest
-    build: player
-    depends_on:
-      - rabbitmq
-      - sqlserver
-    ports:
-      - "8082"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+    battleship.audit:
+        image: ${DOCKER_REGISTRY-}battleshipaudit
+        build:
+          context: .
+          dockerfile: Battleship.Audit/Dockerfile
+        container_name: battleship.audit
+        ports:
+            - "8086:8086"
+        depends_on:
+            - db
+            - rabbitmq
+        networks:
+            default:
+                ipv4_address: 172.19.0.5
+                aliases:
+                    - audit.internal.visualsanity.io
 
-  scorecard:
-    image: battleship/scorecard:latest
-    build: scorecard
-    depends_on:
-      - rabbitmq
-      - sqlserver
-    ports:
-      - "8083"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      
-  statistics:
-    image: battleship/statistics:latest
-    build: statistics
-    depends_on:
-      - rabbitmq
-      - sqlserver
-    ports:
-      - "8084"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+    battleship.player:
+        image: ${DOCKER_REGISTRY-}battleshipplayer
+        build: 
+            context: .
+            dockerfile: Battleship.Audit/Dockerfile
+        container_name: battleship.player
+        ports:
+            - "8081:8081"
+        depends_on:
+            - db
+            - rabbitmq
+        networks:
+            default:
+                ipv4_address: 172.19.0.4
+                aliases:
+                    - player.internal.visualsanity.io
+    
+    rabbitmq:
+        image: 'rabbitmq:3.8.4-management-alpine'
+        container_name: battleship.rabbitmq
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        environment:
+            - RABBITMQ_DEFAULT_USER=guest
+            - RABBITMQ_DEFAULT_PASS=guest
+        networks:
+            default:
+                ipv4_address: 172.19.0.3
+                aliases:
+                    - messaging.internal.visualsanity.io
+    
+    db:
+        image: "mcr.microsoft.com/mssql/server:2019-latest"
+        container_name: battleship.sqlserver
+        environment:
+            SA_PASSWORD: "Test1ng!"
+            ACCEPT_EULA: "Y"
+        ports:
+            - "1433:1433"
+        hostname: db.internal.visualsanity.io
+        networks:
+            default:
+                ipv4_address: 172.19.0.2
+                aliases:
+                    - db.internal.visualsanity.io
 
-  audit:
-    image: battleship/audit:latest
-    build: audit
-    container_name: audit
-    depends_on:
-      - rabbitmq
-    ports:
-      - "8085"
-    environment:
-      - DOTNET_ENVIRONMENT=Production
-      
-  Warehouse:
-    image: battleship/Warehouse:latest
-    build: Warehouse
-    container_name: Warehouse
-    depends_on:
-      - rabbitmq
-      - audit
-    ports:
-      - "8086"
-    environment:
-      - DOTNET_ENVIRONMENT=Production     
-      
-  webapp:
-    image: battleship/webapp:latest
-    build: WebApp
-    container_name: webapp
-    depends_on:
-      - player
-      - game
-      - scorecard
-      - statistics
-    ports:
-      - "8080:8080"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-
-volumes:
-  sqlserverdata:
-    external: true    
-  rabbitmqdata:
-    external: true
+networks:
+    default:
+        ipam:
+            driver: bridge
+            config:
+               - subnet: "172.19.0.0/20"

@@ -1,29 +1,13 @@
 {
-  "Docker": {
-    "commandName": "Docker",
-    "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-    "environmentVariables": {
-      "ASPNETCORE_URLS": "https://+:443;http://+:80",
-      "ASPNETCORE_HTTPS_PORT": "44326"
-    },
-    "publishAllPorts": true
-  },
   "profiles": {
     "Battleship.Audit": {
       "commandName": "Project",
-      "nativeDebugging": true,
       "applicationUrl": "http://localhost:8086"
     },
-    "Docker": {
+    "Docker (1)": {
       "commandName": "Docker",
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "environmentVariables": {
-        "ASPNETCORE_URLS": "http://*:8086"
-      },
       "publishAllPorts": true
-    },
-    "Azure Dev Spaces": {
-      "commandName": "AzureDevSpaces"
     }
   }
 }

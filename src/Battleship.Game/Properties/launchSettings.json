@@ -1,36 +1,11 @@
 {
-  "Docker": {
-    "commandName": "Docker",
-    "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-    "environmentVariables": {
-      "ASPNETCORE_URLS": "https://+:443;http://+:80",
-      "ASPNETCORE_HTTPS_PORT": "44326"
-    },
-    "publishAllPorts": true
-  },
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:8082/",
-      "sslPort": 0
-    }
-  },
   "profiles": {
     "Battleship.Game": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_URLS": "http://+:8082"
       },
       "applicationUrl": "http://localhost:8082"
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "environmentVariables": {
-        "ASPNETCORE_URLS": "http://*:8081"
-      },
-      "publishAllPorts": true
     },
     "Docker (1)": {
       "commandName": "Docker",

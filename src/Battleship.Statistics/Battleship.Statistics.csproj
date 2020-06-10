@@ -9,6 +9,7 @@
     <LangVersion>latest</LangVersion>
     <Version>0.0.7</Version>
     <AssemblyVersion>0.0.7.0</AssemblyVersion>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -46,6 +47,10 @@
     <None Update="Configuration\Setup.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>

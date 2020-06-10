@@ -6,6 +6,7 @@
     <UserSecretsId>687d91a2-e6b3-48e5-b047-d0ffb69cae10</UserSecretsId>
     <StartupObject>Battleship.Scoreboard.Program</StartupObject>
     <Version>0.0.7</Version>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -26,6 +27,10 @@
     <None Update="Configuration\Setup.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>
