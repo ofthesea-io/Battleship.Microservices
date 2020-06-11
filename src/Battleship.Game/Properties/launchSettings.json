@@ -2,15 +2,7 @@
   "profiles": {
     "Battleship.Game": {
       "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_URLS": "http://+:8082"
-      },
       "applicationUrl": "http://localhost:8082"
-    },
-    "Docker (1)": {
-      "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "publishAllPorts": true
     }
   }
 }

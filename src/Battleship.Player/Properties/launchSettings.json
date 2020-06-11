@@ -3,11 +3,6 @@
     "Battleship.Player": {
       "commandName": "Project",
       "applicationUrl": "http://localhost:8081"
-    },
-    "Docker (1)": {
-      "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "publishAllPorts": true
     }
   }
 }

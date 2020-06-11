@@ -12,23 +12,25 @@ services:
         depends_on:
             - db
             - rabbitmq
+        entrypoint: ["/app/wait-for-it.sh", "db:1433", "-t", "120", "--", "dotnet", "Battleship.Statistics.dll"]
         networks:
             default:
                 ipv4_address: 172.19.0.8
                 aliases:
                     - statistics.internal.visualsanity.io
 
-    battleship.scoreboard:
-        image: ${DOCKER_REGISTRY-}battleshipscoreboard
+    battleship.scorecard:
+        image: ${DOCKER_REGISTRY-}battleshipscorecard
         build:
           context: .
-          dockerfile: Battleship.Scoreboard/Dockerfile
-        container_name: battleship.Scoreboard
+          dockerfile: Battleship.ScoreCard/Dockerfile
+        container_name: battleship.ScoreCard
         ports:
             - "8083:8083"
         depends_on:
             - db
             - rabbitmq
+        entrypoint: ["/app/wait-for-it.sh", "db:1433", "-t", "120", "--", "dotnet", "Battleship.ScoreCard.dll"]
         networks:
             default:
                 ipv4_address: 172.19.0.7
@@ -46,6 +48,7 @@ services:
         depends_on:
             - db
             - rabbitmq
+        entrypoint: ["/app/wait-for-it.sh", "db:1433", "-t", "120", "--", "dotnet", "Battleship.Game.dll"]
         networks:
             default:
                 ipv4_address: 172.19.0.6
@@ -59,10 +62,11 @@ services:
           dockerfile: Battleship.Audit/Dockerfile
         container_name: battleship.audit
         ports:
-            - "8086:8086"
+            - "8085:8085"
         depends_on:
             - db
             - rabbitmq
+        entrypoint: ["/app/wait-for-it.sh", "db:1433", "-t", "120", "--", "dotnet", "Battleship.Audit.dll"]
         networks:
             default:
                 ipv4_address: 172.19.0.5
@@ -80,6 +84,7 @@ services:
         depends_on:
             - db
             - rabbitmq
+        entrypoint: ["/app/wait-for-it.sh", "db:1433", "-t", "120", "--", "dotnet", "Battleship.Player.dll"]
         networks:
             default:
                 ipv4_address: 172.19.0.4
@@ -105,7 +110,7 @@ services:
         image: "mcr.microsoft.com/mssql/server:2019-latest"
         container_name: battleship.sqlserver
         environment:
-            SA_PASSWORD: "Test1ng!"
+            SA_PASSWORD: "T3st1ng&"
             ACCEPT_EULA: "Y"
         ports:
             - "1433:1433"
@@ -119,6 +124,6 @@ services:
 networks:
     default:
         ipam:
-            driver: bridge
+            #driver: bridge
             config:
                - subnet: "172.19.0.0/20"

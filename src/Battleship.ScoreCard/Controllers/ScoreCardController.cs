@@ -1,12 +1,11 @@
-﻿namespace Battleship.Scoreboard.Controllers
+﻿namespace Battleship.ScoreCard.Controllers
 {
     using System;
     using System.Threading.Tasks;
 
-    using Battleship.Core.Messages;
     using Battleship.Infrastructure.Core.Components;
     using Battleship.Infrastructure.Core.Messages;
-    using Battleship.Score.Infrastructure;
+    using Battleship.ScoreCard.Infrastructure;
 
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;

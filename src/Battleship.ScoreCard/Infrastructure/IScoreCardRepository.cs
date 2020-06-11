@@ -1,4 +1,4 @@
-﻿namespace Battleship.Score.Infrastructure
+﻿namespace Battleship.ScoreCard.Infrastructure
 {
     using System.Threading.Tasks;
 

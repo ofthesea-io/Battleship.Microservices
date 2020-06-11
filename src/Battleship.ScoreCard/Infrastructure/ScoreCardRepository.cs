@@ -1,10 +1,9 @@
-﻿namespace Battleship.Scoreboard.Infrastructure
+﻿namespace Battleship.ScoreCard.Infrastructure
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Battleship.Infrastructure.Core.Repository;
-    using Battleship.Score.Infrastructure;
 
     public class ScoreCardRepository : RepositoryCore, IScoreCardRepository
     {

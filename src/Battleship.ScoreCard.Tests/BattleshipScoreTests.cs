@@ -1,4 +1,4 @@
-namespace Battleship.Score.Tests
+namespace Battleship.ScoreCard.Tests
 {
     using NUnit.Framework;
 

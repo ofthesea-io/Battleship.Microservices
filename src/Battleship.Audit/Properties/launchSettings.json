@@ -2,7 +2,7 @@
   "profiles": {
     "Battleship.Audit": {
       "commandName": "Project",
-      "applicationUrl": "http://localhost:8086"
+      "applicationUrl": "http://localhost:8083"
     },
     "Docker (1)": {
       "commandName": "Docker",

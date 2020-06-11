@@ -18,4 +18,5 @@ RUN dotnet publish "Battleship.Statistics.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Battleship.Statistics.dll"]
+COPY /Battleship.Statistics/wait-for-it.sh wait-for-it.sh
+RUN chmod +x wait-for-it.sh

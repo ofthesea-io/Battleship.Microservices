@@ -1,14 +1,13 @@
-﻿namespace Battleship.Scoreboard.Handlers
+﻿namespace Battleship.ScoreCard.Handlers
 {
     using System;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Battleship.Core.Messages;
     using Battleship.Infrastructure.Core.Messages;
     using Battleship.Infrastructure.Core.Models;
-    using Battleship.Score.Infrastructure;
+    using Battleship.ScoreCard.Infrastructure;
 
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;

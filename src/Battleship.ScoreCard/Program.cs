@@ -1,7 +1,5 @@
-﻿namespace Battleship.Scoreboard
+﻿namespace Battleship.ScoreCard
 {
-    using Battleship.Score;
-
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
