@@ -8,7 +8,7 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1-focal AS build
 WORKDIR /src
 COPY ["Battleship.Player.csproj", "Battleship.Player/"]
 RUN dotnet restore "Battleship.Player/Battleship.Player.csproj"
-COPY . ./Battleship.Player
+COPY . .
 WORKDIR "/src/Battleship.Player"
 RUN dotnet build "Battleship.Player.csproj" -c Release -o /app/build
 

@@ -23,7 +23,7 @@
       "url": "/api/Statistic/"
     },
     "AuditLog": {
-      "host": "http://localhost:8086",
+      "host": "http://localhost:8085",
       "url": "/api/Audit/"
     }
   }
