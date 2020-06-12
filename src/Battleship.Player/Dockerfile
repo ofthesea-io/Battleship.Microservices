@@ -6,7 +6,7 @@ HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail htt
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-focal AS build
 WORKDIR /src
-COPY ["Battleship.Player.csproj", "Battleship.Player/"]
+COPY ["Battleship.Player/Battleship.Player.csproj", "Battleship.Player/"]
 RUN dotnet restore "Battleship.Player/Battleship.Player.csproj"
 COPY . .
 WORKDIR "/src/Battleship.Player"
