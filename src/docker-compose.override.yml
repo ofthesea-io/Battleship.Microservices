@@ -1,36 +1,54 @@
 version: '3.8'
 
-#services:
+services:
+    
+    battleship.player:
+        environment:
+          - ASPNETCORE_ENVIRONMENT=Development
+        container_name: battleship.player.dev
+        ports:
+          - "8081"
+        volumes:
+          - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
-#  battleship.audit:
-#    environment:
-#      - ASPNETCORE_ENVIRONMENT=Development
-#    ports:
-#      - "80"
-#    volumes:
-#      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-#
-#  battleship.game:
-#    environment:
-#      - ASPNETCORE_ENVIRONMENT=Development
-#    ports:
-#      - "80"
-#    volumes:
-#      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-#
-#  battleship.scoreboard:
-#    environment:
-#      - ASPNETCORE_ENVIRONMENT=Development
-#    ports:
-#      - "80"
-#    volumes:
-#      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-#
-#  battleship.statistics:
-#    environment:
-#      - ASPNETCORE_ENVIRONMENT=Development
-#    ports:
-#      - "80"
-#    volumes:
-#      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-#
+    battleship.audit:
+        environment:
+          - ASPNETCORE_ENVIRONMENT=Development
+        container_name: battleship.audit.dev
+        ports:
+          - "8085"
+        volumes:
+          - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+    battleship.game:
+        environment:
+          - ASPNETCORE_ENVIRONMENT=Development
+        container_name: battleship.game.dev
+        ports:
+          - "8082"
+        volumes:
+          - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+    battleship.scorecard:
+        environment:
+          - ASPNETCORE_ENVIRONMENT=Development
+        container_name: battleship.scorecard.dev
+        ports:
+          - "8083"
+        volumes:
+          - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+    battleship.statistics:
+        environment:
+          - ASPNETCORE_ENVIRONMENT=Development
+        container_name: battleship.statistics.dev
+        ports:
+          - "8084"
+        volumes:
+          - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  
+    rabbitmq:
+        container_name: battleship.rabbitmq.dev
+
+    db:
+        container_name: battleship.sqlserver.dev

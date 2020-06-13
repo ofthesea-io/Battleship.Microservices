@@ -3,6 +3,7 @@ version: "3.8"
 services:
     battleship.statistics:
         image: ${DOCKER_REGISTRY-}battleshipstatistics
+        restart: on-failure
         build:
           context: .
           dockerfile: Battleship.Statistics/Dockerfile
@@ -21,6 +22,7 @@ services:
 
     battleship.scorecard:
         image: ${DOCKER_REGISTRY-}battleshipscorecard
+        restart: on-failure
         build:
           context: .
           dockerfile: Battleship.ScoreCard/Dockerfile
@@ -39,6 +41,7 @@ services:
 
     battleship.game:
         image: ${DOCKER_REGISTRY-}battleshipgame
+        restart: on-failure
         build:
           context: .
           dockerfile: Battleship.Game/Dockerfile
@@ -57,6 +60,7 @@ services:
 
     battleship.audit:
         image: ${DOCKER_REGISTRY-}battleshipaudit
+        restart: on-failure
         build:
           context: .
           dockerfile: Battleship.Audit/Dockerfile
@@ -75,6 +79,7 @@ services:
 
     battleship.player:
         image: ${DOCKER_REGISTRY-}battleshipplayer
+        restart: on-failure
         build: 
             context: .
             dockerfile: Battleship.Player/Dockerfile
@@ -95,11 +100,20 @@ services:
         image: 'rabbitmq:3.8.4-management-alpine'
         container_name: battleship.rabbitmq
         ports:
+            - "4369:4369"
+            - "5671:5671"
             - "5672:5672"
+            - "25672:25672"
+            - "15671:15671"
             - "15672:15672"
         environment:
-            - RABBITMQ_DEFAULT_USER=guest
+            - RABBITMQ_DEFAULT_USER=guest   
             - RABBITMQ_DEFAULT_PASS=guest
+        healthcheck:
+            test: [ "CMD", "curl", "-f", "localhost", "5672" ]
+            interval: 5s
+            timeout: 15s
+            retries: 1
         networks:
             default:
                 ipv4_address: 172.19.0.3
@@ -114,6 +128,11 @@ services:
             ACCEPT_EULA: "Y"
         ports:
             - "1433:1433"
+        healthcheck:
+            test: [ "CMD", "curl", "-f", "localhost", "1433" ]
+            interval: 5s
+            timeout: 15s
+            retries: 1
         hostname: db.internal.visualsanity.io
         networks:
             default:
