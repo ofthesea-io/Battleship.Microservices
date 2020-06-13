@@ -1,6 +1,7 @@
 FROM node:14.4.0-alpine3.12 AS build
-COPY package.json /usr/angular-workdir/
-WORKDIR /usr/angular-workdir
+WORKDIR /usr/angular-workdir/
+COPY package.json  ./
+COPY package-lock.json ./
 RUN npm install
 COPY . .
 RUN npm run build
