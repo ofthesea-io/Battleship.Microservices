@@ -1,6 +1,14 @@
 version: '3.8'
 
 services:
+    battleship.player:
+        environment:
+          - ASPNETCORE_ENVIRONMENT=Development
+        container_name: battleship.web.dev
+        ports:
+          - "80"
+        volumes:
+          - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
     
     battleship.player:
         environment:

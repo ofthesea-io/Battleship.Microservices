@@ -1,13 +1,32 @@
 version: "3.8"
 
 services:
+
+    battleship.web:
+        image: ${DOCKER_REGISTRY-}battleshipweb
+        restart: on-failure
+        build:
+          context: .
+          dockerfile: Battleship.Microservice.Web/Dockerfile
+        container_name: battleship.web
+        ports:
+            - "80:80"
+        depends_on:
+            - db
+            - rabbitmq
+        networks:
+            default:
+                ipv4_address: 172.19.0.10
+                aliases:
+                    - web.internal.visualsanity.io
+
     battleship.statistics:
         image: ${DOCKER_REGISTRY-}battleshipstatistics
         restart: on-failure
         build:
           context: .
           dockerfile: Battleship.Statistics/Dockerfile
-        container_name: battleship.Statistics
+        container_name: battleship.statistics
         ports:
             - "8084:8084"
         depends_on:

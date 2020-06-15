@@ -1,32 +1,37 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.30011.22
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{69AA4A66-4EDE-4C5A-BD1C-3F7D0CD3BE77}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{26DB828F-A674-41DD-9F60-BE4BCDFAD82F}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Battleship.Microservice.Web", "Battleship.Microservice.Web\", "{9FA3CE5E-95B7-473C-8A5F-A2118799E938}"
-	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
-		Debug.AspNetCompiler.VirtualPath = "/localhost_60251"
-		Debug.AspNetCompiler.PhysicalPath = "..\..\Battleship.Microservice.Web\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_60251\"
-		Debug.AspNetCompiler.Updateable = "true"
-		Debug.AspNetCompiler.ForceOverwrite = "true"
-		Debug.AspNetCompiler.FixedNames = "false"
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/localhost_60251"
-		Release.AspNetCompiler.PhysicalPath = "..\..\Battleship.Microservice.Web\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_60251\"
-		Release.AspNetCompiler.Updateable = "true"
-		Release.AspNetCompiler.ForceOverwrite = "true"
-		Release.AspNetCompiler.FixedNames = "false"
-		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "60251"
-		SlnRelativePath = "..\..\Battleship.Microservice.Web\"
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.Statistics", "Battleship.Statistics\Battleship.Statistics.csproj", "{FED4EACE-4347-49D0-BD50-6DEF55EDCF4C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.Audit.Tests", "Battleship.Audit.Tests\Battleship.Audit.Tests.csproj", "{13933833-CEE1-4836-BFB9-C6086BC45131}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.Game.Tests", "Battleship.Game.Tests\Battleship.Game.Tests.csproj", "{11888F1A-C1B0-43AF-8886-483FB03D3FE9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.Player.Tests", "Battleship.Player.Tests\Battleship.Player.Tests.csproj", "{0A0DC465-193A-4943-92CB-8AC6964297FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.Statistics.Tests", "Battleship.Statistics.Tests\Battleship.Statistics.Tests.csproj", "{8C927223-944C-4268-84A8-3B3FAD5E9DA6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.Player", "Battleship.Player\Battleship.Player.csproj", "{E45C8231-283D-4C73-8B69-68B2E9EEA093}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.Game", "Battleship.Game\Battleship.Game.csproj", "{09EDE0B1-E7D0-4D54-A4A7-A26A87C1595E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.Audit", "Battleship.Audit\Battleship.Audit.csproj", "{4403CB4E-A4AD-493C-BEF1-AD1C700B4BCD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.Infrastructure.Core", "Battleship.Infrastructure.Core\Battleship.Infrastructure.Core.csproj", "{39DFCF02-F3E5-4BD7-8834-CDDCA4E5E796}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.Infrastructure.Core.Tests", "Battleship.Infrastructure.Core.Tests\Battleship.Infrastructure.Core.Tests.csproj", "{E1854768-2131-430F-909A-AC7F9B6A0DA3}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AF98A8AB-20FE-407F-85B2-DE45C75D22AC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.ScoreCard", "Battleship.ScoreCard\Battleship.ScoreCard.csproj", "{527E0054-D64A-475E-AB92-B65626428C42}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Battleship.ScoreCard.Tests", "Battleship.ScoreCard.Tests\Battleship.ScoreCard.Tests.csproj", "{B48F783E-3D52-4E3B-AF6C-35631C53E769}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -140,14 +145,6 @@ Global
 		{B48F783E-3D52-4E3B-AF6C-35631C53E769}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B48F783E-3D52-4E3B-AF6C-35631C53E769}.Release|x64.ActiveCfg = Release|Any CPU
 		{B48F783E-3D52-4E3B-AF6C-35631C53E769}.Release|x64.Build.0 = Release|Any CPU
-		{9FA3CE5E-95B7-473C-8A5F-A2118799E938}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FA3CE5E-95B7-473C-8A5F-A2118799E938}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9FA3CE5E-95B7-473C-8A5F-A2118799E938}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{9FA3CE5E-95B7-473C-8A5F-A2118799E938}.Debug|x64.Build.0 = Debug|Any CPU
-		{9FA3CE5E-95B7-473C-8A5F-A2118799E938}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FA3CE5E-95B7-473C-8A5F-A2118799E938}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{9FA3CE5E-95B7-473C-8A5F-A2118799E938}.Release|x64.ActiveCfg = Debug|Any CPU
-		{9FA3CE5E-95B7-473C-8A5F-A2118799E938}.Release|x64.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -178,8 +175,5 @@ Global
 		$0.XmlFormattingPolicy = $5
 		$5.inheritsSet = null
 		$5.scope = text/microsoft-resx
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {EFF3E499-8F54-45B4-A08D-65CA972CF558}
 	EndGlobalSection
 EndGlobal
