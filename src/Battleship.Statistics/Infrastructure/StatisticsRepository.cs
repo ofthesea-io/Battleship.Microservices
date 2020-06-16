@@ -3,8 +3,8 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using Battleship.Microservices.Core.Models;
-    using Battleship.Microservices.Core.Repository;
+    using Battleship.Infrastructure.Core.Models;
+    using Battleship.Infrastructure.Core.Repository;
 
     public class StatisticsRepository : RepositoryCore, IStatisticsRepository
     {

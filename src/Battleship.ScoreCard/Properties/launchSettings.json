@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Battleship.Scoreboard": {
+      "commandName": "Project",
+      "applicationUrl": "http://localhost:8083"
+    }
+  }
+}

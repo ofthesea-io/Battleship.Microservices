@@ -5,7 +5,7 @@
 
     using Battleship.Game.Models;
     using Battleship.Game.Ships;
-    using Battleship.Microservices.Core.Models;
+    using Battleship.Infrastructure.Core.Models;
 
     public static class BattleshipExtensions
     {

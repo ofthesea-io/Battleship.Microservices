@@ -1,8 +1,8 @@
 ﻿namespace Battleship.Player
 {
-    using Battleship.Microservices.Core.Messages;
-    using Battleship.Microservices.Core.Repository;
-    using Battleship.Microservices.Infrastructure.Messages;
+    using Battleship.Core.Messages;
+    using Battleship.Infrastructure.Core.Messages;
+    using Battleship.Infrastructure.Core.Repository;
     using Battleship.Player.Handlers;
     using Battleship.Player.Infrastructure;
 

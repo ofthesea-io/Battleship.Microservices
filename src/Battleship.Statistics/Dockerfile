@@ -1,22 +1,22 @@
-FROM microsoft/dotnet:3.1-sdk AS build-env
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-focal AS base
 WORKDIR /app
-
-# Copy necessary files and restore as distinct layer
-COPY *.csproj ./
-RUN dotnet restore
-
-# Copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o out
-
-# Build runtime image
-FROM microsoft/dotnet:2.2-aspnetcore-runtime
-COPY --from=build-env /app/out .
-
-# Expose ports
 EXPOSE 8084/tcp
 ENV ASPNETCORE_URLS http://*:8084
-HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://localhost:8084/api/Statistic || exit 1
+HEALTHCHECK --interval=30s --timeout=3s --retries=1 CMD curl --silent --fail http://0.0.0.0:8084/api/Statistic || exit 1
 
-# Start
-ENTRYPOINT ["dotnet", "Battleship.Statistics.dll"]
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-focal AS build
+WORKDIR /src
+COPY ["Battleship.Statistics/Battleship.Statistics.csproj", "Battleship.Statistics/"]
+RUN dotnet restore "Battleship.Statistics/Battleship.Statistics.csproj"
+COPY . .
+WORKDIR "/src/Battleship.Statistics"
+RUN dotnet build "Battleship.Statistics.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Battleship.Statistics.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+COPY /Battleship.Statistics/wait-for-it.sh wait-for-it.sh
+RUN chmod +x wait-for-it.sh

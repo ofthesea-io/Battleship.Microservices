@@ -5,13 +5,14 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Battleship.Core.Messages;
     using Battleship.Game.Board;
     using Battleship.Game.Handlers;
     using Battleship.Game.Infrastructure;
     using Battleship.Game.Models;
-    using Battleship.Microservices.Core.Components;
-    using Battleship.Microservices.Core.Messages;
-    using Battleship.Microservices.Core.Models;
+    using Battleship.Infrastructure.Core.Components;
+    using Battleship.Infrastructure.Core.Messages;
+    using Battleship.Infrastructure.Core.Models;
 
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;

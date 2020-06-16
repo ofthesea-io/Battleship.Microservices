@@ -4,7 +4,8 @@
     using System.Collections.Concurrent;
     using System.Text;
 
-    using Battleship.Microservices.Core.Messages;
+    using Battleship.Core.Messages;
+    using Battleship.Infrastructure.Core.Messages;
 
     using RabbitMQ.Client;
     using RabbitMQ.Client.Events;

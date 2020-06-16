@@ -3,7 +3,7 @@
     using System;
 
     using Battleship.Game.Enums;
-    using Battleship.Microservices.Core.Components;
+    using Battleship.Infrastructure.Core.Components;
 
     using NUnit.Framework;
 

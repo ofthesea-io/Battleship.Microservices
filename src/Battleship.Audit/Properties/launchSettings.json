@@ -2,8 +2,12 @@
   "profiles": {
     "Battleship.Audit": {
       "commandName": "Project",
-      "nativeDebugging": true,
-      "applicationUrl": "http://localhost:8086"
+      "applicationUrl": "http://localhost:8083"
+    },
+    "Docker (1)": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "publishAllPorts": true
     }
   }
 }

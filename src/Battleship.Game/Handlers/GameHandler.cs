@@ -5,9 +5,10 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Battleship.Core.Messages;
     using Battleship.Game.Infrastructure;
-    using Battleship.Microservices.Core.Messages;
-    using Battleship.Microservices.Core.Models;
+    using Battleship.Infrastructure.Core.Messages;
+    using Battleship.Infrastructure.Core.Models;
 
     using Microsoft.Extensions.Hosting;
 
@@ -92,6 +93,7 @@
             this.channel = this.connection.CreateModel();
 
             this.channel.ExchangeDeclare(this.messagePublisher.Exchange, ExchangeType.Direct, true);
+            this.channel.QueueDeclare(queue: this.messagePublisher.Queue, durable: false, exclusive: false, autoDelete: false, arguments: null);
             this.channel.QueueBind(this.messagePublisher.Queue, this.messagePublisher.Exchange, this.messagePublisher.Queue);
         }
 

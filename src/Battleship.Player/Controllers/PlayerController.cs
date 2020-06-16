@@ -5,9 +5,10 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    using Battleship.Microservices.Core.Components;
-    using Battleship.Microservices.Core.Messages;
-    using Battleship.Microservices.Core.Utilities;
+    using Battleship.Core.Messages;
+    using Battleship.Infrastructure.Core.Components;
+    using Battleship.Infrastructure.Core.Messages;
+    using Battleship.Infrastructure.Core.Utilities;
     using Battleship.Player.Infrastructure;
     using Battleship.Player.Models;
 

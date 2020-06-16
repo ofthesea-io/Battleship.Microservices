@@ -3,7 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
-    using Battleship.Microservices.Core.Models;
+    using Battleship.Infrastructure.Core.Models;
 
     public interface IGameRepository
     {
