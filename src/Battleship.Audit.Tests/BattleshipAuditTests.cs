@@ -64,7 +64,7 @@ namespace Battleship.Audit.Tests
 
 
         [Test]
-        public async Task GetAuditLog_WhenGivenAWarningIdAnd0HoursReturnAllWarnings()
+        public async Task GetAuditLog_WhenGivenAWarningIdAnd0Hours_ReturnAllWarnings()
         {
             // Arrange
             var warning = AuditType.Warning;

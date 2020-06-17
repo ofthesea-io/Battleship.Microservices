@@ -17,4 +17,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Battleship.Infrastructure.Core\Battleship.Infrastructure.Core.csproj" />
+  </ItemGroup>
+
 </Project>
