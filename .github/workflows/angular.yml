@@ -1,4 +1,4 @@
-name: angular Build
+name: angular build
 on:
   push:
     branches:
@@ -12,17 +12,26 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.4.0]
 
     steps:
       - uses: actions/checkout@v1
 
-      - name: Node $
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Node ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
-          node-version: $
+          node-version: ${{ matrix.node-version }}
 
-      - name: npm install and npm run build
+      - name: npm ci and npm run build
         run: |
+          npm install
           npm ci
           npm run build:ci
