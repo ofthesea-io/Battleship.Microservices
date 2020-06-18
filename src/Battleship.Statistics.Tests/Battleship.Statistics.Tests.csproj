@@ -16,4 +16,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Battleship.Statistics\Battleship.Statistics.csproj" />
+  </ItemGroup>
+
 </Project>

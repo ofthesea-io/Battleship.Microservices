@@ -16,7 +16,7 @@ namespace Battleship.Audit.Tests
 
     using NUnit.Framework;
 
-    public class BattleshipAuditTests
+    public class AuditTests
     {
         #region Fields
 
