@@ -1,4 +1,4 @@
-name: angular build
+name: npm build
 on:
   push:
     branches:

@@ -1,4 +1,4 @@
-name: dotnet core build
+name: ci build
 on:
   push:
     branches: [ master ]
