@@ -1,6 +1,6 @@
 
 # Battleship.Microservices
-![dotnet core build](https://github.com/visualsanity/Battleship.Microservices/workflows/dotnet%20core%20build/badge.svg) ![angular build](https://github.com/visualsanity/Battleship.Microservices/workflows/angular%20build/badge.svg) ![docker build](https://github.com/visualsanity/Battleship.Microservices/workflows/docker%20build/badge.svg)
+![ci build](https://github.com/visualsanity/Battleship.Microservices/workflows/ci%20build/badge.svg) ![npm build](https://github.com/visualsanity/Battleship.Microservices/workflows/npm%20build/badge.svg) ![docker build](https://github.com/visualsanity/Battleship.Microservices/workflows/docker%20build/badge.svg)
 
 The following application is a port from a console kata application that I develop on periodically to hone my skills. This application is merely for technology exploration and coding practise disipline training. 
 
