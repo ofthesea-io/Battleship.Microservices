@@ -1,5 +1,6 @@
 namespace Battleship.Player.Tests
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
@@ -28,6 +29,8 @@ namespace Battleship.Player.Tests
 
         private IEnumerable<Player> players;
 
+        private Authenticated authenticated;
+
         #region Methods
 
         [SetUp]
@@ -39,6 +42,13 @@ namespace Battleship.Player.Tests
                    new Player { Firstname = "John", Lastname = "Doe", Email = "johndoe@email.com" },
                    new Player { Firstname = "Jane", Lastname = "Doe", Email = "janedoe@email.com" }
                };
+
+            this.authenticated = new Authenticated()
+                                {
+                                    IsAdmin = 0,
+                                    IsDemo = 0,
+                                    Level = 1
+                                };
 
             this.moqPlayerRepository = new Mock<IPlayerRepository>();
             this.moqMessagePublisher = new Mock<IMessagePublisher>();
@@ -86,6 +96,26 @@ namespace Battleship.Player.Tests
             else
                 Assert.Fail();
 
+        }
+
+        [Test]
+        public async Task IsAuthenticated_GivenSessionId_ReturnValidSession()
+        {
+            // Arrange
+            string sessionId = Guid.NewGuid().ToString();
+            this.moqPlayerRepository.Reset();
+            this.moqPlayerRepository.Setup(q => q.IsAuthenticated(sessionId)).ReturnsAsync(this.authenticated);
+            string expectedResult = JsonConvert.SerializeObject(this.authenticated);
+
+            // Act 
+            var result = await this.playerController.IsAuthenticated(sessionId);
+            var ok = result as OkObjectResult;
+
+            // Assert
+            if (ok != null) 
+                Assert.AreEqual(ok.Value, expectedResult);
+            else
+                Assert.Fail();
         }
 
         #endregion

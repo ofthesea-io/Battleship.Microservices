@@ -9,6 +9,7 @@ namespace Battleship.Statistics.Tests
     using Battleship.Statistics.Controllers;
     using Battleship.Statistics.Infrastructure;
 
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     using Moq;
@@ -73,6 +74,25 @@ namespace Battleship.Statistics.Tests
 
             // Assert
             Assert.IsInstanceOf<ActionResult>(actionResult);
+        }
+
+        [Test]
+        public async Task GetTopTenPlayers_WhenGivenNoInput_ReturnsList()
+        {
+            // Arrange
+            this.moqStatisticsRepository.Reset();
+            this.moqStatisticsRepository.Setup(q => q.GetTopTenPlayers()).ReturnsAsync(this.statistics);
+
+            // Act
+            var actionResult = await this.statisticController.GetTopTenPlayers();
+            var ok = actionResult as OkObjectResult;
+
+            // Assert
+            if (ok != null)
+                Assert.AreEqual(ok.StatusCode, StatusCodes.Status200OK);
+            else
+                Assert.Fail();
+
         }
 
         #endregion
