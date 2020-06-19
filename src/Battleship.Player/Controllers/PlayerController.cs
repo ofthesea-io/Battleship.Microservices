@@ -5,7 +5,6 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    using Battleship.Core.Messages;
     using Battleship.Infrastructure.Core.Components;
     using Battleship.Infrastructure.Core.Messages;
     using Battleship.Infrastructure.Core.Utilities;
@@ -80,7 +79,6 @@
         [Route("IsAuthenticated")]
         public async Task<ActionResult> IsAuthenticated(string sessionId)
         {
-
             try
             {
                 Authenticated result = await this.playerRepository.IsAuthenticated(sessionId);
@@ -101,6 +99,9 @@
         {
             try
             {
+                if (string.IsNullOrEmpty(player.Firstname) || string.IsNullOrEmpty(player.Lastname) || string.IsNullOrEmpty(player.Email) || string.IsNullOrEmpty(player.Password))
+                    return this.StatusCode(StatusCodes.Status204NoContent);
+
                 Guid result = await this.playerRepository.CreatePlayer(player);
                 if (result == Guid.Empty) return this.StatusCode(StatusCodes.Status400BadRequest);
 
@@ -148,7 +149,8 @@
 
                 // session is created in the database
                 Player player = await this.playerRepository.DemoLogin(playerId);
-                if (player == null) return this.BadRequest(false);
+                if (player == null) 
+                    return this.StatusCode(StatusCodes.Status400BadRequest);
 
                 this.Log($"Demo Player {player.Firstname} {player.Lastname} Login");
 

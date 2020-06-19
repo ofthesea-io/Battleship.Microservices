@@ -1,7 +1,6 @@
 namespace Battleship.Player.Tests
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -11,6 +10,7 @@ namespace Battleship.Player.Tests
     using Battleship.Player.Infrastructure;
     using Battleship.Player.Models;
 
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
 
     using Moq;
@@ -21,34 +21,60 @@ namespace Battleship.Player.Tests
 
     public class PlayerTests
     {
-        private PlayerController playerController;
+        #region Fields
 
-        private Mock<IPlayerRepository> moqPlayerRepository;
+        private readonly Guid sessionId = Guid.NewGuid();
+
+        private Authenticated authenticated;
 
         private Mock<IMessagePublisher> moqMessagePublisher;
 
+        private Mock<IPlayerRepository> moqPlayerRepository;
+
+        private Player player;
+
+        private PlayerController playerController;
+
         private IEnumerable<Player> players;
 
-        private Authenticated authenticated;
+        #endregion
 
         #region Methods
 
         [SetUp]
         public void Setup()
         {
+            this.player = new Player
+              {
+                  Firstname = "Test",
+                  Lastname = "Test",
+                  Email = "test@email.com",
+                  Password = "testing",
+                  PlayerId = Guid.NewGuid()
+              };
 
-            this.players = new List<Player>()
+            this.players = new List<Player>
                {
-                   new Player { Firstname = "John", Lastname = "Doe", Email = "johndoe@email.com" },
-                   new Player { Firstname = "Jane", Lastname = "Doe", Email = "janedoe@email.com" }
+                   new Player
+                       {
+                           Firstname = "John",
+                           Lastname = "Doe",
+                           Email = "johndoe@email.com"
+                       },
+                   new Player
+                       {
+                           Firstname = "Jane",
+                           Lastname = "Doe",
+                           Email = "janedoe@email.com"
+                       }
                };
 
-            this.authenticated = new Authenticated()
-                                {
-                                    IsAdmin = 0,
-                                    IsDemo = 0,
-                                    Level = 1
-                                };
+            this.authenticated = new Authenticated
+             {
+                 IsAdmin = 0,
+                 IsDemo = 0,
+                 Level = 1
+             };
 
             this.moqPlayerRepository = new Mock<IPlayerRepository>();
             this.moqMessagePublisher = new Mock<IMessagePublisher>();
@@ -64,7 +90,7 @@ namespace Battleship.Player.Tests
             this.moqPlayerRepository.Setup(q => q.GetDemoPlayers()).ReturnsAsync(this.players);
 
             // Act
-            var result = await this.moqPlayerRepository.Object.GetDemoPlayers();
+            IEnumerable<Player> result = await this.moqPlayerRepository.Object.GetDemoPlayers();
 
             // Assert
             IEnumerable<Player> resultArray = result as Player[] ?? result.ToArray();
@@ -86,16 +112,15 @@ namespace Battleship.Player.Tests
             string expectedResult = JsonConvert.SerializeObject(this.players);
 
             // Act
-            var actionResult = await this.playerController.GetDemoPlayers();
+            ActionResult actionResult = await this.playerController.GetDemoPlayers();
 
             // Assert
-            var ok = actionResult as OkObjectResult;
+            OkObjectResult ok = (OkObjectResult)actionResult;
             Assert.IsInstanceOf<ActionResult>(actionResult);
             if (ok != null)
                 Assert.AreEqual(ok.Value, expectedResult);
             else
                 Assert.Fail();
-
         }
 
         [Test]
@@ -108,12 +133,124 @@ namespace Battleship.Player.Tests
             string expectedResult = JsonConvert.SerializeObject(this.authenticated);
 
             // Act 
-            var result = await this.playerController.IsAuthenticated(sessionId);
-            var ok = result as OkObjectResult;
+            ActionResult result = await this.playerController.IsAuthenticated(sessionId);
+            OkObjectResult ok = (OkObjectResult)result;
 
             // Assert
-            if (ok != null) 
+            if (ok != null)
                 Assert.AreEqual(ok.Value, expectedResult);
+            else
+                Assert.Fail();
+        }
+
+        [Test]
+        public async Task CreatePlayer_WhenMissingFirstname_ReturnNoContentStatusCode()
+        {
+            // Arrange
+            this.moqPlayerRepository.Reset();
+            this.moqPlayerRepository.Setup(q => q.CreatePlayer(this.player)).ReturnsAsync(this.sessionId);
+            this.player.Firstname = string.Empty;
+
+            // Act
+            ActionResult result = await this.playerController.CreatePlayer(this.player);
+            StatusCodeResult statusCodeResult = (StatusCodeResult)result;
+
+            // Assert
+            if (statusCodeResult != null)
+                Assert.AreEqual(statusCodeResult.StatusCode, StatusCodes.Status204NoContent);
+            else
+                Assert.Fail();
+        }
+
+        [Test]
+        public async Task CreatePlayer_WhenMissingLastname_ReturnNoContentStatusCode()
+        {
+            // Arrange
+            this.moqPlayerRepository.Reset();
+            this.moqPlayerRepository.Setup(q => q.CreatePlayer(this.player)).ReturnsAsync(this.sessionId);
+            this.player.Lastname = string.Empty;
+
+            // Act
+            ActionResult result = await this.playerController.CreatePlayer(this.player);
+            StatusCodeResult statusCodeResult = (StatusCodeResult)result;
+
+            // Assert
+            if (statusCodeResult != null)
+                Assert.AreEqual(statusCodeResult.StatusCode, StatusCodes.Status204NoContent);
+            else
+                Assert.Fail();
+        }
+
+        [Test]
+        public async Task CreatePlayer_WhenMissingEmail_ReturnNoContentStatusCode()
+        {
+            // Arrange
+            this.moqPlayerRepository.Reset();
+            this.moqPlayerRepository.Setup(q => q.CreatePlayer(this.player)).ReturnsAsync(this.sessionId);
+            this.player.Email = string.Empty;
+
+            // Act
+            ActionResult result = await this.playerController.CreatePlayer(this.player);
+            StatusCodeResult statusCodeResult = (StatusCodeResult)result;
+
+            // Assert
+            if (statusCodeResult != null)
+                Assert.AreEqual(statusCodeResult.StatusCode, StatusCodes.Status204NoContent);
+            else
+                Assert.Fail();
+        }
+
+        [Test]
+        public async Task CreatePlayer_WhenMissingPassword_ReturnNoContentStatusCode()
+        {
+            // Arrange
+            this.moqPlayerRepository.Reset();
+            this.moqPlayerRepository.Setup(q => q.CreatePlayer(this.player)).ReturnsAsync(this.sessionId);
+            this.player.Password = string.Empty;
+
+            // Act
+            ActionResult result = await this.playerController.CreatePlayer(this.player);
+            StatusCodeResult statusCodeResult = (StatusCodeResult)result;
+
+            // Assert
+            if (statusCodeResult != null)
+                Assert.AreEqual(statusCodeResult.StatusCode, StatusCodes.Status204NoContent);
+            else
+                Assert.Fail();
+        }
+
+        [Test]
+        public async Task DemoLogin_WhenNoPlayerFound_ReturnBadRequest()
+        {
+            // Arrange
+            this.moqPlayerRepository.Reset();
+            this.moqPlayerRepository.Setup(q => q.DemoLogin(Guid.NewGuid())).ReturnsAsync(new Player());
+
+            // Act
+            ActionResult result = await this.playerController.DemoLogin(Guid.NewGuid());
+            StatusCodeResult statusCodeResult = (StatusCodeResult)result;
+
+            // Assert
+            if (statusCodeResult != null)
+                Assert.AreEqual(statusCodeResult.StatusCode, StatusCodes.Status400BadRequest);
+            else
+                Assert.Fail();
+        }
+
+        [Test]
+        public async Task DemoLogin_WhenGivenPlayerId_ReturnsOkStatusCode()
+        {
+            // Arrange
+            this.moqPlayerRepository.Reset();
+            this.moqPlayerRepository.Setup(q => q.DemoLogin(this.player.PlayerId)).ReturnsAsync(this.player);
+
+            // Act
+            ActionResult result = await this.playerController.DemoLogin(this.player.PlayerId);
+            OkObjectResult ok = (OkObjectResult)result;
+
+            // Assert
+            if (ok != null)
+                Assert.AreEqual(ok.StatusCode, StatusCodes.Status200OK);
             else
                 Assert.Fail();
         }
